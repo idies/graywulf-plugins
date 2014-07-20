@@ -8,7 +8,7 @@
     <ProjectGuid>{FB1B903B-CBA6-4E7E-8C03-C7D8C49E2471}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Jhu.Graywulf.SimpleRestClient</RootNamespace>
+    <RootNamespace>Jhu.Graywulf</RootNamespace>
     <AssemblyName>Jhu.Graywulf.SimpleRestClient</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -44,22 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Enum.cs" />
-    <Compile Include="ExceptionMessages.Designer.cs">
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleRestClient\Constants.cs" />
+    <Compile Include="SimpleRestClient\Enum.cs" />
+    <Compile Include="SimpleRestClient\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RestClient.cs" />
-    <Compile Include="RestException.cs" />
-    <Compile Include="RestHeader.cs" />
-    <Compile Include="RestHeaderCollection.cs" />
-    <Compile Include="RestMessage.cs" />
+    <Compile Include="SimpleRestClient\RestClient.cs" />
+    <Compile Include="SimpleRestClient\RestException.cs" />
+    <Compile Include="SimpleRestClient\RestHeader.cs" />
+    <Compile Include="SimpleRestClient\RestHeaderCollection.cs" />
+    <Compile Include="SimpleRestClient\RestMessage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ExceptionMessages.resx">
+    <EmbeddedResource Include="SimpleRestClient\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
