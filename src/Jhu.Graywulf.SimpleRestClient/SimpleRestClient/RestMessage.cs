@@ -19,7 +19,7 @@ namespace Jhu.Graywulf.SimpleRestClient
         public RestHeaderCollection Headers
         {
             get { return headers; }
-            internal set { headers = value; }
+            set { headers = value; }
         }
 
         public RestMessage()
