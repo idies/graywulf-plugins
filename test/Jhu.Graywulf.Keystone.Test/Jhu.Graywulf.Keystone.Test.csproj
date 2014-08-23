@@ -55,7 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\rest-client\src\Jhu.Graywulf.SimpleRestClient\Jhu.Graywulf.SimpleRestClient.csproj">
+    <ProjectReference Include="..\..\src\Jhu.Graywulf.SimpleRestClient\Jhu.Graywulf.SimpleRestClient.csproj">
       <Project>{8ec7930c-ccc4-47d3-99bd-39e54eb405a9}</Project>
       <Name>Jhu.Graywulf.SimpleRestClient</Name>
     </ProjectReference>
