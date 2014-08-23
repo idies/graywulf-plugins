@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FB1B903B-CBA6-4E7E-8C03-C7D8C49E2471}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Jhu.Graywulf</RootNamespace>
+    <AssemblyName>Jhu.Graywulf.Keystone</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Keystone\AppSettings.cs" />
+    <Compile Include="Keystone\Constants.cs" />
+    <Compile Include="Keystone\Enum.cs" />
+    <Compile Include="Keystone\Objects\Credential.cs" />
+    <Compile Include="Keystone\Objects\Endpoint.cs" />
+    <Compile Include="Keystone\Objects\Entity.cs" />
+    <Compile Include="Keystone\Objects\Group.cs" />
+    <Compile Include="Keystone\Objects\Links.cs" />
+    <Compile Include="Keystone\Objects\Policy.cs" />
+    <Compile Include="Keystone\Objects\Project.cs" />
+    <Compile Include="Keystone\Objects\Region.cs" />
+    <Compile Include="Keystone\Objects\Scope.cs" />
+    <Compile Include="Keystone\Objects\Version.cs" />
+    <Compile Include="Keystone\Requests\GroupRequest.cs" />
+    <Compile Include="Keystone\Requests\RoleRequest.cs" />
+    <Compile Include="Keystone\Requests\ProjectRequest.cs" />
+    <Compile Include="Keystone\Requests\DomainRequest.cs" />
+    <Compile Include="Keystone\Requests\TrustRequest.cs" />
+    <Compile Include="Keystone\Requests\UserRequest.cs" />
+    <Compile Include="Keystone\Responses\GroupListResponse.cs" />
+    <Compile Include="Keystone\Responses\GroupResponse.cs" />
+    <Compile Include="Keystone\Responses\TrustListResponse.cs" />
+    <Compile Include="Keystone\Responses\RoleListResponse.cs" />
+    <Compile Include="Keystone\Responses\RoleResponse.cs" />
+    <Compile Include="Keystone\Responses\ProjectListResponse.cs" />
+    <Compile Include="Keystone\Responses\ProjectResponse.cs" />
+    <Compile Include="Keystone\Responses\DomainListResponse.cs" />
+    <Compile Include="Keystone\Responses\DomainResponse.cs" />
+    <Compile Include="Keystone\Responses\TrustResponse.cs" />
+    <Compile Include="Keystone\Responses\UserResponse.cs" />
+    <Compile Include="Keystone\Responses\ListResponse.cs" />
+    <Compile Include="Keystone\Responses\UserListResponse.cs" />
+    <Compile Include="Keystone\Objects\Role.cs" />
+    <Compile Include="Keystone\Objects\Service.cs" />
+    <Compile Include="Keystone\Objects\Trust.cs" />
+    <Compile Include="Keystone\Responses\VersionResponse.cs" />
+    <Compile Include="Keystone\KeystoneClient.cs" />
+    <Compile Include="Keystone\KeystoneException.cs" />
+    <Compile Include="Keystone\Objects\Domain.cs" />
+    <Compile Include="Keystone\Objects\Error.cs" />
+    <Compile Include="Keystone\Objects\Identity.cs" />
+    <Compile Include="Keystone\Objects\Password.cs" />
+    <Compile Include="Keystone\Responses\AuthResponse.cs" />
+    <Compile Include="Keystone\Responses\ErrorResponse.cs" />
+    <Compile Include="Keystone\Objects\Token.cs" />
+    <Compile Include="Keystone\Objects\User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Keystone\Objects\Auth.cs" />
+    <Compile Include="Keystone\Requests\AuthRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\rest-client\src\Jhu.Graywulf.SimpleRestClient\Jhu.Graywulf.SimpleRestClient.csproj">
+      <Project>{8ec7930c-ccc4-47d3-99bd-39e54eb405a9}</Project>
+      <Name>Jhu.Graywulf.SimpleRestClient</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetDir)*.dll $(SolutionDir)$(OutDir)
+copy $(TargetDir)*.pdb $(SolutionDir)$(OutDir)</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
