@@ -89,27 +89,27 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\keystone-client\src\Jhu.Graywulf.Keystone\Jhu.Graywulf.Keystone.csproj">
+    <ProjectReference Include="..\Jhu.Graywulf.Keystone\Jhu.Graywulf.Keystone.csproj">
       <Project>{fb1b903b-cba6-4e7e-8c03-c7d8c49e2471}</Project>
       <Name>Jhu.Graywulf.Keystone</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\rest-client\src\Jhu.Graywulf.SimpleRestClient\Jhu.Graywulf.SimpleRestClient.csproj">
+    <ProjectReference Include="..\Jhu.Graywulf.SimpleRestClient\Jhu.Graywulf.SimpleRestClient.csproj">
       <Project>{8ec7930c-ccc4-47d3-99bd-39e54eb405a9}</Project>
       <Name>Jhu.Graywulf.SimpleRestClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Jhu.Graywulf.Components\Jhu.Graywulf.Components.csproj">
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Components\Jhu.Graywulf.Components.csproj">
       <Project>{abb4c403-720a-47e1-9485-cfaadd696656}</Project>
       <Name>Jhu.Graywulf.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Jhu.Graywulf.Registry.Enum\Jhu.Graywulf.Registry.Enum.sqlproj">
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Registry.Enum\Jhu.Graywulf.Registry.Enum.sqlproj">
       <Project>{d0cbe71f-b0fc-4911-b5ec-ddddea10656e}</Project>
       <Name>Jhu.Graywulf.Registry.Enum</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Jhu.Graywulf.Registry\Jhu.Graywulf.Registry.csproj">
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Registry\Jhu.Graywulf.Registry.csproj">
       <Project>{59bfb28b-3f97-4714-b8d7-a1b40f668831}</Project>
       <Name>Jhu.Graywulf.Registry</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Jhu.Graywulf.Web\Jhu.Graywulf.Web.csproj">
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Web\Jhu.Graywulf.Web.csproj">
       <Project>{e9d182cf-746e-4e40-b01c-74a32fb70749}</Project>
       <Name>Jhu.Graywulf.Web</Name>
     </ProjectReference>
