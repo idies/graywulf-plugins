@@ -94,14 +94,39 @@ namespace Jhu.Graywulf.Web.Security
             // Keystone tokens (in the simplest case) do not carry any detailed
             // information about the identity of the user. For this reason,
             // every token needs to be validated by calling the Keystone service.
-            // To avoid doing this, we need to cache tokens.
+            // To avoid doing this in every single request, we need to cache tokens.
+
+            // This function also supports token renewal with a configurable granularity.
+            // We compare the token issue time with the current time and if it's older than a given
+            // number of minutes we renew the token unconditionally. This effectively results
+            // in sliding token expiration, though generates a lot of tickets.
+            // Token renewal only happens when the token is conveyed in a cookie, meaning the
+            // request is made by a browser or a smarter client.
+
+            string tokenID = null;
+            var foundInCookie = false;
+
+            // Look for a token in a cookie
+            var cookies = request.Cookies.GetCookies(request.Uri);
+            if (cookies != null)
+            {
+                var cookie = cookies[settings.AuthTokenCookie];
+                if (cookie != null)
+                {
+                    tokenID = cookie.Value;
+                    foundInCookie = true;
+                }
+            }
 
             // Look for a token in the request headers
-            var tokenID = request.Headers[settings.AuthTokenHeader];
-
             if (tokenID == null)
             {
-                // Try to take header from the query string
+                tokenID = request.Headers[settings.AuthTokenHeader];
+            }
+
+            // Try to take header from the query string
+            if (tokenID == null)
+            {
                 tokenID = request.QueryString[settings.AuthTokenParameter];
             }
 
@@ -110,33 +135,30 @@ namespace Jhu.Graywulf.Web.Security
                 Token token;
 
                 // Check if the resolved token is already in the cache
-                if (tokenCache.TryGetValue(tokenID, out token))
-                {
-                    // The token is in the cache, check if it needs renewal
-                    if ((token.ExpiresAt - DateTime.Now).TotalMinutes < 2)
-                    {
-                        // TODO: request new token here...
-                        // problem is, keystone will return the old one :(
-                    }
-                }
-                else
+                if (!tokenCache.TryGetValue(tokenID, out token))
                 {
                     // Need to validate token against Keystone
                     var ksclient = settings.CreateClient();
-
-                    token = new Token()
-                    {
-                        ID = tokenID
-                    };
-
-                    // Keystone doesn't return the user along with
-                    // the token, so let's retrieve it now.
-
-                    // TODO: this part might need modifications
-                    // if we also accept trusts
-                    token.User = ksclient.GetUser(token);
+                    token = ksclient.GetToken(tokenID);
 
                     tokenCache.TryAdd(token.ID, token);
+                }
+
+                // If the token is coming in a cookie and seems too old we can renew it here
+                if (foundInCookie && (DateTime.Now.ToUniversalTime() - token.IssuedAt).TotalMinutes > settings.TokenRenewInterval)
+                {
+                    // Request new token here...
+                    var ksclient = settings.CreateClient();
+                    var newtoken = ksclient.RenewToken(token);
+
+                    // Update cache
+                    tokenCache.TryRemove(tokenID, out token);
+                    tokenCache.TryAdd(newtoken.ID, newtoken, newtoken.ExpiresAt);
+
+                    token = newtoken;
+
+                    // TODO: Now the problem is if a user comes back with the old but still
+                    // valid token
                 }
 
                 settings.UpdateAuthenticationResponse(response, token, IsMasterAuthority);

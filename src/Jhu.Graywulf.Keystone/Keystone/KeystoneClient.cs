@@ -507,6 +507,22 @@ namespace Jhu.Graywulf.Keystone
             return authResponse.Token;
         }
 
+        public Token GetToken(string tokenID)
+        {
+            var headers = new RestHeaderCollection();
+            headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, tokenID));
+
+            var resMessage = SendRequest<AuthResponse>(
+                HttpMethod.Get, "/v3/auth/tokens", headers, adminAuthToken);
+
+            var authResponse = resMessage.Body;
+
+            // Token ID comes in the header
+            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
+
+            return authResponse.Token;
+        }
+
         public bool ValidateToken(Token token)
         {
             var headers = new RestHeaderCollection();
@@ -836,6 +852,10 @@ namespace Jhu.Graywulf.Keystone
             }
             catch (RestException ex)
             {
+#if DEBUG
+                System.Diagnostics.Debugger.Break();
+#endif
+
                 throw CreateException(ex);
             }
         }

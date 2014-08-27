@@ -134,6 +134,10 @@ namespace Jhu.Graywulf.SimpleRestClient
                         Body = ReadResponseBody(ex.Response)
                     };
 
+#if DEBUG
+                    System.Diagnostics.Debugger.Break();
+#endif
+
                     throw rex;
                 }
             }

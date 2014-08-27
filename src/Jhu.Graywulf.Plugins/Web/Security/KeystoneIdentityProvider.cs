@@ -255,16 +255,17 @@ namespace Jhu.Graywulf.Web.Security
             // use the username as project name.
             var project = new Keystone.Project()
             {
-                Domain = new Keystone.Domain()
-                {
-                    Name = settings.Domain.ToLowerInvariant()
-                },
                 Name = request.Username.ToLowerInvariant()
+            };
+
+            var domain = new Keystone.Domain()
+            {
+                Name = settings.Domain.ToLowerInvariant()
             };
 
             // Verify user password in Keystone, we don't use
             // Graywulf password in this case
-            var token = KeystoneClient.Authenticate(settings.Domain.ToLowerInvariant(), request.Username.ToLowerInvariant(), request.Password, project);
+            var token = KeystoneClient.Authenticate(request.Username.ToLowerInvariant(), request.Password, domain, project);
 
             // Find user details in keystone
             token.User = GetKeystoneUser(request.Username);
@@ -272,11 +273,11 @@ namespace Jhu.Graywulf.Web.Security
             // Create a response, this sets necessary response headers
             var response = new AuthenticationResponse(request);
             settings.UpdateAuthenticationResponse(response, token, true);
-            
+
             // Load user from the graywulf registry. This call will create the user
             // if necessary because authority is set to master
             LoadOrCreateUser(response.Principal.Identity);
-            
+
             return response;
         }
 

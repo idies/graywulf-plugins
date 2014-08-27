@@ -24,6 +24,7 @@ namespace Jhu.Graywulf.Web.Security
         private string authTokenParameter;
         private string authTokenHeader;
         private string authTokenCookie;
+        private int tokenRenewInterval;     // in minutes
 
         #endregion
         #region Properties
@@ -131,6 +132,12 @@ namespace Jhu.Graywulf.Web.Security
             set { authTokenCookie = value; }
         }
 
+        public int TokenRenewInterval
+        {
+            get { return tokenRenewInterval; }
+            set { tokenRenewInterval = value; }
+        }
+
         #endregion
         #region Constructors and initializers
 
@@ -153,6 +160,7 @@ namespace Jhu.Graywulf.Web.Security
             this.authTokenParameter = Constants.KeystoneDefaultAuthTokenParameter;
             this.authTokenHeader = Constants.KeystoneDefaultAuthTokenHeader;
             this.authTokenCookie = Constants.KeystoneDefaultAuthTokenCookie;
+            this.tokenRenewInterval = 5;
         }
 
         #endregion
@@ -170,14 +178,15 @@ namespace Jhu.Graywulf.Web.Security
                 {
                     var project = new Keystone.Project()
                     {
-                        Domain = new Keystone.Domain()
-                        {
-                            Name = domain
-                        },
                         Name = adminProject
                     };
 
-                    var token = ksclient.Authenticate(domain, adminUserName, adminPassword, project);
+                    var d = new Keystone.Domain()
+                    {
+                        Name = domain
+                    };
+
+                    var token = ksclient.Authenticate(adminUserName, adminPassword, d, project);
 
                     adminToken = token.ID;
                     adminTokenExpiresAt = token.ExpiresAt;
@@ -220,18 +229,36 @@ namespace Jhu.Graywulf.Web.Security
 
         public void UpdateAuthenticationResponse(AuthenticationResponse response, Token token, bool isMasterAuthority)
         {
+            // Forward identified user to response
             if (response.Principal == null)
             {
                 var principal = CreateAuthenticatedPrincipal(token.User, isMasterAuthority);
                 response.SetPrincipal(principal);
             }
 
-            // TODO: add keystone cookie, custom parameter, etc...
-            response.QueryParameters.Add(authTokenParameter, token.ID);
-            response.Headers.Add(authTokenHeader, token.ID);
+            // Add keystone token to various response collections in necessary
+            // This data may be used depending on the communication channel (i.e. browser, WCF)
+            if (token != null)
+            {
+                if (!String.IsNullOrWhiteSpace(authTokenParameter))
+                {
+                    response.QueryParameters.Add(authTokenParameter, token.ID);
+                }
 
-            // TODO: not sure if it is needed or created automatically
-            //response.Cookies.Add(CreateFormsAuthenticationTicketCookie(principal.Identity.User, createPersistentCookie));
+                if (!String.IsNullOrWhiteSpace(authTokenHeader))
+                {
+                    response.Headers.Add(authTokenHeader, token.ID);
+                }
+
+                if (!String.IsNullOrWhiteSpace(authTokenCookie))
+                {
+                    var cookies = new System.Web.HttpCookie(authTokenCookie, token.ID)
+                    {
+                        Expires = token.ExpiresAt,
+                    };
+                    response.Cookies.Add(new System.Web.HttpCookie(authTokenCookie, token.ID));
+                }
+            }
         }
     }
 }
