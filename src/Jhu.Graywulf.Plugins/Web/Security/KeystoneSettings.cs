@@ -17,14 +17,13 @@ namespace Jhu.Graywulf.Web.Security
         private string domain;
         private string project;
         private string adminToken;
+        private DateTime adminTokenExpiresAt;
         private string adminProject;
         private string adminUserName;
         private string adminPassword;
         private string authTokenParameter;
         private string authTokenHeader;
         private string authTokenCookie;
-
-        private DateTime adminTokenExpiresAt;
 
         #endregion
         #region Properties
@@ -147,14 +146,13 @@ namespace Jhu.Graywulf.Web.Security
             this.authorityUri = new Uri(Constants.KeystoneDefaultUri);
             this.domain = Constants.KeystoneDefaultDomain;
             this.adminToken = null;
+            this.adminTokenExpiresAt = DateTime.MinValue;
             this.adminProject = null;
             this.adminUserName = null;
             this.adminPassword = null;
             this.authTokenParameter = Constants.KeystoneDefaultAuthTokenParameter;
             this.authTokenHeader = Constants.KeystoneDefaultAuthTokenHeader;
             this.authTokenCookie = Constants.KeystoneDefaultAuthTokenCookie;
-
-            this.adminTokenExpiresAt = DateTime.MinValue;
         }
 
         #endregion

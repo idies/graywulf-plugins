@@ -38,7 +38,7 @@ namespace Jhu.Graywulf.Web.Security
         #region Private member variables
 
         private KeystoneSettings settings;
-        
+
         #endregion
         #region Properties
 
@@ -110,7 +110,16 @@ namespace Jhu.Graywulf.Web.Security
                 Token token;
 
                 // Check if the resolved token is already in the cache
-                if (!tokenCache.TryGetValue(tokenID, out token))
+                if (tokenCache.TryGetValue(tokenID, out token))
+                {
+                    // The token is in the cache, check if it needs renewal
+                    if ((token.ExpiresAt - DateTime.Now).TotalMinutes < 2)
+                    {
+                        // TODO: request new token here...
+                        // problem is, keystone will return the old one :(
+                    }
+                }
+                else
                 {
                     // Need to validate token against Keystone
                     var ksclient = settings.CreateClient();

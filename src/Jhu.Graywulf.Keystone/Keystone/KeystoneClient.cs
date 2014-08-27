@@ -450,15 +450,14 @@ namespace Jhu.Graywulf.Keystone
         }
 
         // TODO: test
-        public Token Authenticate(string domain, string username, string password, Domain scope)
+        public Token Authenticate(string username, string password, Domain scope)
         {
-            return Authenticate(domain, username, password, scope, null);
+            return Authenticate(null, username, password, scope, null);
         }
 
-        // TODO: test
-        public Token Authenticate(string domain, string username, string password, Project scope)
+        public Token Authenticate(string username, string password, Domain scopeDomain, Project scopeProject)
         {
-            return Authenticate(domain, username, password, null, scope);
+            return Authenticate(null, username, password, scopeDomain, scopeProject);
         }
 
         private Token Authenticate(string domain, string username, string password, Domain scopeDomain, Project scopeProject)
@@ -485,6 +484,20 @@ namespace Jhu.Graywulf.Keystone
             var req = AuthRequest.CreateMessage(token, trust);
             var resMessage = SendRequest<AuthRequest, AuthResponse>(
                 HttpMethod.Post, "/v3/auth/tokens", req, adminAuthToken);
+
+            var authResponse = resMessage.Body;
+
+            // Token value comes in the header
+            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
+
+            return authResponse.Token;
+        }
+
+        public Token RenewToken(Token token)
+        {
+            var req = AuthRequest.CreateMessage(token);
+            var resMessage = SendRequest<AuthRequest, AuthResponse>(
+                HttpMethod.Post, "v3/auth/tokens", req);
 
             var authResponse = resMessage.Body;
 

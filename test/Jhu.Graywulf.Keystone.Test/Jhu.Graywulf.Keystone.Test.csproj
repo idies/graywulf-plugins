@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Keystone\GroupTest.cs" />
+    <Compile Include="Keystone\TokenTest.cs" />
     <Compile Include="Keystone\RoleTest.cs" />
     <Compile Include="Keystone\ProjectTest.cs" />
     <Compile Include="Keystone\DomainTest.cs" />
