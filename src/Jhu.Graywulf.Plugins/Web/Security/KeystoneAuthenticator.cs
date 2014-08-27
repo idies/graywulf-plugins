@@ -139,7 +139,20 @@ namespace Jhu.Graywulf.Web.Security
                 {
                     // Need to validate token against Keystone
                     var ksclient = settings.CreateClient();
-                    token = ksclient.GetToken(tokenID);
+
+                    try
+                    {
+                        token = ksclient.GetToken(tokenID);
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        // This is very likely a token not found exception (404)
+                        // user cannot be authenticated this way
+                        settings.UpdateAuthenticationResponse(response, null, IsMasterAuthority);
+
+                        return;
+                    }
+
                     token.User = ksclient.GetUser(token.User.ID);
 
                     tokenCache.TryAdd(token.ID, token);
@@ -165,24 +178,6 @@ namespace Jhu.Graywulf.Web.Security
 
                 settings.UpdateAuthenticationResponse(response, token, IsMasterAuthority);
             }
-        }
-
-        public override void RedirectToLoginPage()
-        {
-            var url = settings.LoginUrl.ToString();
-
-            if (url.IndexOf('?') == -1)
-            {
-                url += "?";
-            }
-            else
-            {
-                url += "&";
-            }
-
-            url += "ReturnUrl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.Url.ToString());
-
-            HttpContext.Current.Response.Redirect(url);
         }
     }
 }

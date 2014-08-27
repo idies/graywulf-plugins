@@ -242,7 +242,7 @@ namespace Jhu.Graywulf.Web.Security
         public void UpdateAuthenticationResponse(AuthenticationResponse response, Token token, bool isMasterAuthority)
         {
             // Forward identified user to response
-            if (response.Principal == null)
+            if (token != null && response.Principal == null)
             {
                 var principal = CreateAuthenticatedPrincipal(token.User, isMasterAuthority);
                 response.SetPrincipal(principal);
@@ -264,11 +264,23 @@ namespace Jhu.Graywulf.Web.Security
 
                 if (!String.IsNullOrWhiteSpace(authTokenCookie))
                 {
-                    var cookies = new System.Web.HttpCookie(authTokenCookie, token.ID)
+                    var cookie = new System.Web.HttpCookie(authTokenCookie, token.ID)
                     {
                         Expires = token.ExpiresAt,
                     };
-                    response.Cookies.Add(new System.Web.HttpCookie(authTokenCookie, token.ID));
+                    response.Cookies.Add(cookie);
+                }
+            }
+            else
+            {
+                // Delete cookie
+                if (!String.IsNullOrWhiteSpace(authTokenCookie))
+                {
+                    var cookie = new System.Web.HttpCookie(authTokenCookie, "")
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    };
+                    response.Cookies.Add(cookie);
                 }
             }
         }
