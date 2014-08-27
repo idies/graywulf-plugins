@@ -142,23 +142,32 @@ copy $(TargetDir)$(TargetName).pdb $(SolutionDir)$(OutDir)
 
 REM copy to web bin
 
-copy $(TargetDir)$(TargetName).dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
-copy $(TargetDir)$(TargetName).pdb $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
-copy $(TargetDir)Jhu.Graywulf.Keystone.dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
-copy $(TargetDir)Jhu.Graywulf.Keystone.pdb $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
-copy $(TargetDir)Newtonsoft.Json.dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
+cd $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
+copy $(TargetDir)$(TargetName).dll .
+copy $(TargetDir)$(TargetName).pdb .
+copy $(TargetDir)Jhu.Graywulf.Keystone.dll .
+copy $(TargetDir)Jhu.Graywulf.Keystone.pdb .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb .
+copy $(TargetDir)Newtonsoft.Json.dll .
+copy $(TargetDir)DotNetOpenAuth.Core.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.RelyingParty.dll .
+
 
 REM copy to auth web bin
 
-copy $(TargetDir)$(TargetName).dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
-copy $(TargetDir)$(TargetName).pdb $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
-copy $(TargetDir)Jhu.Graywulf.Keystone.dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
-copy $(TargetDir)Jhu.Graywulf.Keystone.pdb $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
-copy $(TargetDir)Newtonsoft.Json.dll $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
+cd $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
+copy $(TargetDir)$(TargetName).dll .
+copy $(TargetDir)$(TargetName).pdb .
+copy $(TargetDir)Jhu.Graywulf.Keystone.dll .
+copy $(TargetDir)Jhu.Graywulf.Keystone.pdb .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb .
+copy $(TargetDir)Newtonsoft.Json.dll .
+copy $(TargetDir)DotNetOpenAuth.Core.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.RelyingParty.dll .
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
