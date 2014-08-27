@@ -14,6 +14,7 @@ namespace Jhu.Graywulf.Web.Security
 
         private string authorityName;
         private Uri authorityUri;
+        private Uri loginUrl;
         private string domain;
         private string project;
         private string adminToken;
@@ -48,6 +49,16 @@ namespace Jhu.Graywulf.Web.Security
         {
             get { return authorityUri; }
             set { authorityUri = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the URL where users are redirected if authentication is required.
+        /// </summary>
+        [DataMember]
+        public Uri LoginUrl
+        {
+            get { return loginUrl; }
+            set { loginUrl = value; }
         }
 
         /// <summary>
@@ -151,6 +162,7 @@ namespace Jhu.Graywulf.Web.Security
         {
             this.authorityName = Constants.AuthorityNameKeystone;
             this.authorityUri = new Uri(Constants.KeystoneDefaultUri);
+            this.loginUrl = null;
             this.domain = Constants.KeystoneDefaultDomain;
             this.adminToken = null;
             this.adminTokenExpiresAt = DateTime.MinValue;

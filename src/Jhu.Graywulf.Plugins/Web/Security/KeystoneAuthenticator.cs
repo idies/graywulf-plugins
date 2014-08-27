@@ -140,6 +140,7 @@ namespace Jhu.Graywulf.Web.Security
                     // Need to validate token against Keystone
                     var ksclient = settings.CreateClient();
                     token = ksclient.GetToken(tokenID);
+                    token.User = ksclient.GetUser(token.User.ID);
 
                     tokenCache.TryAdd(token.ID, token);
                 }
@@ -150,6 +151,7 @@ namespace Jhu.Graywulf.Web.Security
                     // Request new token here...
                     var ksclient = settings.CreateClient();
                     var newtoken = ksclient.RenewToken(token);
+                    newtoken.User = ksclient.GetUser(newtoken.User.ID);
 
                     // Update cache
                     tokenCache.TryRemove(tokenID, out token);
@@ -163,6 +165,24 @@ namespace Jhu.Graywulf.Web.Security
 
                 settings.UpdateAuthenticationResponse(response, token, IsMasterAuthority);
             }
+        }
+
+        public override void RedirectToLoginPage()
+        {
+            var url = settings.LoginUrl.ToString();
+
+            if (url.IndexOf('?') == -1)
+            {
+                url += "?";
+            }
+            else
+            {
+                url += "&";
+            }
+
+            url += "ReturnUrl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.Url.ToString());
+
+            HttpContext.Current.Response.Redirect(url);
         }
     }
 }
