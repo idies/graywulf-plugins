@@ -428,6 +428,21 @@ namespace Jhu.Graywulf.Keystone
             return Authenticate(domain, username, password, null, null);
         }
 
+        public Token Authenticate(string domain, string project, string username, string password)
+        {
+            var p = new Keystone.Project()
+            {
+                Name = project
+            };
+
+            var d = new Keystone.Domain()
+            {
+                Name = domain
+            };
+
+            return Authenticate(domain, username, password, d, p);
+        }
+
         // TODO: test
         public Token Authenticate(string username, string password, Domain scope)
         {
