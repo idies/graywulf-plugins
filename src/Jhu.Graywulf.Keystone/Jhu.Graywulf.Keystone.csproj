@@ -50,6 +50,7 @@
     <Compile Include="Keystone\AppSettings.cs" />
     <Compile Include="Keystone\Constants.cs" />
     <Compile Include="Keystone\Enum.cs" />
+    <Compile Include="Keystone\KeystoneClientBase.cs" />
     <Compile Include="Keystone\Objects\Credential.cs" />
     <Compile Include="Keystone\Objects\Endpoint.cs" />
     <Compile Include="Keystone\Objects\Entity.cs" />
