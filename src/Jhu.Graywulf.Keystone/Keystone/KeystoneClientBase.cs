@@ -7,6 +7,10 @@ using Jhu.Graywulf.SimpleRestClient;
 
 namespace Jhu.Graywulf.Keystone
 {
+    /// <summary>
+    /// Implements core function to be used with services interacting
+    /// with Keystone or any other service supporting Keystone.
+    /// </summary>
     public abstract class KeystoneClientBase : RestClient
     {
         #region Private member variables

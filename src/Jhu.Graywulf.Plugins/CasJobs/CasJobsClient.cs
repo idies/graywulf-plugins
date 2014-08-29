@@ -19,7 +19,7 @@ namespace Jhu.Graywulf.CasJobs
         }
 
         #endregion
-        #region
+        #region Client functions
 
         public User GetUser(string userID)
         {
