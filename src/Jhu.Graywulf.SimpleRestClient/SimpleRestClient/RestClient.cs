@@ -21,6 +21,10 @@ namespace Jhu.Graywulf.SimpleRestClient
             set { baseUri = value; }
         }
 
+        protected RestClient()
+        {
+        }
+
         protected RestClient(Uri baseUri)
         {
             this.baseUri = baseUri;

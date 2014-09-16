@@ -39,10 +39,13 @@ namespace Jhu.Graywulf.Keystone
                 TrusteeUserID = trustee.ID,
                 RemainingUses = 5,
                 ProjectID = project.ID,
-                Roles = new [] { role }
+                Roles = new[] { role }
             };
 
-            Client.UserToken = token1;
+            Client.UserCredentials = new KeystoneCredentials()
+            {
+                TokenID = token1.ID,
+            };
             trust = Client.Create(trust);
 
             // Try to impersonate user with trust
@@ -74,7 +77,7 @@ namespace Jhu.Graywulf.Keystone
             // Delete trust
             Client.Delete(trust);
 
-            PurgeTestEntities();            
+            PurgeTestEntities();
         }
     }
 }

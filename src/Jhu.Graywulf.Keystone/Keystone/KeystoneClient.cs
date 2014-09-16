@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
+using System.Configuration;
 using Newtonsoft.Json;
 using Jhu.Graywulf.SimpleRestClient;
 
@@ -23,9 +24,174 @@ namespace Jhu.Graywulf.Keystone
     {
         #region Constructors and initializers
 
+        public KeystoneClient()
+            : this(KeystoneConfiguration.Get())
+        {
+        }
+
+        /* TODO: delete
         public KeystoneClient(Uri baseUri)
             : base(baseUri)
         {
+        }*/
+
+        public KeystoneClient(KeystoneConfiguration configuration)
+            : base(configuration.BaseUri)
+        {
+            AdminCredentials = configuration.GetAdminCredentials();
+        }
+
+        #endregion
+        #region Authentication and token manipulation
+
+        public Token GetAdminToken()
+        {
+            return GetToken(AdminCredentials);
+        }
+
+        public Token GetUserToken()
+        {
+            return GetToken(UserCredentials);
+        }
+
+        public Token GetToken(KeystoneCredentials credentials)
+        {
+            Token token;
+
+            // If tokenID is set, use that ID. This is typically the case when the admin token is used
+            // instead of username and password to authenticate the administrator account.
+            // Otherwise try to look up a token by username. If no valid token is found request a new one
+            // using the password provided by caller code.
+
+            if (credentials.TokenID != null)
+            {
+                return new Token()
+                {
+                    ID = credentials.TokenID
+                };
+            }
+            else if (!KeystoneTokenCache.Instance.TryGetValueByUserName(credentials.ProjectName, credentials.UserName, out token))
+            {
+                // No valid token found, request a new one
+                token = Authenticate(credentials.DomainID, credentials.ProjectName, credentials.UserName, credentials.Password);
+                KeystoneTokenCache.Instance.TryAdd(token);
+            }
+
+            return token;
+        }
+
+        public Token Authenticate(string domain, string username, string password)
+        {
+            return Authenticate(domain, username, password, null, null);
+        }
+
+        public Token Authenticate(string domain, string project, string username, string password)
+        {
+            var p = new Keystone.Project()
+            {
+                Name = project
+            };
+
+            var d = new Keystone.Domain()
+            {
+                Name = domain
+            };
+
+            return Authenticate(domain, username, password, d, p);
+        }
+
+        // TODO: test
+        public Token Authenticate(string username, string password, Domain scope)
+        {
+            return Authenticate(null, username, password, scope, null);
+        }
+
+        public Token Authenticate(string username, string password, Domain scopeDomain, Project scopeProject)
+        {
+            return Authenticate(null, username, password, scopeDomain, scopeProject);
+        }
+
+        private Token Authenticate(string domain, string username, string password, Domain scopeDomain, Project scopeProject)
+        {
+            var req = AuthRequest.CreateMessage(domain, username, password, scopeDomain, scopeProject);
+            var resMessage = SendRequest<AuthRequest, AuthResponse>(
+                HttpMethod.Post, "/v3/auth/tokens", req);
+
+            var authResponse = resMessage.Body;
+
+            // Token value comes in the header
+            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
+
+            return authResponse.Token;
+        }
+
+        public Token Authenticate(Token token)
+        {
+            return Authenticate(token, null);
+        }
+
+        public Token Authenticate(Token token, Trust trust)
+        {
+            var req = AuthRequest.CreateMessage(token, trust);
+            var resMessage = SendRequest<AuthRequest, AuthResponse>(
+                HttpMethod.Post, "/v3/auth/tokens", req, GetAdminToken());
+
+            var authResponse = resMessage.Body;
+
+            // Token value comes in the header
+            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
+
+            return authResponse.Token;
+        }
+
+        public Token RenewToken(Token token)
+        {
+            var req = AuthRequest.CreateMessage(token);
+            var resMessage = SendRequest<AuthRequest, AuthResponse>(
+                HttpMethod.Post, "v3/auth/tokens", req);
+
+            var authResponse = resMessage.Body;
+
+            // Token value comes in the header
+            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
+
+            return authResponse.Token;
+        }
+
+        public Token GetToken(string tokenID)
+        {
+            var headers = new RestHeaderCollection();
+            headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, tokenID));
+
+            var resMessage = SendRequest<AuthResponse>(
+                HttpMethod.Get, "/v3/auth/tokens", headers, GetAdminToken());
+
+            var authResponse = resMessage.Body;
+
+            // Token ID comes in the header
+            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
+
+            return authResponse.Token;
+        }
+
+        public bool ValidateToken(Token token)
+        {
+            var headers = new RestHeaderCollection();
+            headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, token.ID));
+
+            var resMessage = SendRequest(
+                HttpMethod.Head, "/v3/auth/tokens", headers, GetAdminToken());
+
+            return true;
+        }
+
+        public void RevokeToken(Token token)
+        {
+            var headers = new RestHeaderCollection();
+            headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, token.ID));
+
+            var resMessage = SendRequest(
+                HttpMethod.Delete, "/v3/auth/tokens", headers, GetAdminToken());
         }
 
         #endregion
@@ -437,7 +603,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = TrustRequest.CreateMessage(trust);
             var res = SendRequest<TrustRequest, TrustResponse>(
-                HttpMethod.Post, "/v3/OS-TRUST/trusts", req, UserToken);
+                HttpMethod.Post, "/v3/OS-TRUST/trusts", req, GetUserToken());
 
             return res.Body.Trust;
         }
@@ -461,7 +627,7 @@ namespace Jhu.Graywulf.Keystone
         {
             // Get user based on trustor token and use
             // the token to create new trust
-            var trustor = GetUser(UserToken);
+            var trustor = GetUser(GetUserToken());
 
             var trust = new Trust()
             {
@@ -486,7 +652,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Delete,
                 String.Format("/v3/OS-TRUST/trusts/{0}", trust.ID),
-                UserToken);
+                GetUserToken());
         }
 
         /// <remarks>
@@ -498,7 +664,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<TrustResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts/{0}", id),
-                UserToken);
+                GetUserToken());
 
             return res.Body.Trust;
         }
@@ -520,7 +686,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<TrustListResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts?trustor_user_id={0}", trustor.ID),
-                UserToken);
+                GetUserToken());
 
             return res.Body.Trusts;
         }
@@ -534,7 +700,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<RoleListResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts/{0}/roles", trust.ID),
-                UserToken);
+                GetUserToken());
 
             return res.Body.Roles;
         }
@@ -571,7 +737,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Head,
                 String.Format("/v3/OS-TRUST/trusts/{0}/roles/{1}", trust.ID, role.ID),
-                UserToken);
+                GetUserToken());
         }
 
         /// <summary>
@@ -588,7 +754,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<RoleResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts/{0}/roles/{1}", trust.ID, role.ID),
-                UserToken);
+                GetUserToken());
 
             return res.Body.Role;
         }
