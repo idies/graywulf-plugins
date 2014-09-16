@@ -26,7 +26,7 @@ namespace Jhu.Graywulf.Web.Security
         {
             get
             {
-                return (KeystoneAuthenticationConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/Keystone/Authentication");
+                return (KeystoneAuthenticationConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/keystone/authentication");
             }
         }
 
