@@ -13,8 +13,6 @@ namespace Jhu.Graywulf.CasJobs
 {
     public class CasJobsUserDatabaseFactory : UserDatabaseFactory
     {
-
-
         public CasJobsUserDatabaseFactory(Federation federation)
             :base(federation)
         {
@@ -53,13 +51,8 @@ namespace Jhu.Graywulf.CasJobs
             // TODO: this has to be moved to the keystone client and admin token
             // needs to be cached, because getting mydb is a frequent task
 
-            var kssettings = (KeystoneSettings)Federation.Domain.Settings[Jhu.Graywulf.Web.Security.Constants.SettingsKeystone].Value;
-            var ksclient = new KeystoneClient(kssettings.AuthorityUri);
-            var cjsettings = (CasJobsSettings)Federation.Settings[Jhu.Graywulf.CasJobs.Constants.SettingsCasJobs].Value;
-            var cjclient = new CasJobsClient(cjsettings.RestServiceBaseUri)
-            {
-                AdminCredentials = kssettings.GetAdminCredentials()
-            };
+            var ksclient = new KeystoneClient();
+            var cjclient = new CasJobsClient(ksclient);
 
             var cjuser = cjclient.GetUser(keystoneID);
 
@@ -70,10 +63,12 @@ namespace Jhu.Graywulf.CasJobs
                 InitialCatalog = cjuser.MyDBName
             };
 
-            if (cjsettings.SqlUserName != null)
+            var config = CasJobsClient.Configuration;
+
+            if (config.SqlUserName != null)
             {
-                csb.UserID = cjsettings.SqlUserName;
-                csb.Password = cjsettings.SqlPassword;
+                csb.UserID = config.SqlUserName;
+                csb.Password = config.SqlPassword;
                 csb.PersistSecurityInfo = true;
                 csb.IntegratedSecurity = false;
             }

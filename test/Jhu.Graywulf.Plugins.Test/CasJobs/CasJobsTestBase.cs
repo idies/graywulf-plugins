@@ -18,11 +18,7 @@ namespace Jhu.Graywulf.CasJobs
                 if (client == null)
                 {
                     // TODO: modify once keystone settings is moved to own config section
-                    client = new CasJobsClient(new Uri(CasJobs.AppSettings.Url));
-                    client.AdminCredentials = new KeystoneCredentials()
-                    {
-                        TokenID = Keystone.AppSettings.AdminToken
-                    };
+                    client = new CasJobsClient(KeystoneClient);
                 }
 
                 return client;
@@ -36,11 +32,7 @@ namespace Jhu.Graywulf.CasJobs
                 if (keystoneClient == null)
                 {
                     // TODO: modify once keystone settings is moved to own config section
-                    keystoneClient = new KeystoneClient(new Uri(Keystone.AppSettings.Url));
-                    keystoneClient.AdminCredentials = new KeystoneCredentials()
-                    {
-                        TokenID = Keystone.AppSettings.AdminToken
-                    };
+                    keystoneClient = new KeystoneClient();
                 }
 
                 return keystoneClient;

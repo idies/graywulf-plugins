@@ -7,6 +7,5 @@ namespace Jhu.Graywulf.CasJobs
 {
     static class Constants
     {
-        public const string SettingsCasJobs = "CasJobsSettings";
     }
 }

@@ -83,7 +83,7 @@
   <ItemGroup>
     <Compile Include="CasJobs\AppSettings.cs" />
     <Compile Include="CasJobs\CasJobsClient.cs" />
-    <Compile Include="CasJobs\CasJobsSettings.cs" />
+    <Compile Include="CasJobs\CasJobsClientConfiguration.cs" />
     <Compile Include="CasJobs\CasJobsUserDatabaseFactory.cs" />
     <Compile Include="CasJobs\Constants.cs" />
     <Compile Include="CasJobs\Objects\Query.cs" />
