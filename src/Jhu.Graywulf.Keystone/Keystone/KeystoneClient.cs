@@ -22,10 +22,20 @@ namespace Jhu.Graywulf.Keystone
     /// </remarks>
     public class KeystoneClient : KeystoneClientBase
     {
+        #region Static members
+        public static KeystoneClientConfiguration Configuration
+        {
+            get
+            {
+                return (KeystoneClientConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/Keystone/Client");
+            }
+        }
+
+        #endregion
         #region Constructors and initializers
 
         public KeystoneClient()
-            : this(KeystoneConfiguration.Get())
+            : this(KeystoneClient.Configuration)
         {
         }
 
@@ -35,7 +45,7 @@ namespace Jhu.Graywulf.Keystone
         {
         }*/
 
-        public KeystoneClient(KeystoneConfiguration configuration)
+        private KeystoneClient(KeystoneClientConfiguration configuration)
             : base(configuration.BaseUri)
         {
             AdminCredentials = configuration.GetAdminCredentials();

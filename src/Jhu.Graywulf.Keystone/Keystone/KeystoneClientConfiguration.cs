@@ -7,11 +7,14 @@ using System.Runtime.Serialization;
 
 namespace Jhu.Graywulf.Keystone
 {
-    public class KeystoneConfiguration : ConfigurationSection
+    public class KeystoneClientConfiguration : ConfigurationSection
     {
         #region Static declarations
 
         private static ConfigurationPropertyCollection properties;
+
+        private static readonly ConfigurationProperty propAuthorityName = new ConfigurationProperty(
+            "authorityName", typeof(string), Constants.KeystoneAuthorityName, ConfigurationPropertyOptions.None);
 
         private static readonly ConfigurationProperty propBaseUri = new ConfigurationProperty(
             "baseUri", typeof(Uri), new Uri(Constants.KeystoneDefaultUri), ConfigurationPropertyOptions.IsRequired);
@@ -34,10 +37,11 @@ namespace Jhu.Graywulf.Keystone
         private static readonly ConfigurationProperty propAdminPassword = new ConfigurationProperty(
             "adminPassword", typeof(string), null, ConfigurationPropertyOptions.None);
 
-        static KeystoneConfiguration()
+        static KeystoneClientConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
 
+            properties.Add(propAuthorityName);
             properties.Add(propBaseUri);
             properties.Add(propDomain);
             properties.Add(propProject);
@@ -47,13 +51,15 @@ namespace Jhu.Graywulf.Keystone
             properties.Add(propAdminPassword);
         }
 
-        public static KeystoneConfiguration Get()
-        {
-            return (KeystoneConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/Keystone");
-        }
-
         #endregion
         #region Properties
+
+        [ConfigurationProperty("authorityName")]
+        public string AuthorityName
+        {
+            get { return (string)base[propAuthorityName]; }
+            set { base[propAuthorityName] = value; }
+        }
 
         /// <summary>
         /// Gets or sets the base URL of the Keystone service
@@ -134,7 +140,7 @@ namespace Jhu.Graywulf.Keystone
         #endregion
         #region Constructors and initializers
 
-        public KeystoneConfiguration()
+        public KeystoneClientConfiguration()
         {
         }
 

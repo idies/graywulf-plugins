@@ -7,6 +7,8 @@ namespace Jhu.Graywulf.Keystone
 {
     internal static class Constants
     {
+        public const string KeystoneAuthorityName = "Keystone";
+
         /// <summary>
         /// Header name for passing token for authentication
         /// </summary>

@@ -89,12 +89,10 @@
     <Compile Include="CasJobs\Objects\Query.cs" />
     <Compile Include="CasJobs\Objects\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Schema\CasJobsSettings.cs" />
-    <Compile Include="Schema\CasJobsUserDatabaseFactory.cs" />
     <Compile Include="Web\Security\Constants.cs" />
-    <Compile Include="Web\Security\KeystoneAuthenticator.cs" />
+    <Compile Include="Web\Security\KeystoneAuthentication.cs" />
+    <Compile Include="Web\Security\KeystoneAuthenticationConfiguration.cs" />
     <Compile Include="Web\Security\KeystoneIdentityProvider.cs" />
-    <Compile Include="Web\Security\KeystoneSettings.cs" />
     <Compile Include="Web\Security\OpenIDAuthenticator.cs" />
   </ItemGroup>
   <ItemGroup>

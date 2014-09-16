@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Configuration;
 using Jhu.Graywulf.Registry;
 
 namespace Jhu.Graywulf.Web.Security
@@ -13,17 +14,7 @@ namespace Jhu.Graywulf.Web.Security
     /// </summary>
     public class KeystoneIdentityProvider : GraywulfIdentityProvider
     {
-        #region Private member variables
-
-        private KeystoneSettings settings;
-
-        #endregion
         #region Properties
-
-        public KeystoneSettings Settings
-        {
-            get { return settings; }
-        }
 
         /// <summary>
         /// Gets a configures Keystone client class.
@@ -32,7 +23,7 @@ namespace Jhu.Graywulf.Web.Security
         {
             get
             {
-                return settings.CreateClient();
+                return new Keystone.KeystoneClient();
             }
         }
 
@@ -43,13 +34,10 @@ namespace Jhu.Graywulf.Web.Security
             : base(domain)
         {
             InitializeMembers();
-
-            settings = (KeystoneSettings)domain.Settings[Constants.SettingsKeystone].Value;
         }
 
         private void InitializeMembers()
         {
-            this.settings = new KeystoneSettings();
         }
 
         #endregion
@@ -61,10 +49,12 @@ namespace Jhu.Graywulf.Web.Security
         /// <returns></returns>
         private Jhu.Graywulf.Keystone.User ConvertUser(User graywulfUser)
         {
+            var config = Keystone.KeystoneClient.Configuration;
+
             var keystoneUser = new Keystone.User()
             {
                 Name = graywulfUser.Name.ToLowerInvariant(),
-                DomainID = settings.Domain.ToLowerInvariant(),
+                DomainID = config.Domain.ToLowerInvariant(),
                 Description = graywulfUser.Comments,
                 Email = graywulfUser.Email.ToLowerInvariant(),
                 Enabled = graywulfUser.DeploymentState == DeploymentState.Deployed,
@@ -99,15 +89,19 @@ namespace Jhu.Graywulf.Web.Security
         /// <returns></returns>
         private string GetIdentityName(User user)
         {
-            return String.Format("{0}_{1}", settings.AuthorityName, user.Name);
+            var config = Keystone.KeystoneClient.Configuration;
+
+            return String.Format("{0}_{1}", config.AuthorityName, user.Name);
         }
 
         #region User account manipulation
 
         private Keystone.User GetKeystoneUser(string username)
         {
+            var config = Keystone.KeystoneClient.Configuration;
+
             // Try to get user from Keystone
-            var users = KeystoneClient.FindUsers(settings.Domain.ToLowerInvariant(), username.ToLowerInvariant(), false, false);
+            var users = KeystoneClient.FindUsers(config.Domain.ToLowerInvariant(), username.ToLowerInvariant(), false, false);
 
             if (users == null)
             {
@@ -152,6 +146,8 @@ namespace Jhu.Graywulf.Web.Security
 
         protected override void OnCreateUser(User user)
         {
+            var config = Keystone.KeystoneClient.Configuration;
+
             // Create user in keystone
             var keystoneUser = KeystoneClient.Create(ConvertUser(user));
 
@@ -159,7 +155,7 @@ namespace Jhu.Graywulf.Web.Security
             var keystoneProject = new Keystone.Project
             {
                 Name = user.Name.ToLowerInvariant(),
-                DomainID = settings.Domain.ToLowerInvariant(),
+                DomainID = config.Domain.ToLowerInvariant(),
             };
             keystoneProject = KeystoneClient.Create(keystoneProject);
 
@@ -173,7 +169,7 @@ namespace Jhu.Graywulf.Web.Security
             // taken from the username.
             foreach (var userRole in user.UserRoleMemberships.Values.Where(r => r.UserRole.Default))
             {
-                var roles = KeystoneClient.FindRoles(settings.Domain, userRole.Name, true, false);
+                var roles = KeystoneClient.FindRoles(config.Domain, userRole.Name, true, false);
                 if (roles == null || roles.Length == 0)
                 {
                     throw new Exception("No matching role found");      // TODO: ***
@@ -183,7 +179,7 @@ namespace Jhu.Graywulf.Web.Security
             }
 
             // Add identity to local principal
-            var principal = settings.CreateAuthenticatedPrincipal(keystoneUser, true);
+            var principal = KeystoneAuthentication.CreateAuthenticatedPrincipal(keystoneUser, true);
             AddUserIdentity(user, principal.Identity);
         }
 
@@ -207,8 +203,10 @@ namespace Jhu.Graywulf.Web.Security
 
         public override bool IsNameExisting(string username)
         {
+            var config = Keystone.KeystoneClient.Configuration;
+
             // Try to get user from Keystone
-            var users = KeystoneClient.FindUsers(settings.Domain.ToLowerInvariant(), username.ToLowerInvariant(), false, false);
+            var users = KeystoneClient.FindUsers(config.Domain.ToLowerInvariant(), username.ToLowerInvariant(), false, false);
 
             return users != null && users.Length > 0;
         }
@@ -247,6 +245,8 @@ namespace Jhu.Graywulf.Web.Security
 
         public override AuthenticationResponse VerifyPassword(AuthenticationRequest request)
         {
+            var config = Keystone.KeystoneClient.Configuration;
+
             // User needs to be authenticated in the scope of a project (tenant).
             // Since a tenant with the same name is generated for each user in keystone, we
             // use the username as project name.
@@ -257,7 +257,7 @@ namespace Jhu.Graywulf.Web.Security
 
             var domain = new Keystone.Domain()
             {
-                Name = settings.Domain.ToLowerInvariant()
+                Name = config.Domain.ToLowerInvariant()
             };
 
             // Verify user password in Keystone, we don't use
@@ -269,7 +269,7 @@ namespace Jhu.Graywulf.Web.Security
 
             // Create a response, this sets necessary response headers
             var response = new AuthenticationResponse(request);
-            settings.UpdateAuthenticationResponse(response, token, true);
+            KeystoneAuthentication.UpdateAuthenticationResponse(response, token, true);
 
             // Load user from the graywulf registry. This call will create the user
             // if necessary because authority is set to master
@@ -293,6 +293,5 @@ namespace Jhu.Graywulf.Web.Security
         }
 
         #endregion
-
     }
 }

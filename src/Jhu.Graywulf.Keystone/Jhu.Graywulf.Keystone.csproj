@@ -50,7 +50,7 @@
     <Compile Include="Keystone\Constants.cs" />
     <Compile Include="Keystone\Enum.cs" />
     <Compile Include="Keystone\KeystoneClientBase.cs" />
-    <Compile Include="Keystone\KeystoneConfiguration.cs" />
+    <Compile Include="Keystone\KeystoneClientConfiguration.cs" />
     <Compile Include="Keystone\KeystoneTokenCache.cs" />
     <Compile Include="Keystone\Objects\Credential.cs">
       <SubType>Code</SubType>
