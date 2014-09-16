@@ -14,14 +14,27 @@ namespace Jhu.Graywulf.CasJobs
         {
             var ksuser = KeystoneClient.FindUsers("default", "test1", false, false)[0];
 
-            Client.AdminAuthToken = KeystoneClient.Authenticate("default", "admin", "admin", "almafa").ID;
+            Client.AdminCredentials = new Keystone.KeystoneCredentials()
+            {
+                DomainID = "default",
+                ProjectName = "admin",
+                UserName = "admin",
+                Password = "almafa",
+            };
+
             var user = Client.GetUser(ksuser.ID);
         }
 
         [TestMethod]
         public void CreateUserTest()
         {
-            Client.AdminAuthToken = KeystoneClient.Authenticate("default", "admin", "admin", "almafa").ID;
+            Client.AdminCredentials = new Keystone.KeystoneCredentials()
+            {
+                DomainID = "default",
+                ProjectName = "admin",
+                UserName = "admin",
+                Password = "almafa",
+            };
 
             var ksuser = KeystoneClient.FindUsers("default", "test1", false, false)[0];
 
@@ -37,7 +50,7 @@ namespace Jhu.Graywulf.CasJobs
 
             // Now submit a dummy job to force mydb creation
 
-            Client.UserAuthToken = KeystoneClient.Authenticate("default", "test1", "test1", "alma").ID;
+            Client.UserToken = KeystoneClient.Authenticate("default", "test1", "test1", "alma");
 
             var query = new Query()
             {

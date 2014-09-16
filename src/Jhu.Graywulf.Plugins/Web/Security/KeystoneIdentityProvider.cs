@@ -32,10 +32,7 @@ namespace Jhu.Graywulf.Web.Security
         {
             get
             {
-                return new Keystone.KeystoneClient(settings.AuthorityUri)
-                {
-                    AdminAuthToken = settings.AdminToken,
-                };
+                return settings.CreateClient();
             }
         }
 

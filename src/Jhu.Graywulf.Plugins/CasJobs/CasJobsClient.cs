@@ -24,7 +24,7 @@ namespace Jhu.Graywulf.CasJobs
         public User GetUser(string userID)
         {
             var res = SendRequest<User>(
-                HttpMethod.Get, String.Format("/users/{0}", userID), AdminAuthToken);
+                HttpMethod.Get, String.Format("/users/{0}", userID), GetAdminToken());
 
             return res.Body;
         }
@@ -33,14 +33,14 @@ namespace Jhu.Graywulf.CasJobs
         {
             var req = new RestMessage<User>(user);
             var res = SendRequest<User>(
-                HttpMethod.Put, String.Format("/users/{0}", keystoneUserID), req, AdminAuthToken);
+                HttpMethod.Put, String.Format("/users/{0}", keystoneUserID), req, GetAdminToken());
         }
 
         public void Submit(string context, Query query)
         {
             var req = new RestMessage<Query>(query);
             var res = SendRequest<Query>(
-                HttpMethod.Post, String.Format("/contexts/{0}/query", context), req, UserAuthToken);
+                HttpMethod.Post, String.Format("/contexts/{0}/query", context), req, UserToken);
         }
 
         #endregion

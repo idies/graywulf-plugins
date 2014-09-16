@@ -34,7 +34,7 @@ namespace Jhu.Graywulf.Keystone
         public Version GetVersion()
         {
             var res = SendRequest<VersionResponse>(
-                HttpMethod.Get, "/v3", AdminAuthToken);
+                HttpMethod.Get, "/v3", GetAdminToken());
 
             return res.Body.Version;
         }
@@ -46,7 +46,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = DomainRequest.CreateMessage(domain);
             var res = SendRequest<DomainRequest, DomainResponse>(
-                HttpMethod.Post, "/v3/domains", req, AdminAuthToken);
+                HttpMethod.Post, "/v3/domains", req, GetAdminToken());
 
             return res.Body.Domain;
         }
@@ -55,7 +55,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = DomainRequest.CreateMessage(domain);
             var res = SendRequest<DomainRequest, DomainResponse>(
-                HttpMethod.Patch, String.Format("/v3/domains/{0}", domain.ID), req, AdminAuthToken);
+                HttpMethod.Patch, String.Format("/v3/domains/{0}", domain.ID), req, GetAdminToken());
 
             return res.Body.Domain;
         }
@@ -67,13 +67,13 @@ namespace Jhu.Graywulf.Keystone
             Update(domain);
 
             // Now it can be deleted
-            SendRequest(HttpMethod.Delete, String.Format("/v3/domains/{0}", domain.ID), AdminAuthToken);
+            SendRequest(HttpMethod.Delete, String.Format("/v3/domains/{0}", domain.ID), GetAdminToken());
         }
 
         public Domain GetDomain(string id)
         {
             var res = SendRequest<DomainResponse>(
-                HttpMethod.Get, String.Format("/v3/domains/{0}", id), AdminAuthToken);
+                HttpMethod.Get, String.Format("/v3/domains/{0}", id), GetAdminToken());
 
             return res.Body.Domain;
         }
@@ -81,7 +81,7 @@ namespace Jhu.Graywulf.Keystone
         public Domain[] ListDomains()
         {
             var res = SendRequest<DomainListResponse>(
-                HttpMethod.Get, "/v3/domains", AdminAuthToken);
+                HttpMethod.Get, "/v3/domains", GetAdminToken());
 
             return res.Body.Domains;
         }
@@ -93,7 +93,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = ProjectRequest.CreateMessage(project);
             var res = SendRequest<ProjectRequest, ProjectResponse>(
-                HttpMethod.Post, "/v3/projects", req, AdminAuthToken);
+                HttpMethod.Post, "/v3/projects", req, GetAdminToken());
 
             return res.Body.Project;
         }
@@ -102,7 +102,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = ProjectRequest.CreateMessage(project);
             var res = SendRequest<ProjectRequest, ProjectResponse>(
-                HttpMethod.Patch, String.Format("/v3/projects/{0}", project.ID), req, AdminAuthToken);
+                HttpMethod.Patch, String.Format("/v3/projects/{0}", project.ID), req, GetAdminToken());
 
             return res.Body.Project;
         }
@@ -110,13 +110,13 @@ namespace Jhu.Graywulf.Keystone
         public void Delete(Project project)
         {
             // Now it can be deleted
-            SendRequest(HttpMethod.Delete, String.Format("/v3/projects/{0}", project.ID), AdminAuthToken);
+            SendRequest(HttpMethod.Delete, String.Format("/v3/projects/{0}", project.ID), GetAdminToken());
         }
 
         public Project GetProject(string id)
         {
             var res = SendRequest<ProjectResponse>(
-                HttpMethod.Get, String.Format("/v3/projects/{0}", id), AdminAuthToken);
+                HttpMethod.Get, String.Format("/v3/projects/{0}", id), GetAdminToken());
 
             return res.Body.Project;
         }
@@ -124,7 +124,7 @@ namespace Jhu.Graywulf.Keystone
         public Project[] ListProjects()
         {
             var res = SendRequest<ProjectListResponse>(
-                HttpMethod.Get, "/v3/projects", AdminAuthToken);
+                HttpMethod.Get, "/v3/projects", GetAdminToken());
 
             return res.Body.Projects;
         }
@@ -132,7 +132,7 @@ namespace Jhu.Graywulf.Keystone
         public Project[] ListProjects(string domainID)
         {
             var res = SendRequest<ProjectListResponse>(
-                HttpMethod.Get, String.Format("/v3/domains/{0}/projects", domainID), AdminAuthToken);
+                HttpMethod.Get, String.Format("/v3/domains/{0}/projects", domainID), GetAdminToken());
 
             return res.Body.Projects;
         }
@@ -141,7 +141,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var query = BuildSearchQueryString(domainID, name, enabledOnly, caseInsensitive);
             var res = SendRequest<ProjectListResponse>(
-                HttpMethod.Get, "/v3/projects" + query, AdminAuthToken);
+                HttpMethod.Get, "/v3/projects" + query, GetAdminToken());
 
             return res.Body.Projects;
         }
@@ -153,7 +153,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = RoleRequest.CreateMessage(role);
             var res = SendRequest<RoleRequest, RoleResponse>(
-                HttpMethod.Post, "/v3/roles", req, AdminAuthToken);
+                HttpMethod.Post, "/v3/roles", req, GetAdminToken());
 
             return res.Body.Role;
         }
@@ -162,7 +162,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = RoleRequest.CreateMessage(project);
             var res = SendRequest<RoleRequest, RoleResponse>(
-                HttpMethod.Patch, String.Format("/v3/roles/{0}", project.ID), req, AdminAuthToken);
+                HttpMethod.Patch, String.Format("/v3/roles/{0}", project.ID), req, GetAdminToken());
 
             return res.Body.Role;
         }
@@ -170,13 +170,13 @@ namespace Jhu.Graywulf.Keystone
         public void Delete(Role role)
         {
             // Now it can be deleted
-            SendRequest(HttpMethod.Delete, String.Format("/v3/roles/{0}", role.ID), AdminAuthToken);
+            SendRequest(HttpMethod.Delete, String.Format("/v3/roles/{0}", role.ID), GetAdminToken());
         }
 
         public Role GetRole(string id)
         {
             var res = SendRequest<RoleResponse>(
-                HttpMethod.Get, String.Format("/v3/roles/{0}", id), AdminAuthToken);
+                HttpMethod.Get, String.Format("/v3/roles/{0}", id), GetAdminToken());
 
             return res.Body.Role;
         }
@@ -184,7 +184,7 @@ namespace Jhu.Graywulf.Keystone
         public Role[] ListRoles()
         {
             var res = SendRequest<RoleListResponse>(
-                HttpMethod.Get, "/v3/roles", AdminAuthToken);
+                HttpMethod.Get, "/v3/roles", GetAdminToken());
 
             return res.Body.Roles;
         }
@@ -192,7 +192,7 @@ namespace Jhu.Graywulf.Keystone
         public Role[] ListRoles(string domainID)
         {
             var res = SendRequest<RoleListResponse>(
-                HttpMethod.Get, String.Format("/v3/domains/{0}/roles", domainID), AdminAuthToken);
+                HttpMethod.Get, String.Format("/v3/domains/{0}/roles", domainID), GetAdminToken());
 
             return res.Body.Roles;
         }
@@ -204,7 +204,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = GroupRequest.CreateMessage(group);
             var res = SendRequest<GroupRequest, GroupResponse>(
-                HttpMethod.Post, "/v3/groups", req, AdminAuthToken);
+                HttpMethod.Post, "/v3/groups", req, GetAdminToken());
 
             return res.Body.Group;
         }
@@ -213,20 +213,20 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = GroupRequest.CreateMessage(group);
             var res = SendRequest<GroupRequest, GroupResponse>(
-                HttpMethod.Patch, String.Format("/v3/groups/{0}", group.ID), req, AdminAuthToken);
+                HttpMethod.Patch, String.Format("/v3/groups/{0}", group.ID), req, GetAdminToken());
 
             return res.Body.Group;
         }
 
         public void Delete(Group group)
         {
-            SendRequest(HttpMethod.Delete, String.Format("/v3/groups/{0}", group.ID), AdminAuthToken);
+            SendRequest(HttpMethod.Delete, String.Format("/v3/groups/{0}", group.ID), GetAdminToken());
         }
 
         public Group GetGroup(string id)
         {
             var res = SendRequest<GroupResponse>(
-                HttpMethod.Get, String.Format("/v3/groups/{0}", id), AdminAuthToken);
+                HttpMethod.Get, String.Format("/v3/groups/{0}", id), GetAdminToken());
 
             return res.Body.Group;
         }
@@ -234,7 +234,7 @@ namespace Jhu.Graywulf.Keystone
         public Group[] ListGroups()
         {
             var res = SendRequest<GroupListResponse>(
-                HttpMethod.Get, "/v3/groups", AdminAuthToken);
+                HttpMethod.Get, "/v3/groups", GetAdminToken());
 
             return res.Body.Groups;
         }
@@ -246,7 +246,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = UserRequest.CreateMessage(user);
             var res = SendRequest<UserRequest, UserResponse>(
-                HttpMethod.Post, "/v3/users", req, AdminAuthToken);
+                HttpMethod.Post, "/v3/users", req, GetAdminToken());
 
             return res.Body.User;
         }
@@ -255,14 +255,14 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = UserRequest.CreateMessage(user);
             var res = SendRequest<UserRequest, UserResponse>(
-                HttpMethod.Patch, String.Format("/v3/users/{0}", user.ID), req, AdminAuthToken);
+                HttpMethod.Patch, String.Format("/v3/users/{0}", user.ID), req, GetAdminToken());
 
             return res.Body.User;
         }
 
         public void Delete(User user)
         {
-            SendRequest(HttpMethod.Delete, String.Format("/v3/users/{0}", user.ID), AdminAuthToken);
+            SendRequest(HttpMethod.Delete, String.Format("/v3/users/{0}", user.ID), GetAdminToken());
         }
 
         public void ResetPassword(string userID, string newPassword)
@@ -275,7 +275,7 @@ namespace Jhu.Graywulf.Keystone
             var req = UserRequest.CreateMessage(user);
 
             SendRequest<UserRequest>(
-                HttpMethod.Patch, String.Format("/v3/users/{0}", userID), req, AdminAuthToken);
+                HttpMethod.Patch, String.Format("/v3/users/{0}", userID), req, GetAdminToken());
         }
 
         public void ChangePassword(string userID, string oldPassword, string newPassword)
@@ -289,13 +289,13 @@ namespace Jhu.Graywulf.Keystone
             var req = UserRequest.CreateMessage(user);
 
             SendRequest<UserRequest>(
-                HttpMethod.Post, String.Format("/v3/users/{0}/password", userID), req, AdminAuthToken);
+                HttpMethod.Post, String.Format("/v3/users/{0}/password", userID), req, GetAdminToken());
         }
 
         public User GetUser(string id)
         {
             var res = SendRequest<UserResponse>(
-                HttpMethod.Get, String.Format("/v3/users/{0}", id), AdminAuthToken);
+                HttpMethod.Get, String.Format("/v3/users/{0}", id), GetAdminToken());
 
             return res.Body.User;
         }
@@ -312,7 +312,7 @@ namespace Jhu.Graywulf.Keystone
         public User[] ListUsers()
         {
             var res = SendRequest<UserListResponse>(
-                HttpMethod.Get, "/v3/users", AdminAuthToken);
+                HttpMethod.Get, "/v3/users", GetAdminToken());
 
             return res.Body.Users;
         }
@@ -322,7 +322,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<UserListResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/groups/{0}/users", group.ID),
-                AdminAuthToken);
+                GetAdminToken());
 
             return res.Body.Users;
         }
@@ -331,7 +331,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var query = BuildSearchQueryString(domainID, name, enabledOnly, caseInsensitive);
             var res = SendRequest<UserListResponse>(
-                HttpMethod.Get, "/v3/users" + query, AdminAuthToken);
+                HttpMethod.Get, "/v3/users" + query, GetAdminToken());
 
             return res.Body.Users;
         }
@@ -341,7 +341,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Put,
                 String.Format("/v3/groups/{0}/users/{1} ", group.ID, user.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void RemoveFromGroup(User user, Group group)
@@ -349,7 +349,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Delete,
                 String.Format("/v3/groups/{0}/users/{1} ", group.ID, user.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void CheckGroup(User user, Group group)
@@ -357,7 +357,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Head,
                 String.Format("/v3/groups/{0}/users/{1} ", group.ID, user.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void GrantRole(Domain domain, User user, Role role)
@@ -365,7 +365,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Put,
                 String.Format("/v3/domains/{0}/users/{1}/roles/{2}", domain.ID, user.ID, role.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void RevokeRole(Domain domain, User user, Role role)
@@ -373,7 +373,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Delete,
                 String.Format("/v3/domains/{0}/users/{1}/roles/{2}", domain.ID, user.ID, role.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void CheckRole(Domain domain, User user, Role role)
@@ -381,7 +381,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Head,
                 String.Format("/v3/domains/{0}/users/{1}/roles/{2}", domain.ID, user.ID, role.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public Role[] ListRoles(Domain domain, User user)
@@ -395,7 +395,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Put,
                 String.Format("/v3/projects/{0}/users/{1}/roles/{2}", project.ID, user.ID, role.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void RevokeRole(Project project, User user, Role role)
@@ -403,7 +403,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Delete,
                 String.Format("/v3/projects/{0}/users/{1}/roles/{2}", project.ID, user.ID, role.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void CheckRole(Project project, User user, Role role)
@@ -411,7 +411,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Head,
                 String.Format("/v3/projects/{0}/users/{1}/roles/{2}", project.ID, user.ID, role.ID),
-                AdminAuthToken);
+                GetAdminToken());
         }
 
         public void ListRoles(Project project, User user)
@@ -421,123 +421,7 @@ namespace Jhu.Graywulf.Keystone
         }
 
         #endregion
-        #region Authentication and token manipulation
-
-        public Token Authenticate(string domain, string username, string password)
-        {
-            return Authenticate(domain, username, password, null, null);
-        }
-
-        public Token Authenticate(string domain, string project, string username, string password)
-        {
-            var p = new Keystone.Project()
-            {
-                Name = project
-            };
-
-            var d = new Keystone.Domain()
-            {
-                Name = domain
-            };
-
-            return Authenticate(domain, username, password, d, p);
-        }
-
-        // TODO: test
-        public Token Authenticate(string username, string password, Domain scope)
-        {
-            return Authenticate(null, username, password, scope, null);
-        }
-
-        public Token Authenticate(string username, string password, Domain scopeDomain, Project scopeProject)
-        {
-            return Authenticate(null, username, password, scopeDomain, scopeProject);
-        }
-
-        private Token Authenticate(string domain, string username, string password, Domain scopeDomain, Project scopeProject)
-        {
-            var req = AuthRequest.CreateMessage(domain, username, password, scopeDomain, scopeProject);
-            var resMessage = SendRequest<AuthRequest, AuthResponse>(
-                HttpMethod.Post, "/v3/auth/tokens", req);
-
-            var authResponse = resMessage.Body;
-
-            // Token value comes in the header
-            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
-
-            return authResponse.Token;
-        }
-
-        public Token Authenticate(Token token)
-        {
-            return Authenticate(token, null);
-        }
-
-        public Token Authenticate(Token token, Trust trust)
-        {
-            var req = AuthRequest.CreateMessage(token, trust);
-            var resMessage = SendRequest<AuthRequest, AuthResponse>(
-                HttpMethod.Post, "/v3/auth/tokens", req, AdminAuthToken);
-
-            var authResponse = resMessage.Body;
-
-            // Token value comes in the header
-            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
-
-            return authResponse.Token;
-        }
-
-        public Token RenewToken(Token token)
-        {
-            var req = AuthRequest.CreateMessage(token);
-            var resMessage = SendRequest<AuthRequest, AuthResponse>(
-                HttpMethod.Post, "v3/auth/tokens", req);
-
-            var authResponse = resMessage.Body;
-
-            // Token value comes in the header
-            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
-
-            return authResponse.Token;
-        }
-
-        public Token GetToken(string tokenID)
-        {
-            var headers = new RestHeaderCollection();
-            headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, tokenID));
-
-            var resMessage = SendRequest<AuthResponse>(
-                HttpMethod.Get, "/v3/auth/tokens", headers, AdminAuthToken);
-
-            var authResponse = resMessage.Body;
-
-            // Token ID comes in the header
-            authResponse.Token.ID = resMessage.Headers[Constants.KeystoneXSubjectTokenHeader].Value;
-
-            return authResponse.Token;
-        }
-
-        public bool ValidateToken(Token token)
-        {
-            var headers = new RestHeaderCollection();
-            headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, token.ID));
-
-            var resMessage = SendRequest(
-                HttpMethod.Head, "/v3/auth/tokens", headers, AdminAuthToken);
-
-            return true;
-        }
-
-        public void RevokeToken(Token token)
-        {
-            var headers = new RestHeaderCollection();
-            headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, token.ID));
-
-            var resMessage = SendRequest(
-                HttpMethod.Delete, "/v3/auth/tokens", headers, AdminAuthToken);
-        }
-
-        #endregion
+        
         #region Trusts
 
         /// <summary>
@@ -553,7 +437,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var req = TrustRequest.CreateMessage(trust);
             var res = SendRequest<TrustRequest, TrustResponse>(
-                HttpMethod.Post, "/v3/OS-TRUST/trusts", req, UserAuthToken);
+                HttpMethod.Post, "/v3/OS-TRUST/trusts", req, UserToken);
 
             return res.Body.Trust;
         }
@@ -577,7 +461,7 @@ namespace Jhu.Graywulf.Keystone
         {
             // Get user based on trustor token and use
             // the token to create new trust
-            var trustor = GetUser(UserAuthToken);
+            var trustor = GetUser(UserToken);
 
             var trust = new Trust()
             {
@@ -602,7 +486,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Delete,
                 String.Format("/v3/OS-TRUST/trusts/{0}", trust.ID),
-                UserAuthToken);
+                UserToken);
         }
 
         /// <remarks>
@@ -614,7 +498,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<TrustResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts/{0}", id),
-                UserAuthToken);
+                UserToken);
 
             return res.Body.Trust;
         }
@@ -622,7 +506,7 @@ namespace Jhu.Graywulf.Keystone
         public Trust[] ListTrusts()
         {
             var res = SendRequest<TrustListResponse>(
-                HttpMethod.Get, "/v3/OS-TRUST/trusts", AdminAuthToken);
+                HttpMethod.Get, "/v3/OS-TRUST/trusts", GetAdminToken());
 
             return res.Body.Trusts;
         }
@@ -636,7 +520,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<TrustListResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts?trustor_user_id={0}", trustor.ID),
-                UserAuthToken);
+                UserToken);
 
             return res.Body.Trusts;
         }
@@ -650,7 +534,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<RoleListResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts/{0}/roles", trust.ID),
-                UserAuthToken);
+                UserToken);
 
             return res.Body.Roles;
         }
@@ -667,7 +551,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var query = BuildSearchQueryString(domainID, name, enabledOnly, caseInsensitive);
             var res = SendRequest<RoleListResponse>(
-                HttpMethod.Get, "/v3/roles" + query, AdminAuthToken);
+                HttpMethod.Get, "/v3/roles" + query, GetAdminToken());
 
             return res.Body.Roles;
         }
@@ -687,7 +571,7 @@ namespace Jhu.Graywulf.Keystone
             SendRequest(
                 HttpMethod.Head,
                 String.Format("/v3/OS-TRUST/trusts/{0}/roles/{1}", trust.ID, role.ID),
-                UserAuthToken);
+                UserToken);
         }
 
         /// <summary>
@@ -704,7 +588,7 @@ namespace Jhu.Graywulf.Keystone
             var res = SendRequest<RoleResponse>(
                 HttpMethod.Get,
                 String.Format("/v3/OS-TRUST/trusts/{0}/roles/{1}", trust.ID, role.ID),
-                UserAuthToken);
+                UserToken);
 
             return res.Body.Role;
         }

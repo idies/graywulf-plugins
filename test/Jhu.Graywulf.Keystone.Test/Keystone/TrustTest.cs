@@ -42,7 +42,7 @@ namespace Jhu.Graywulf.Keystone
                 Roles = new [] { role }
             };
 
-            Client.UserAuthToken = token1.ID;
+            Client.UserToken = token1;
             trust = Client.Create(trust);
 
             // Try to impersonate user with trust

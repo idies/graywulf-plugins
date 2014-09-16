@@ -177,36 +177,25 @@ namespace Jhu.Graywulf.Web.Security
 
         #endregion
 
+        public KeystoneCredentials GetAdminCredentials()
+        {
+            return new Keystone.KeystoneCredentials()
+                {
+                    TokenID = adminToken,
+                    DomainID = domain,
+                    ProjectName = adminProject,
+                    UserName = adminUserName,
+                    Password = adminPassword,
+                };
+        }
+
         public KeystoneClient CreateClient()
         {
-            var ksclient = new KeystoneClient(AuthorityUri);
-
-            // If using password authentication, make sure we have a valid admin token
-            // Leave e 30 second margin to perform all keystone-related operations with an
-            // already existing token
-            if (!String.IsNullOrWhiteSpace(adminPassword) && (DateTime.Now - adminTokenExpiresAt).TotalSeconds > -30)
+            var ksclient = new KeystoneClient(AuthorityUri)
             {
-                lock (this)
-                {
-                    var project = new Keystone.Project()
-                    {
-                        Name = adminProject
-                    };
-
-                    var d = new Keystone.Domain()
-                    {
-                        Name = domain
-                    };
-
-                    var token = ksclient.Authenticate(adminUserName, adminPassword, d, project);
-
-                    adminToken = token.ID;
-                    adminTokenExpiresAt = token.ExpiresAt;
-                }
-            }
-
-            // Set the valid admin token
-            ksclient.AdminAuthToken = adminToken;
+                // Set the valid admin token
+                AdminCredentials = GetAdminCredentials()
+            };
 
             return ksclient;
         }

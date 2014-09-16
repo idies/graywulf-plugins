@@ -56,9 +56,10 @@ namespace Jhu.Graywulf.CasJobs
             var kssettings = (KeystoneSettings)Federation.Domain.Settings[Jhu.Graywulf.Web.Security.Constants.SettingsKeystone].Value;
             var ksclient = new KeystoneClient(kssettings.AuthorityUri);
             var cjsettings = (CasJobsSettings)Federation.Settings[Jhu.Graywulf.CasJobs.Constants.SettingsCasJobs].Value;
-            var cjclient = new CasJobsClient(cjsettings.RestServiceBaseUri);
-
-            cjclient.AdminAuthToken = ksclient.Authenticate(kssettings.Domain, kssettings.AdminProject, kssettings.AdminUserName, kssettings.AdminPassword).ID;
+            var cjclient = new CasJobsClient(cjsettings.RestServiceBaseUri)
+            {
+                AdminCredentials = kssettings.GetAdminCredentials()
+            };
 
             var cjuser = cjclient.GetUser(keystoneID);
 
