@@ -14,7 +14,7 @@ namespace Jhu.Graywulf.Web.Security
     /// <summary>
     /// Implements OpenID authentication.
     /// </summary>
-    public class OpenIDAuthenticator : Authenticator
+    public class OpenIDAuthentication : Authentication
     {
         #region Private member variables
 
@@ -46,7 +46,7 @@ namespace Jhu.Graywulf.Web.Security
         #endregion
         #region Constructors and initializers
 
-        public OpenIDAuthenticator()
+        public OpenIDAuthentication()
         {
             InitializeMembers();
         }

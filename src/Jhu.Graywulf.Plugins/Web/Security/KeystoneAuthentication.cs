@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using System.Web;
 using System.Web.Security;
 using System.Configuration;
-using System.Runtime.Serialization;
 using Jhu.Graywulf.Components;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Keystone;
@@ -19,7 +18,7 @@ namespace Jhu.Graywulf.Web.Security
     /// Implements functions to authenticate an HTTP request based on
     /// a Keystone token in the header
     /// </summary>
-    public class KeystoneAuthentication : Authenticator
+    public class KeystoneAuthentication : Authentication
     {
         #region Static members
         public static KeystoneAuthenticationConfiguration Configuration
@@ -28,23 +27,6 @@ namespace Jhu.Graywulf.Web.Security
             {
                 return (KeystoneAuthenticationConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/keystone/authentication");
             }
-        }
-
-        #endregion
-
-        // TODO: delete this and use global cache
-        #region Static cache implementation
-
-        private static readonly Cache<string, Token> tokenCache;
-
-        static KeystoneAuthentication()
-        {
-            tokenCache = new Cache<string, Token>(StringComparer.InvariantCultureIgnoreCase)
-            {
-                AutoExtendLifetime = false,
-                CollectionInterval = new TimeSpan(0, 1, 0),     // one minute
-                DefaultLifetime = new TimeSpan(0, 20, 0),       // twenty minutes
-            };
         }
 
         #endregion
@@ -69,28 +51,15 @@ namespace Jhu.Graywulf.Web.Security
 
         public KeystoneAuthentication()
         {
-            InitializeMembers(new StreamingContext());
+            InitializeMembers();
         }
 
-        [OnDeserializing]
-        private void InitializeMembers(StreamingContext context)
+        private void InitializeMembers()
         {
             AuthorityName = KeystoneClient.Configuration.AuthorityName;
         }
 
         #endregion
-
-        /* TODO: delete
-        public override void Initialize(Registry.Domain domain)
-        {
-            base.Initialize(domain);
-
-            // Make sure settings holds same info as the authenticator
-            settings.AuthorityName = this.AuthorityName;
-            settings.AuthorityUri = this.AuthorityUri;
-        }
-        */
-
         public override void Authenticate(AuthenticationRequest request, AuthenticationResponse response)
         {
             // Keystone tokens (in the simplest case) do not carry any detailed
@@ -139,7 +108,7 @@ namespace Jhu.Graywulf.Web.Security
                 Token token;
 
                 // Check if the resolved token is already in the cache
-                if (!tokenCache.TryGetValue(tokenID, out token))
+                if (!KeystoneTokenCache.Instance.TryGetValueByTokenID(tokenID, out token))
                 {
                     // Need to validate token against Keystone
                     var ksclient = new KeystoneClient();
@@ -159,7 +128,7 @@ namespace Jhu.Graywulf.Web.Security
 
                     token.User = ksclient.GetUser(token.User.ID);
 
-                    tokenCache.TryAdd(token.ID, token);
+                    KeystoneTokenCache.Instance.TryAdd(token);
                 }
 
                 // If the token is coming in a cookie and seems too old we can renew it here
@@ -171,8 +140,8 @@ namespace Jhu.Graywulf.Web.Security
                     newtoken.User = ksclient.GetUser(newtoken.User.ID);
 
                     // Update cache
-                    tokenCache.TryRemove(tokenID, out token);
-                    tokenCache.TryAdd(newtoken.ID, newtoken, newtoken.ExpiresAt);
+                    KeystoneTokenCache.Instance.TryRemoveByTokenID(tokenID, out token);
+                    KeystoneTokenCache.Instance.TryAdd(newtoken);
 
                     token = newtoken;
 
