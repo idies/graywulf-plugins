@@ -13,26 +13,26 @@ namespace Jhu.Graywulf.Web.Security
 
         private static ConfigurationPropertyCollection properties;
 
-        private static readonly ConfigurationProperty propEnabled = new ConfigurationProperty(
+        private static readonly ConfigurationProperty propIsEnabled = new ConfigurationProperty(
             "enabled", typeof(bool), false, ConfigurationPropertyOptions.None);
 
         private static readonly ConfigurationProperty propAuthTokenParameter = new ConfigurationProperty(
-            "authTokenParameter", typeof(string), null, ConfigurationPropertyOptions.None);
+            "authTokenParameter", typeof(string), Constants.KeystoneDefaultAuthTokenParameter, ConfigurationPropertyOptions.None);
 
         private static readonly ConfigurationProperty propAuthTokenHeader = new ConfigurationProperty(
-            "authTokenHeader", typeof(string), null, ConfigurationPropertyOptions.None);
+            "authTokenHeader", typeof(string), Constants.KeystoneDefaultAuthTokenHeader, ConfigurationPropertyOptions.None);
 
         private static readonly ConfigurationProperty propAuthTokenCookie = new ConfigurationProperty(
-            "authTokenCookie", typeof(string), null, ConfigurationPropertyOptions.None);
+            "authTokenCookie", typeof(string), Constants.KeystoneDefaultAuthTokenCookie, ConfigurationPropertyOptions.None);
 
         private static readonly ConfigurationProperty propTokenRenewalInterval = new ConfigurationProperty(
-            "tokenRenewalInterval", typeof(int), null, ConfigurationPropertyOptions.None);
+            "tokenRenewalInterval", typeof(int), Constants.KeystoneTokenRenewalInterval, ConfigurationPropertyOptions.None);
 
         static KeystoneAuthenticationConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
 
-            properties.Add(propEnabled);
+            properties.Add(propIsEnabled);
             properties.Add(propAuthTokenParameter);
             properties.Add(propAuthTokenHeader);
             properties.Add(propAuthTokenCookie);
@@ -42,31 +42,31 @@ namespace Jhu.Graywulf.Web.Security
         #endregion
         #region Properties
 
-        [ConfigurationProperty("enabled", DefaultValue=false)]
-        public bool Enabled
+        [ConfigurationProperty("enabled", DefaultValue = false)]
+        public bool IsEnabled
         {
-            get { return (bool)base[propEnabled]; }
-            set { base[propEnabled] = value; }
+            get { return (bool)base[propIsEnabled]; }
+            set { base[propIsEnabled] = value; }
         }
 
         /// <summary>
         /// Gets or sets the base URL of the Keystone service
         /// </summary>
-        [ConfigurationProperty("authTokenParameter")]
+        [ConfigurationProperty("authTokenParameter", DefaultValue = Constants.KeystoneDefaultAuthTokenParameter)]
         public string AuthTokenParameter
         {
             get { return (string)base[propAuthTokenParameter]; }
             set { base[propAuthTokenParameter] = value; }
         }
 
-        [ConfigurationProperty("authTokenHeader")]
+        [ConfigurationProperty("authTokenHeader", DefaultValue = Constants.KeystoneDefaultAuthTokenHeader)]
         public string AuthTokenHeader
         {
             get { return (string)base[propAuthTokenHeader]; }
             set { base[propAuthTokenHeader] = value; }
         }
 
-        [ConfigurationProperty("authTokenCookie")]
+        [ConfigurationProperty("authTokenCookie", DefaultValue = Constants.KeystoneDefaultAuthTokenCookie)]
         public string AuthTokenCookie
         {
             get { return (string)base[propAuthTokenCookie]; }

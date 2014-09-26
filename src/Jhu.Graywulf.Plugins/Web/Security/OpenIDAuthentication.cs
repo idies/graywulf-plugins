@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.Web;
+using System.Configuration;
 using DotNetOpenAuth.OpenId.RelyingParty;
 using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using Jhu.Graywulf.Registry;
@@ -16,6 +17,16 @@ namespace Jhu.Graywulf.Web.Security
     /// </summary>
     public class OpenIDAuthentication : Authentication
     {
+        #region Static members
+        public static OpenIDConfiguration Configuration
+        {
+            get
+            {
+                return (OpenIDConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/authentication/openID");
+            }
+        }
+
+        #endregion
         #region Private member variables
 
         private Uri discoveryUri;
@@ -49,6 +60,18 @@ namespace Jhu.Graywulf.Web.Security
         public OpenIDAuthentication()
         {
             InitializeMembers();
+        }
+
+        public OpenIDAuthentication(OpenIDProviderSettings settings)
+        {
+            InitializeMembers();
+
+            this.AuthorityName = settings.AuthorityName;
+            this.AuthorityUri = settings.AuthorityUri;
+            this.DiscoveryUri = settings.DiscoveryUri;
+            this.DisplayName = settings.DisplayName;
+            this.IsEnabled = settings.IsEnabled;
+            this.IsMasterAuthority = settings.IsMasterAuthority;
         }
 
         private void InitializeMembers()
