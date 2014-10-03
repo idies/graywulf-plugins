@@ -17,19 +17,15 @@ namespace Jhu.Graywulf.CasJobs
         private static readonly ConfigurationProperty propBaseUri = new ConfigurationProperty(
             "baseUri", typeof(Uri), null, ConfigurationPropertyOptions.IsRequired);
 
-        private static readonly ConfigurationProperty propSqlUserName = new ConfigurationProperty(
-            "sqlUserName", typeof(string), null, ConfigurationPropertyOptions.None);
-
-        private static readonly ConfigurationProperty propSqlPassword = new ConfigurationProperty(
-            "sqlPassword", typeof(string), null, ConfigurationPropertyOptions.None);
+        private static readonly ConfigurationProperty propBatchAdminConnectionString = new ConfigurationProperty(
+            "batchAdminConnectionString", typeof(string), null, ConfigurationPropertyOptions.None);
 
         static CasJobsClientConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
 
             properties.Add(propBaseUri);
-            properties.Add(propSqlUserName);
-            properties.Add(propSqlPassword);
+            properties.Add(propBatchAdminConnectionString);
         }
 
         #endregion
@@ -42,18 +38,11 @@ namespace Jhu.Graywulf.CasJobs
             set { base[propBaseUri] = value; }
         }
 
-        [ConfigurationProperty("sqlUserName")]
-        public string SqlUserName
+        [ConfigurationProperty("batchAdminConnectionString")]
+        public string BatchAdminConnectionString
         {
-            get { return (string)base[propSqlUserName]; }
-            set { base[propSqlUserName] = value; }
-        }
-
-        [ConfigurationProperty("sqlPassword")]
-        public string SqlPassword
-        {
-            get { return (string)base[propSqlPassword]; }
-            set { base[propSqlPassword] = value; }
+            get { return (string)base[propBatchAdminConnectionString]; }
+            set { base[propBatchAdminConnectionString] = value; }
         }
 
         #endregion
