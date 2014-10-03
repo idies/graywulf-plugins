@@ -208,7 +208,8 @@ namespace Jhu.Graywulf.Keystone
 
             if (tokens.TryGetValue(tokenID, out token))
             {
-                var now = DateTime.Now;
+                // Make sure time zone is taken into account
+                var now = DateTime.Now.ToUniversalTime();
 
                 if (token.ExpiresAt > now)
                 {
