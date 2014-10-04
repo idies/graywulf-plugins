@@ -60,6 +60,7 @@ namespace Jhu.Graywulf.Web.Security
         }
 
         #endregion
+
         public override void Authenticate(AuthenticationRequest request, AuthenticationResponse response)
         {
             // Keystone tokens (in the simplest case) do not carry any detailed
@@ -76,32 +77,8 @@ namespace Jhu.Graywulf.Web.Security
 
             var config = Configuration;
 
-            string tokenID = null;
-            var foundInCookie = false;
-
-            // Look for a token in a cookie
-            var cookies = request.Cookies.GetCookies(request.Uri);
-            if (cookies != null)
-            {
-                var cookie = cookies[config.AuthTokenCookie];
-                if (cookie != null)
-                {
-                    tokenID = cookie.Value;
-                    foundInCookie = true;
-                }
-            }
-
-            // Look for a token in the request headers
-            if (tokenID == null)
-            {
-                tokenID = request.Headers[config.AuthTokenHeader];
-            }
-
-            // Try to take header from the query string
-            if (tokenID == null)
-            {
-                tokenID = request.QueryString[config.AuthTokenParameter];
-            }
+            bool foundInCookie;
+            var tokenID = GetTokenID(request, out foundInCookie);
 
             if (tokenID != null)
             {
@@ -180,7 +157,7 @@ namespace Jhu.Graywulf.Web.Security
                 DeploymentState = user.Enabled.Value ? Registry.DeploymentState.Deployed : Registry.DeploymentState.Undeployed,
             };
 
-            return new GraywulfPrincipal(identity);
+            return new GraywulfPrincipal(identity);;
         }
 
         internal static void UpdateAuthenticationResponse(AuthenticationResponse response, Token token, bool isMasterAuthority)
@@ -229,6 +206,46 @@ namespace Jhu.Graywulf.Web.Security
                     response.Cookies.Add(cookie);
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the token ID found in an HTTP or REST request
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="foundInCookie"></param>
+        /// <returns></returns>
+        private string GetTokenID(AuthenticationRequest request, out bool foundInCookie)
+        {
+            var config = Configuration;
+            string tokenID = null;
+
+            // Look for a token in a cookie
+            foundInCookie = false;
+
+            var cookies = request.Cookies.GetCookies(request.Uri);
+            if (cookies != null)
+            {
+                var cookie = cookies[config.AuthTokenCookie];
+                if (cookie != null)
+                {
+                    tokenID = cookie.Value;
+                    foundInCookie = true;
+                }
+            }
+
+            // Look for a token in the request headers
+            if (tokenID == null)
+            {
+                tokenID = request.Headers[config.AuthTokenHeader];
+            }
+
+            // Try to take header from the query string
+            if (tokenID == null)
+            {
+                tokenID = request.QueryString[config.AuthTokenParameter];
+            }
+
+            return tokenID;
         }
     }
 }
