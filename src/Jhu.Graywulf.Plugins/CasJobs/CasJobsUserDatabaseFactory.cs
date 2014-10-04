@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web;
 using Jhu.Graywulf.Schema;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Web.Security;
@@ -20,55 +21,70 @@ namespace Jhu.Graywulf.CasJobs
 
         public override void EnsureUserDatabaseExists(Registry.User user)
         {
-#if false
-            User cjuser = null;
-
-            var keystoneID = GetKeystoneID(user);
+            // This class is only used with tight Keystone integration.
+            // We somehow have to find the token used to authenticate the user
+            // because it is required to talk to the casjobs service in the name
+            // of the user. The keystone user ID is conveyed in the thread's identity
+            // but the authentication ticket is not available directly. 
+            // The best we can do is to look up the token from the token
+            // cache which should hold the last valid tokens indexed by user name.
 
             var ksclient = new KeystoneClient();
+
+            // Get keystone user ID from identity and load user from keystone
+            var keystoneID = GetKeystoneID(user);
+            var ksuser = ksclient.GetUser(keystoneID);
+
+            // Try to find a valid token in the cache
+            Keystone.Token token;
+            if (!KeystoneTokenCache.Instance.TryGetValueByUserName(ksuser.Name, ksuser.Name, out token))
+            {
+                throw new UnauthorizedAccessException("Keystone token required.");
+            }
+
+            // Now create a CasJobs client and look up or create user
             var cjclient = new CasJobsClient(ksclient);
+            CasJobs.User cjuser = null;
 
             // Try to get the user from casjobs
             try
             {
                 cjuser = cjclient.GetUser(keystoneID);
 
-                // If the user exists that means their MYDB exists as well
-                // nothing to do here
+                // If the user exists we still have to make sure later that
+                // mydb is created by executing a dummy query
             }
             catch
             {
+                // This is a 404 which means the user doesn't exist. In this case
+                // we have to create the user
+
+                cjuser = CreateCasJobsUser(user, keystoneID);
             }
 
-            /*
-            
+            // Now check if MyDB exists.
+            // TODO: there's a bug in casjobs which causes the user to be reported
+            // non-existing when no MyDB has been created yet, but the user otherwise
+            // exists in the database. Once the bug is fixed, this function will need
+            // to be revised and tested.
 
-            var user = new User()
+            if (cjuser.MyDBName == null)
             {
-                UserId = ksuser.Name,
-                Password = "alma",
-                Email = ksuser.Email,
-                FullName = !String.IsNullOrWhiteSpace(ksuser.Description) ? ksuser.Description : ksuser.Name,
-            };
+                // Here we need to delegate the user using its Keystone token
+                // Submit a dummy job to force mydb creation
+                cjclient.UserCredentials = new Keystone.KeystoneCredentials()
+                {
+                    TokenID = token.ID
+                };
 
-            Client.Create(ksuser.ID, user);
+                var query = new Query()
+                {
+                    QueryText = "SELECT 1 AS a",
+                    TaskName = "Dummy task to force MyDB creation."
+                };
 
-            // Now submit a dummy job to force mydb creation
-
-            Client.UserCredentials = new Keystone.KeystoneCredentials()
-            {
-                TokenID = KeystoneClient.Authenticate("default", "test1", "test1", "alma").ID
-            };
-
-            var query = new Query()
-            {
-                QueryText = "SELECT 1 AS a",
-                TaskName = "Dummy task to force MyDB creation."
-            };
-
-            Client.Submit("mydb", query);
-             * */
-#endif
+                cjclient.Submit("mydb", query);
+            }
         }
 
         protected override DatasetBase OnGetUserDatabase(Registry.User user)
@@ -160,6 +176,24 @@ namespace Jhu.Graywulf.CasJobs
             }
 
             return keystoneID;
+        }
+
+        private CasJobs.User CreateCasJobsUser(Registry.User user, string keystoneID)
+        {
+            var ksclient = new KeystoneClient();
+            var cjclient = new CasJobsClient(ksclient);
+
+            var cjuser = new User()
+            {
+                UserId = user.Name,
+                Password = "alma",  // *** TODO
+                Email = user.Email,
+                FullName = String.Format("{0} {1}", user.FirstName, user.LastName)
+            };
+
+            cjclient.Create(keystoneID, cjuser);
+
+            return cjuser;
         }
     }
 }
