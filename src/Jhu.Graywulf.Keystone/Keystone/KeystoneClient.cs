@@ -39,12 +39,6 @@ namespace Jhu.Graywulf.Keystone
         {
         }
 
-        /* TODO: delete
-        public KeystoneClient(Uri baseUri)
-            : base(baseUri)
-        {
-        }*/
-
         private KeystoneClient(KeystoneClientConfiguration configuration)
             : base(configuration.BaseUri)
         {
