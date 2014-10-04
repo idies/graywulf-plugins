@@ -71,7 +71,7 @@ namespace Jhu.Graywulf.CasJobs
 #endif
         }
 
-        public override DatasetBase GetUserDatabase(Registry.User user)
+        protected override DatasetBase OnGetUserDatabase(Registry.User user)
         {
             var keystoneID = GetKeystoneID(user);
 
