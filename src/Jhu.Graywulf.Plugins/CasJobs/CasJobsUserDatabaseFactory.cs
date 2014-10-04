@@ -93,8 +93,7 @@ namespace Jhu.Graywulf.CasJobs
             {
                 cn.Open();
 
-                // Filter on the server name because that's what returned by the web service
-                var sql = "SELECT server, admin_usr, admin_pw, CStringExtra FROM MyDBHosts WHERE server = @mydbhost";
+                var sql = "SELECT server, admin_usr, admin_pw, CStringExtra FROM MyDBHosts WHERE mydbhost = @mydbhost";
 
                 using (var cmd = new SqlCommand(sql, cn))
                 {
