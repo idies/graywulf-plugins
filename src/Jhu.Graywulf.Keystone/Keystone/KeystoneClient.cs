@@ -32,17 +32,50 @@ namespace Jhu.Graywulf.Keystone
         }
 
         #endregion
+        #region Private member variables
+
+        private KeystoneCredentials adminCredentials;
+        private KeystoneCredentials userCredentials;
+
+        #endregion
+        #region Properties
+
+        public KeystoneCredentials AdminCredentials
+        {
+            get { return adminCredentials; }
+            set { adminCredentials = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the token used for user authentication
+        /// </summary>
+        public KeystoneCredentials UserCredentials
+        {
+            get { return userCredentials; }
+            set { userCredentials = value; }
+        }
+
+        #endregion
         #region Constructors and initializers
 
         public KeystoneClient()
             : this(KeystoneClient.Configuration)
         {
+            // Overload
         }
 
         private KeystoneClient(KeystoneClientConfiguration configuration)
             : base(configuration.BaseUri)
         {
-            AdminCredentials = configuration.GetAdminCredentials();
+            InitializeMembers();
+
+            this.adminCredentials = configuration.GetAdminCredentials();
+        }
+
+        private void InitializeMembers()
+        {
+            this.adminCredentials = null;
+            this.userCredentials = null;
         }
 
         #endregion
@@ -50,12 +83,12 @@ namespace Jhu.Graywulf.Keystone
 
         public Token GetAdminToken()
         {
-            return GetToken(AdminCredentials);
+            return GetToken(adminCredentials);
         }
 
         public Token GetUserToken()
         {
-            return GetToken(UserCredentials);
+            return GetToken(userCredentials);
         }
 
         public Token GetToken(KeystoneCredentials credentials)

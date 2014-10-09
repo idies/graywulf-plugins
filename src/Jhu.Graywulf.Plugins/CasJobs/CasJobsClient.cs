@@ -26,6 +26,28 @@ namespace Jhu.Graywulf.CasJobs
         private KeystoneClient keystoneClient;
 
         #endregion
+        #region Properties
+
+        #region Properties
+
+        public KeystoneCredentials AdminCredentials
+        {
+            get { return keystoneClient.AdminCredentials; }
+            set { keystoneClient.AdminCredentials = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the token used for user authentication
+        /// </summary>
+        public KeystoneCredentials UserCredentials
+        {
+            get { return keystoneClient.UserCredentials; }
+            set { keystoneClient.UserCredentials = value; }
+        }
+
+        #endregion
+
+        #endregion
         #region Constructors and initializers
 
         public CasJobsClient(KeystoneClient keystoneClient)

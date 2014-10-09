@@ -14,30 +14,6 @@ namespace Jhu.Graywulf.Keystone
     /// </summary>
     public abstract class KeystoneClientBase : RestClient
     {
-        #region Private member variables
-
-        private KeystoneCredentials adminCredentials;
-        private KeystoneCredentials userCredentials;
-
-        #endregion
-        #region Properties
-
-        public KeystoneCredentials AdminCredentials
-        {
-            get { return adminCredentials; }
-            set { adminCredentials = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the token used for user authentication
-        /// </summary>
-        public KeystoneCredentials UserCredentials
-        {
-            get { return userCredentials; }
-            set { userCredentials = value; }
-        }
-
-        #endregion
         #region Constructors and initializers
 
         protected KeystoneClientBase()
@@ -53,8 +29,6 @@ namespace Jhu.Graywulf.Keystone
 
         private void InitializeMembers()
         {
-            this.adminCredentials = null;
-            this.userCredentials = null;
         }
 
         #endregion
