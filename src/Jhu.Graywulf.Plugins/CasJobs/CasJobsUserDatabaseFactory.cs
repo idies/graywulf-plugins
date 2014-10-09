@@ -12,6 +12,11 @@ using Jhu.Graywulf.Keystone;
 
 namespace Jhu.Graywulf.CasJobs
 {
+    /// <summary>
+    /// Implements functions to create and use CasJobs MyDB as the user database
+    /// in a Graywulf installation. Authentication relies on Keystone and no
+    /// original CasJobs authentication is supported.
+    /// </summary>
     public class CasJobsUserDatabaseFactory : UserDatabaseFactory
     {
         public CasJobsUserDatabaseFactory(Federation federation)
@@ -58,8 +63,19 @@ namespace Jhu.Graywulf.CasJobs
             {
                 // This is a 404 which means the user doesn't exist. In this case
                 // we have to create the user
+            }
 
-                cjuser = CreateCasJobsUser(user, keystoneID);
+            if (cjuser == null)
+            {
+                try
+                {
+                    cjuser = CreateCasJobsUser(user, keystoneID);
+                }
+                catch
+                {
+                    // A CasJobs bug prevents retrieving user's that are in the database
+                    // but have no MyDB assigned yet, so catch the exception here
+                }
             }
 
             // Now check if MyDB exists.
@@ -68,7 +84,7 @@ namespace Jhu.Graywulf.CasJobs
             // exists in the database. Once the bug is fixed, this function will need
             // to be revised and tested.
 
-            if (cjuser.MyDBName == null)
+            if (cjuser != null && cjuser.MyDBName == null)
             {
                 // Here we need to delegate the user using its Keystone token
                 // Submit a dummy job to force mydb creation
@@ -186,7 +202,7 @@ namespace Jhu.Graywulf.CasJobs
             var cjuser = new User()
             {
                 UserId = user.Name,
-                Password = "alma",  // *** TODO
+                Password = new Guid().ToString(),   // User 'random' password
                 Email = user.Email,
                 FullName = String.Format("{0} {1}", user.FirstName, user.LastName)
             };
