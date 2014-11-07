@@ -62,6 +62,11 @@ namespace Jhu.Graywulf.Web.Security
 
             if (graywulfUser.IsExisting)
             {
+                if (!graywulfUser.Context.IsValid)
+                {
+                    graywulfUser.Context = this.Context;
+                }
+
                 graywulfUser.LoadUserIdentities(false);
 
                 var idname = GetIdentityName(graywulfUser);
@@ -293,5 +298,45 @@ namespace Jhu.Graywulf.Web.Security
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a valid keystone token from the token cache associated with the user.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Keystone.Token GetCachedToken(Registry.User user)
+        {
+            var ksuser = ConvertUser(user);
+
+            // Try to find a valid token in the cache
+            Keystone.Token token;
+            if (!Keystone.KeystoneTokenCache.Instance.TryGetValueByUserName(ksuser.Name, ksuser.Name, out token))
+            {
+                throw new UnauthorizedAccessException("Keystone token required.");
+            }
+
+            return token;
+        }
+
+        private Keystone.Trust CreateTrust(Registry.User user, TimeSpan expiresAfter)
+        {
+            var token = GetCachedToken(user);
+
+            var trust = new Keystone.Trust()
+            {
+                ExpiresAt = DateTime.Now.Add(expiresAfter),
+                Impersonation = true,
+                TrustorUserID = token.User.ID,
+                TrusteeUserID = token.User.ID,  // ???
+                RemainingUses = 5,
+                ProjectID = token.Project.ID,
+                Roles = null  //  new[] { token } // ?????
+            };
+
+            var ksclient = new Keystone.KeystoneClient();
+            trust = ksclient.Create(trust);
+
+            return trust;
+        }
     }
 }

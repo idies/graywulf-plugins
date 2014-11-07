@@ -34,27 +34,18 @@ namespace Jhu.Graywulf.CasJobs
             // The best we can do is to look up the token from the token
             // cache which should hold the last valid tokens indexed by user name.
 
-            var ksclient = new KeystoneClient();
-
-            // Get keystone user ID from identity and load user from keystone
-            var keystoneID = GetKeystoneID(user);
-            var ksuser = ksclient.GetUser(keystoneID);
-
-            // Try to find a valid token in the cache
-            Keystone.Token token;
-            if (!KeystoneTokenCache.Instance.TryGetValueByUserName(ksuser.Name, ksuser.Name, out token))
-            {
-                throw new UnauthorizedAccessException("Keystone token required.");
-            }
+            var ip = new KeystoneIdentityProvider(Federation.Domain);
+            var token = ip.GetCachedToken(user);
 
             // Now create a CasJobs client and look up or create user
+            var ksclient = new KeystoneClient();
             var cjclient = new CasJobsClient(ksclient);
             CasJobs.User cjuser = null;
 
             // Try to get the user from casjobs
             try
             {
-                cjuser = cjclient.GetUser(keystoneID);
+                cjuser = cjclient.GetUser(token.User.ID);
 
                 // If the user exists we still have to make sure later that
                 // mydb is created by executing a dummy query
@@ -69,7 +60,7 @@ namespace Jhu.Graywulf.CasJobs
             {
                 try
                 {
-                    cjuser = CreateCasJobsUser(user, keystoneID);
+                    cjuser = CreateCasJobsUser(user, token.User.ID);
                 }
                 catch
                 {
@@ -105,18 +96,17 @@ namespace Jhu.Graywulf.CasJobs
 
         protected override DatasetBase OnGetUserDatabase(Registry.User user)
         {
-            var keystoneID = GetKeystoneID(user);
-
             // CasJobs requires a keystone admin token to access REST services
-            // TODO: this has to be moved to the keystone client and admin token
-            // needs to be cached, because getting mydb is a frequent task
+
+            var ip = new KeystoneIdentityProvider(this.Federation.Domain);
+            var token = ip.GetCachedToken(user);
 
             var ksclient = new KeystoneClient();
             var cjclient = new CasJobsClient(ksclient);
 
-            var cjuser = cjclient.GetUser(keystoneID);
+            var cjuser = cjclient.GetUser(token.User.ID);
 
-            // Because the cas jobs web service doesn't expose the database password,
+            // Because the CasJobs web service doesn't expose the database password,
             // we need to look it up directly from batch admin
 
             string server, username, password, extra;
@@ -165,33 +155,6 @@ namespace Jhu.Graywulf.CasJobs
             };
 
             return ds;
-        }
-
-        private string GetKeystoneID(Registry.User user)
-        {
-            // Make sure user identities are loaded and find keystone user ID.
-            user.Context = Federation.Context;
-            user.LoadUserIdentities(false);
-
-            string keystoneID = null;
-            foreach (var id in user.UserIdentities.Values)
-            {
-                // Here we select the identity based on protocol name (should be Keystone)
-                // This might not work when two different keystone services used but
-                // that's a weird config anyway.
-                if (StringComparer.InvariantCultureIgnoreCase.Compare(id.Protocol, Jhu.Graywulf.Web.Security.Constants.AuthorityNameKeystone) == 0)
-                {
-                    keystoneID = id.Identifier;
-                    break;
-                }
-            }
-
-            if (keystoneID == null)
-            {
-                throw new SecurityException("User Keystone ID not found");  // *** TODO
-            }
-
-            return keystoneID;
         }
 
         private CasJobs.User CreateCasJobsUser(Registry.User user, string keystoneID)
