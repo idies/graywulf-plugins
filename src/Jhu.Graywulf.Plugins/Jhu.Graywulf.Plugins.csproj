@@ -88,6 +88,9 @@
     <Compile Include="CasJobs\Constants.cs" />
     <Compile Include="CasJobs\Objects\Query.cs" />
     <Compile Include="CasJobs\Objects\User.cs" />
+    <Compile Include="SciDrive\Constants.cs" />
+    <Compile Include="SciDrive\SciDriveClient.cs" />
+    <Compile Include="SciDrive\SciDriveConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Security\Constants.cs" />
     <Compile Include="Web\Security\CustomAuthenticationFactory.cs" />
@@ -104,6 +107,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.IO\Jhu.Graywulf.IO.csproj">
+      <Project>{6797ed88-1d8c-491b-a036-4c42c4bf2eaf}</Project>
+      <Name>Jhu.Graywulf.IO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Schema\Jhu.Graywulf.Schema.csproj">
       <Project>{5868b518-cbfc-43fb-b9c8-c617a65121c4}</Project>
       <Name>Jhu.Graywulf.Schema</Name>
