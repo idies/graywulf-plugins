@@ -148,7 +148,7 @@ namespace Jhu.Graywulf.CasJobs
 
             var ds = new Jhu.Graywulf.Schema.SqlServer.SqlServerDataset()
             {
-                Name = Jhu.Graywulf.Registry.Constants.MyDbName,
+                Name = Jhu.Graywulf.Registry.Constants.UserDbName,
                 ConnectionString = cstr,
                 IsCacheable = false,
                 IsMutable = true,
