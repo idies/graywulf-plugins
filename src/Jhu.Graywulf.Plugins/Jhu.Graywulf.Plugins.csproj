@@ -84,10 +84,12 @@
   <ItemGroup>
     <Compile Include="CasJobs\CasJobsClient.cs" />
     <Compile Include="CasJobs\CasJobsClientConfiguration.cs" />
+    <Compile Include="CasJobs\CasJobsException.cs" />
     <Compile Include="CasJobs\CasJobsUserDatabaseFactory.cs" />
     <Compile Include="CasJobs\Constants.cs" />
     <Compile Include="CasJobs\Objects\Query.cs" />
     <Compile Include="CasJobs\Objects\User.cs" />
+    <Compile Include="CasJobs\Responses\ErrorResponse.cs" />
     <Compile Include="SciDrive\Constants.cs" />
     <Compile Include="SciDrive\SciDriveClient.cs" />
     <Compile Include="SciDrive\SciDriveConfiguration.cs" />
@@ -142,7 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CasJobs\Requests\" />
-    <Folder Include="CasJobs\Responses\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

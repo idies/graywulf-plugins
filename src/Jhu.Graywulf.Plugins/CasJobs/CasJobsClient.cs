@@ -86,32 +86,31 @@ namespace Jhu.Graywulf.CasJobs
 
         protected override Exception CreateException(RestException ex)
         {
-            /*KeystoneException kex = null;
+            CasJobsException cjex = null;
             var error = DeserializeJson<ErrorResponse>(ex.Body);
 
             if (error != null)
             {
-                kex = new KeystoneException(error.Error.Message, ex)
+                cjex = new CasJobsException(error.Message, ex)
                 {
-                    Title = error.Error.Title,
-                    StatusCode = (HttpStatusCode)error.Error.Code
+                    StatusCode = (HttpStatusCode)error.StatusCode,
+                    ErrorType = error.ErrorType,
+                    LogMessageID = error.LogMessageID
                 };
             }
             else if (ex.InnerException is WebException)
             {
-                kex = new KeystoneException(ex.Message, ex)
+                cjex = new CasJobsException(ex.Message, ex)
                 {
                     StatusCode = ((HttpWebResponse)((WebException)ex.InnerException).Response).StatusCode
                 };
             }
             else
             {
-                kex = new KeystoneException(ex.Message, ex);
+                cjex = new CasJobsException(ex.Message, ex);
             }
 
-            return kex;*/
-
-            throw new NotImplementedException();
+            return cjex;
         }
 
         #endregion
