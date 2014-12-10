@@ -115,11 +115,12 @@ namespace Jhu.Graywulf.CasJobs
             {
                 cn.Open();
 
-                var sql = "SELECT server, admin_usr, admin_pw, CStringExtra FROM MyDBHosts WHERE mydbhost = @mydbhost";
+                // TODO: this might need to be changed to use mydbhost instead of server
+                var sql = "SELECT server, admin_usr, admin_pw, CStringExtra FROM MyDBHosts WHERE server = @server";
 
                 using (var cmd = new SqlCommand(sql, cn))
                 {
-                    cmd.Parameters.Add("@mydbhost", SqlDbType.NVarChar).Value = cjuser.MyDBHost;
+                    cmd.Parameters.Add("@server", SqlDbType.NVarChar).Value = cjuser.MyDBHost;
 
                     using (var dr = cmd.ExecuteReader())
                     {
