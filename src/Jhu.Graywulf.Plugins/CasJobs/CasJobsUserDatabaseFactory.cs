@@ -94,7 +94,7 @@ namespace Jhu.Graywulf.CasJobs
             }
         }
 
-        protected override DatasetBase OnGetUserDatabase(Registry.User user)
+        protected override Jhu.Graywulf.Schema.SqlServer.SqlServerDataset OnGetUserDatabase(Registry.User user)
         {
             // CasJobs requires a keystone admin token to access REST services
 
