@@ -272,6 +272,9 @@ namespace Jhu.Graywulf.Web.Security
             // Find user details in keystone
             token.User = GetKeystoneUser(request.Username);
 
+            // Add token to the cache to be used by subsequent requests.
+            Keystone.KeystoneTokenCache.Instance.TryAdd(token);
+
             // Create a response, this sets necessary response headers
             var response = new AuthenticationResponse(request);
             KeystoneAuthentication.UpdateAuthenticationResponse(response, token, true);
