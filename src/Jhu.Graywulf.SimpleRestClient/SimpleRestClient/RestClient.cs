@@ -248,7 +248,23 @@ namespace Jhu.Graywulf.SimpleRestClient
         /// <returns></returns>
         private Uri CreateAbsoluteUri(string path)
         {
-            return new Uri(baseUri + path, UriKind.RelativeOrAbsolute);
+            var fullPath = baseUri.ToString();
+            
+            if (!fullPath.EndsWith("/"))
+            {
+                fullPath += "/";
+            }
+
+            if (path.StartsWith("/"))
+            {
+                fullPath += path.Substring(1);
+            }
+            else
+            {
+                fullPath += path;
+            }
+
+            return new Uri(fullPath, UriKind.RelativeOrAbsolute);
         }
 
         protected string UrlEncode(string value)
