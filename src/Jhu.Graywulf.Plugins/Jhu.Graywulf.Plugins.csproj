@@ -164,6 +164,20 @@
 copy $(TargetPath) $(SolutionDir)$(OutDir)
 copy $(TargetDir)$(TargetName).pdb $(SolutionDir)$(OutDir)
 
+REM copy to test
+
+cd $(SolutionDir)graywulf\test\Jhu.Graywulf.Jobs.Test\$(OutDir)
+copy $(TargetDir)$(TargetName).dll .
+copy $(TargetDir)$(TargetName).pdb .
+copy $(TargetDir)Jhu.Graywulf.Keystone.dll .
+copy $(TargetDir)Jhu.Graywulf.Keystone.pdb .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb .
+copy $(TargetDir)Newtonsoft.Json.dll .
+copy $(TargetDir)DotNetOpenAuth.Core.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.RelyingParty.dll .
+
 REM copy to web bin
 
 cd $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
