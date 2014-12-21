@@ -20,7 +20,7 @@ namespace Jhu.Graywulf.CasJobs
         [TestMethod]
         public void CreateUserTest()
         {
-            var ksuser = KeystoneClient.FindUsers("default", "test1", false, false)[0];
+            var ksuser = KeystoneClient.FindUsers("default", "test", false, false)[0];
 
             var user = new User()
             {
