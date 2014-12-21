@@ -20,7 +20,7 @@ namespace Jhu.Graywulf.CasJobs
     public class CasJobsUserDatabaseFactory : UserDatabaseFactory
     {
         public CasJobsUserDatabaseFactory(Federation federation)
-            :base(federation)
+            : base(federation)
         {
         }
 
@@ -98,7 +98,7 @@ namespace Jhu.Graywulf.CasJobs
         {
             // CasJobs requires a keystone admin token to access REST services
 
-            var ip = new KeystoneIdentityProvider(this.Federation.Domain);
+            var ip = new KeystoneIdentityProvider(Federation.Domain);
             var token = ip.GetCachedToken(user);
 
             var ksclient = new KeystoneClient();
@@ -156,6 +156,44 @@ namespace Jhu.Graywulf.CasJobs
             };
 
             return ds;
+        }
+
+        protected override ServerInstance OnGetUserDatabaseServerInstance(Registry.User user)
+        {
+            var ds = OnGetUserDatabase(user);
+            return GetAssociatedServerInstance(ds);
+        }
+
+        private ServerInstance GetAssociatedServerInstance(Jhu.Graywulf.Schema.SqlServer.SqlServerDataset dataset)
+        {
+            // This function is currently unused
+
+            var hostname = dataset.HostName;
+            var instancename = dataset.InstanceName;
+
+            // Find the server instance based on Graywulf settings
+            var mr = Federation.UserDatabaseVersion.ServerVersion.MachineRole;
+
+            // Find the right machine
+            mr.LoadMachines(false);
+            var m = (from mi in mr.Machines.Values
+                     where Registry.Entity.StringComparer.Compare(mi.HostName.Value, hostname) == 0
+                     select mi)
+                    .FirstOrDefault();
+
+            if (m == null)
+            {
+                return null;
+            }
+
+            // Find the right server instance
+            m.LoadServerInstances(false);
+            var si = (from sii in m.ServerInstances.Values
+                      where Registry.Entity.StringComparer.Compare(sii.InstanceName, instancename) == 0
+                      select sii)
+                     .FirstOrDefault();
+
+            return si;
         }
 
         private CasJobs.User CreateCasJobsUser(Registry.User user, string keystoneID)
