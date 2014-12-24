@@ -101,15 +101,5 @@ namespace Jhu.Graywulf.Web.Security
                 ip.DeleteUser(user);
             }
         }
-
-        [TestMethod]
-        public void SerializeSettingsTest()
-        {
-            var p = new Parameter();
-
-            p.Value = new KeystoneSettings();
-
-            var xml = p.XmlValue;
-        }
     }
 }

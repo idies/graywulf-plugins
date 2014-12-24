@@ -21,6 +21,10 @@ namespace Jhu.Graywulf.SimpleRestClient
             set { baseUri = value; }
         }
 
+        protected RestClient()
+        {
+        }
+
         protected RestClient(Uri baseUri)
         {
             this.baseUri = baseUri;
@@ -134,6 +138,10 @@ namespace Jhu.Graywulf.SimpleRestClient
                         Body = ReadResponseBody(ex.Response)
                     };
 
+#if DEBUG
+                    System.Diagnostics.Debugger.Break();
+#endif
+
                     throw rex;
                 }
             }
@@ -240,7 +248,23 @@ namespace Jhu.Graywulf.SimpleRestClient
         /// <returns></returns>
         private Uri CreateAbsoluteUri(string path)
         {
-            return new Uri(baseUri, path);
+            var fullPath = baseUri.ToString();
+            
+            if (!fullPath.EndsWith("/"))
+            {
+                fullPath += "/";
+            }
+
+            if (path.StartsWith("/"))
+            {
+                fullPath += path.Substring(1);
+            }
+            else
+            {
+                fullPath += path;
+            }
+
+            return new Uri(fullPath, UriKind.RelativeOrAbsolute);
         }
 
         protected string UrlEncode(string value)

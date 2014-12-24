@@ -42,6 +42,10 @@
     <Reference Include="DotNetOpenAuth.OpenId.RelyingParty">
       <HintPath>..\..\..\packages\DotNetOpenAuth.OpenId.RelyingParty.4.3.4.13329\lib\net40-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -66,6 +70,7 @@
       <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Threading.Tasks">
       <HintPath>..\..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -77,18 +82,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CasJobs\CasJobsClient.cs" />
+    <Compile Include="CasJobs\CasJobsClientConfiguration.cs" />
+    <Compile Include="CasJobs\CasJobsException.cs" />
+    <Compile Include="CasJobs\CasJobsUserDatabaseFactory.cs" />
+    <Compile Include="CasJobs\Constants.cs" />
+    <Compile Include="CasJobs\Objects\Query.cs" />
+    <Compile Include="CasJobs\Objects\User.cs" />
+    <Compile Include="CasJobs\Responses\ErrorResponse.cs" />
+    <Compile Include="SciDrive\Constants.cs" />
+    <Compile Include="SciDrive\SciDriveClient.cs" />
+    <Compile Include="SciDrive\SciDriveConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\Security\Constants.cs" />
-    <Compile Include="Web\Security\KeystoneAuthenticator.cs" />
+    <Compile Include="Web\Security\CustomAuthenticationFactory.cs" />
+    <Compile Include="Web\Security\KeystoneAuthentication.cs" />
+    <Compile Include="Web\Security\KeystoneAuthenticationConfiguration.cs" />
     <Compile Include="Web\Security\KeystoneIdentityProvider.cs" />
-    <Compile Include="Web\Security\KeystoneSettings.cs" />
-    <Compile Include="Web\Security\OpenIDAuthenticator.cs" />
+    <Compile Include="Web\Security\OpenIDAuthentication.cs" />
+    <Compile Include="Web\Security\OpenIDProviderSettings.cs" />
+    <Compile Include="Web\Security\OpenIDConfiguration.cs" />
+    <Compile Include="Web\Security\OpenIDProviderSettingsCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.IO\Jhu.Graywulf.IO.csproj">
+      <Project>{6797ed88-1d8c-491b-a036-4c42c4bf2eaf}</Project>
+      <Name>Jhu.Graywulf.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Schema\Jhu.Graywulf.Schema.csproj">
+      <Project>{5868b518-cbfc-43fb-b9c8-c617a65121c4}</Project>
+      <Name>Jhu.Graywulf.Schema</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jhu.Graywulf.Keystone\Jhu.Graywulf.Keystone.csproj">
       <Project>{fb1b903b-cba6-4e7e-8c03-c7d8c49e2471}</Project>
       <Name>Jhu.Graywulf.Keystone</Name>
@@ -114,6 +142,9 @@
       <Name>Jhu.Graywulf.Web</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CasJobs\Requests\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -128,8 +159,50 @@
     <Error Condition="Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)$(OutDir)
-copy $(TargetDir)$(TargetName).pdb $(SolutionDir)$(OutDir)</PostBuildEvent>
+    <PostBuildEvent>REM copy to solution bin
+
+copy $(TargetPath) $(SolutionDir)$(OutDir)
+copy $(TargetDir)$(TargetName).pdb $(SolutionDir)$(OutDir)
+
+REM copy to test
+
+cd $(SolutionDir)graywulf\test\Jhu.Graywulf.Jobs.Test\$(OutDir)
+copy $(TargetDir)*.dll .
+copy $(TargetDir)*.pdb .
+
+cd $(SolutionDir)graywulf\test\Jhu.Graywulf.Scheduler.Test\$(OutDir)
+copy $(TargetDir)*.dll .
+copy $(TargetDir)*.pdb .
+
+REM copy to web bin
+
+cd $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
+copy $(TargetDir)$(TargetName).dll .
+copy $(TargetDir)$(TargetName).pdb .
+copy $(TargetDir)Jhu.Graywulf.Keystone.dll .
+copy $(TargetDir)Jhu.Graywulf.Keystone.pdb .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb .
+copy $(TargetDir)Newtonsoft.Json.dll .
+copy $(TargetDir)DotNetOpenAuth.Core.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.RelyingParty.dll .
+
+
+REM copy to auth web bin
+
+cd $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
+copy $(TargetDir)$(TargetName).dll .
+copy $(TargetDir)$(TargetName).pdb .
+copy $(TargetDir)Jhu.Graywulf.Keystone.dll .
+copy $(TargetDir)Jhu.Graywulf.Keystone.pdb .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll .
+copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb .
+copy $(TargetDir)Newtonsoft.Json.dll .
+copy $(TargetDir)DotNetOpenAuth.Core.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.dll .
+copy $(TargetDir)DotNetOpenAuth.OpenId.RelyingParty.dll .
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

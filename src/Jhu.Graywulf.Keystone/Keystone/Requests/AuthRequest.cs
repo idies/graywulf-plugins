@@ -13,16 +13,37 @@ namespace Jhu.Graywulf.Keystone
         [JsonProperty("auth")]
         public Auth Auth { get; private set; }
 
-        public static AuthRequest Create(string domain, string username, string password, Domain scopeDomain, Project scopeProject)
+        public static AuthRequest Create(string domainID, string username, string password, Domain scopeDomain, Project scopeProject)
         {
-            Scope scope = null;
+            Domain domain = null;
+            if (domainID != null)
+            {
+                domain = new Domain()
+                {
+                    Name = domainID
+                };
+            }
+            else
+            {
+                domain = scopeDomain;
+            }
 
-            if (scopeDomain != null || scopeProject != null)
+            Scope scope = null;
+            if (scopeProject != null)
+            {
+                // There must be a domain ID in project if project is set
+                scopeProject.Domain = domain;
+
+                scope = new Scope()
+                {
+                    Project = scopeProject
+                };
+            }
+            else if (scopeDomain != null)
             {
                 scope = new Scope()
                 {
                     Domain = scopeDomain,
-                    Project = scopeProject,
                 };
             }
 
@@ -37,14 +58,42 @@ namespace Jhu.Graywulf.Keystone
                         {
                             User = new User()
                             {
-                                Domain = new Domain()
-                                {
-                                    Name = domain
-                                },
+                                Domain = domain,
                                 Name = username,
                                 Password = password
                             }
                         },
+                    },
+                    Scope = scope
+                }
+            };
+        }
+
+        /// <summary>
+        /// Creates a request to renew a token, scoped equally to the old one.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static AuthRequest Create(Token token)
+        {
+            Scope scope = null;
+
+            if (token.Project != null)
+            {
+                scope = new Scope()
+                    {
+                        Project = token.Project,
+                    };
+            }
+
+            return new AuthRequest()
+            {
+                Auth = new Auth()
+                {
+                    Identity = new Identity()
+                    {
+                        Methods = new[] { "token" },
+                        Token = token
                     },
                     Scope = scope
                 }
@@ -80,6 +129,11 @@ namespace Jhu.Graywulf.Keystone
         public static RestMessage<AuthRequest> CreateMessage(string domain, string username, string password, Domain scopeDomain, Project scopeProject)
         {
             return new RestMessage<AuthRequest>(Create(domain, username, password, scopeDomain, scopeProject));
+        }
+
+        public static RestMessage<AuthRequest> CreateMessage(Token token)
+        {
+            return new RestMessage<AuthRequest>(Create(token));
         }
 
         public static RestMessage<AuthRequest> CreateMessage(Token token, Trust trust)

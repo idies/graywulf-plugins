@@ -47,10 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Keystone\AppSettings.cs" />
     <Compile Include="Keystone\Constants.cs" />
     <Compile Include="Keystone\Enum.cs" />
-    <Compile Include="Keystone\Objects\Credential.cs" />
+    <Compile Include="Keystone\KeystoneClientBase.cs" />
+    <Compile Include="Keystone\KeystoneClientConfiguration.cs" />
+    <Compile Include="Keystone\KeystoneTokenCache.cs" />
+    <Compile Include="Keystone\Objects\Credential.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Keystone\Objects\Endpoint.cs" />
     <Compile Include="Keystone\Objects\Entity.cs" />
     <Compile Include="Keystone\Objects\Group.cs" />
@@ -93,11 +97,16 @@
     <Compile Include="Keystone\Responses\ErrorResponse.cs" />
     <Compile Include="Keystone\Objects\Token.cs" />
     <Compile Include="Keystone\Objects\User.cs" />
+    <Compile Include="Keystone\KeystoneCredentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Keystone\Objects\Auth.cs" />
     <Compile Include="Keystone\Requests\AuthRequest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Components\Jhu.Graywulf.Components.csproj">
+      <Project>{abb4c403-720a-47e1-9485-cfaadd696656}</Project>
+      <Name>Jhu.Graywulf.Components</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jhu.Graywulf.SimpleRestClient\Jhu.Graywulf.SimpleRestClient.csproj">
       <Project>{8ec7930c-ccc4-47d3-99bd-39e54eb405a9}</Project>
       <Name>Jhu.Graywulf.SimpleRestClient</Name>

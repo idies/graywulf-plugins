@@ -17,8 +17,7 @@ namespace Jhu.Graywulf.Keystone
             {
                 if (client == null)
                 {
-                    client = new KeystoneClient(new Uri(Keystone.AppSettings.Url));
-                    client.AdminAuthToken = Keystone.AppSettings.AdminToken;
+                    client = new KeystoneClient();
                 }
 
                 return client;
