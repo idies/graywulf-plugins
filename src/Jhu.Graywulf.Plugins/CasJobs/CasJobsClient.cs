@@ -16,7 +16,7 @@ namespace Jhu.Graywulf.CasJobs
         {
             get
             {
-                return (CasJobsClientConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/casJobs");
+                return (CasJobsClientConfiguration)ConfigurationManager.GetSection("jhu.graywulf/casJobs");
             }
         }
 
