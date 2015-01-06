@@ -22,7 +22,7 @@ namespace Jhu.Graywulf.Web.Security
         {
             get
             {
-                return (OpenIDConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/authentication/openID");
+                return (OpenIDConfiguration)ConfigurationManager.GetSection("jhu.graywulf/authentication/openID");
             }
         }
 

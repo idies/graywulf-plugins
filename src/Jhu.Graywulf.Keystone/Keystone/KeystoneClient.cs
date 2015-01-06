@@ -27,7 +27,7 @@ namespace Jhu.Graywulf.Keystone
         {
             get
             {
-                return (KeystoneClientConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/keystone/client");
+                return (KeystoneClientConfiguration)ConfigurationManager.GetSection("jhu.graywulf/keystone/client");
             }
         }
 

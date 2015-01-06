@@ -12,7 +12,7 @@ namespace Jhu.Graywulf.SciDrive
         {
             get
             {
-                return (SciDriveClientConfiguration)ConfigurationManager.GetSection("Jhu.Graywulf/sciDrive");
+                return (SciDriveClientConfiguration)ConfigurationManager.GetSection("jhu.graywulf/sciDrive");
             }
         }
 
