@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Configuration;
+using Jhu.Graywulf.Check;
 using Jhu.Graywulf.Registry;
 
 namespace Jhu.Graywulf.Web.Security
@@ -12,7 +13,7 @@ namespace Jhu.Graywulf.Web.Security
     /// user data stored in a keystone instance. It created shadow
     /// users in the Graywulf registry
     /// </summary>
-    public class KeystoneIdentityProvider : GraywulfIdentityProvider
+    public class KeystoneIdentityProvider : GraywulfIdentityProvider, ICheckable
     {
         #region Properties
 
@@ -341,5 +342,14 @@ namespace Jhu.Graywulf.Web.Security
 
             return trust;
         }
+
+        #region Check routines
+
+        public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
+        {
+            yield return new KeystoneCheck();
+        }
+
+        #endregion
     }
 }
