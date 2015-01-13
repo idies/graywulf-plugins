@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Security;
 using System.Configuration;
 using Jhu.Graywulf.Components;
+using Jhu.Graywulf.Check;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Keystone;
 
@@ -18,7 +19,7 @@ namespace Jhu.Graywulf.Web.Security
     /// Implements functions to authenticate an HTTP request based on
     /// a Keystone token in the header
     /// </summary>
-    public class KeystoneAuthentication : Authentication
+    public class KeystoneAuthentication : Authentication, ICheckable
     {
         #region Static members
         public static KeystoneAuthenticationConfiguration Configuration
@@ -246,6 +247,11 @@ namespace Jhu.Graywulf.Web.Security
             }
 
             return tokenID;
+        }
+
+        public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
+        {
+            yield return new KeystoneCheck();
         }
     }
 }

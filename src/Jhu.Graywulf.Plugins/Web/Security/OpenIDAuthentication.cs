@@ -8,14 +8,16 @@ using System.Web;
 using System.Configuration;
 using DotNetOpenAuth.OpenId.RelyingParty;
 using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
+using Jhu.Graywulf.Check;
 using Jhu.Graywulf.Registry;
+using Jhu.Graywulf.Web.Check;
 
 namespace Jhu.Graywulf.Web.Security
 {
     /// <summary>
     /// Implements OpenID authentication.
     /// </summary>
-    public class OpenIDAuthentication : Authentication
+    public class OpenIDAuthentication : Authentication, ICheckable
     {
         #region Static members
         public static OpenIDConfiguration Configuration
@@ -216,6 +218,11 @@ namespace Jhu.Graywulf.Web.Security
             identity.User.CellPhone = fetch.Attributes.Contains(WellKnownAttributes.Contact.Phone.Mobile) ? fetch.Attributes[WellKnownAttributes.Contact.Phone.Mobile].Values[0] : "";
 
             return principal;
+        }
+
+        public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
+        {
+            yield return new UrlCheck(discoveryUri.ToString());
         }
     }
 }

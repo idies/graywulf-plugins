@@ -98,6 +98,7 @@
     <Compile Include="Web\Security\CustomAuthenticationFactory.cs" />
     <Compile Include="Web\Security\KeystoneAuthentication.cs" />
     <Compile Include="Web\Security\KeystoneAuthenticationConfiguration.cs" />
+    <Compile Include="Web\Security\KeystoneCheck.cs" />
     <Compile Include="Web\Security\KeystoneIdentityProvider.cs" />
     <Compile Include="Web\Security\OpenIDAuthentication.cs" />
     <Compile Include="Web\Security\OpenIDProviderSettings.cs" />
