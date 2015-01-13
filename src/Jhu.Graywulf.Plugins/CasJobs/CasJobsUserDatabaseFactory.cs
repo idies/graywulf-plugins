@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web;
+using Jhu.Graywulf.Check;
 using Jhu.Graywulf.Schema;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Web.Security;
@@ -17,7 +18,7 @@ namespace Jhu.Graywulf.CasJobs
     /// in a Graywulf installation. Authentication relies on Keystone and no
     /// original CasJobs authentication is supported.
     /// </summary>
-    public class CasJobsUserDatabaseFactory : UserDatabaseFactory
+    public class CasJobsUserDatabaseFactory : UserDatabaseFactory, ICheckable
     {
         public CasJobsUserDatabaseFactory(Federation federation)
             : base(federation)
@@ -213,5 +214,14 @@ namespace Jhu.Graywulf.CasJobs
 
             return cjuser;
         }
+
+        #region Check routines
+
+        public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
+        {
+            yield return new CasJobsCheck();
+        }
+
+        #endregion
     }
 }

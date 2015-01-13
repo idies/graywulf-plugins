@@ -82,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CasJobs\CasJobsCheck.cs" />
     <Compile Include="CasJobs\CasJobsClient.cs" />
     <Compile Include="CasJobs\CasJobsClientConfiguration.cs" />
     <Compile Include="CasJobs\CasJobsException.cs" />
