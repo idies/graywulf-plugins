@@ -563,6 +563,8 @@ namespace Jhu.Graywulf.Keystone
                 GetAdminToken());
         }
 
+        // TODO: add user groups
+
         public void GrantRole(Domain domain, User user, Role role)
         {
             SendRequest(
