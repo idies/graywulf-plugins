@@ -110,7 +110,7 @@ namespace Jhu.Graywulf.Web.Security
                 }
 
                 // If the token is coming in a cookie and seems too old we can renew it here
-                if (foundInCookie && (DateTime.Now.ToUniversalTime() - token.IssuedAt).TotalMinutes > config.TokenRenewalInterval)
+                if (foundInCookie && (token.ExpiresAt - DateTime.UtcNow).TotalMinutes < config.TokenRenewalInterval)
                 {
                     // Request new token here...
                     var ksclient = new KeystoneClient();
