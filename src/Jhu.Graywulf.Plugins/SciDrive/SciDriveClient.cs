@@ -8,11 +8,11 @@ namespace Jhu.Graywulf.SciDrive
 {
     public class SciDriveClient
     {
-        public static SciDriveClientConfiguration Configuration
+        public static SciDriveConfiguration Configuration
         {
             get
             {
-                return (SciDriveClientConfiguration)ConfigurationManager.GetSection("jhu.graywulf/sciDrive");
+                return (SciDriveConfiguration)ConfigurationManager.GetSection("jhu.graywulf/sciDrive");
             }
         }
 

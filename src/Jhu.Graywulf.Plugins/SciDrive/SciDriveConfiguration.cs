@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 
 namespace Jhu.Graywulf.SciDrive
 {
-    public class SciDriveClientConfiguration : ConfigurationSection
+    public class SciDriveConfiguration : ConfigurationSection
     {
         #region Static declarations
 
@@ -23,7 +23,7 @@ namespace Jhu.Graywulf.SciDrive
         private static readonly ConfigurationProperty propTrustExpiresAfter = new ConfigurationProperty(
             "trustExpiresAfter", typeof(TimeSpan), TimeSpan.Zero, ConfigurationPropertyOptions.None);
 
-        static SciDriveClientConfiguration()
+        static SciDriveConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
 
@@ -59,7 +59,7 @@ namespace Jhu.Graywulf.SciDrive
         #endregion
         #region Constructors and initializers
 
-        public SciDriveClientConfiguration()
+        public SciDriveConfiguration()
         {
         }
 
