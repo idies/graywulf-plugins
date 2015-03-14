@@ -17,16 +17,21 @@ namespace Jhu.Graywulf.SciDrive
 
         public Uri Uri
         {
-            get { return new Uri(uri.Text, UriKind.RelativeOrAbsolute); }
-            set { uri.Text = value.OriginalString; }
+            get
+            {
+                return SciDriveClient.GetFileGetUri(new Uri(uri.Text, UriKind.Relative));
+            }
+            set
+            {
+                uri.Text = SciDriveClient.GetFilePath(value).ToString();
+            }
         }
 
         public Credentials Credentials
         {
             get
             {
-                // TODO: add keystone header here
-                return null;
+                return SciDriveClient.GetCredentials();
             }
             set { }
         }

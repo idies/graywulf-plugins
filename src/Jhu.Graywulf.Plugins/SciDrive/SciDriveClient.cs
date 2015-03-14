@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Configuration;
+using Jhu.Graywulf.IO;
 
 namespace Jhu.Graywulf.SciDrive
 {
@@ -57,6 +58,57 @@ namespace Jhu.Graywulf.SciDrive
             {
                 // In any other case just use HTTP or HTTPS
                 return uri;
+            }
+        }
+
+        public static Uri GetFileGetUri(Uri path)
+        {
+            var uri = Configuration.BaseUri;
+            uri = Util.UriConverter.Combine(uri, "1/files/dropbox/");
+            uri = Util.UriConverter.Combine(uri, path);
+
+            return uri;
+        }
+
+        public static Uri GetFilePutUri(Uri path)
+        {
+            var uri = Configuration.BaseUri;
+            uri = Util.UriConverter.Combine(uri, "1/files_put/dropbox/");
+            uri = Util.UriConverter.Combine(uri, path);
+
+            return uri;
+        }
+
+        public static Uri GetFilePath(Uri uri)
+        {
+            return uri.MakeRelativeUri(Configuration.BaseUri);
+        }
+
+        public static Credentials GetCredentials()
+        {
+            var name = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+            Keystone.Token token;
+
+            // TODO: replace keystone token to a trust here
+
+            if (Keystone.KeystoneTokenCache.Instance.TryGetValueByUserName(name, name, out token))
+            {
+                var credentials = new Credentials();
+
+                var header = new AuthenticationHeader()
+                {
+                    Name = Web.Security.KeystoneAuthentication.Configuration.AuthTokenHeader,
+                    Value = token.ID
+                };
+
+
+                credentials.AuthenticationHeaders.Add(header);
+
+                return credentials;
+            }
+            else
+            {
+                throw new System.Security.SecurityException("Keystone token required");
             }
         }
     }
