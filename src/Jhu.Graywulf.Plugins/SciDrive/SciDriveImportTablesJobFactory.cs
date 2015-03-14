@@ -15,13 +15,7 @@ namespace Jhu.Graywulf.SciDrive
                 yield return method;
             }
 
-            yield return new ImportTablesMethod()
-            {
-                ID = "scidrive",
-                Description = "Import from SciDrive",
-                BaseUri = SciDriveClient.Configuration.BaseUri,
-                HasCredentials = false,
-            };
+            yield return new ImportTablesFromSciDriveMethod();
         }
 
         public override ImportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, Format.DataFileBase source, IO.Tasks.DestinationTable destination)

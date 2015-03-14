@@ -117,7 +117,7 @@ namespace Jhu.Graywulf.CasJobs
                 cn.Open();
 
                 // TODO: this might need to be changed to use mydbhost instead of server
-                var sql = "SELECT server, admin_usr, admin_pw, CStringExtra FROM MyDBHosts WHERE server = @server";
+                var sql = "SELECT server, admin_usr, admin_pw, CStringExtra FROM MyDBHosts WHERE mydbhost = @server";
 
                 using (var cmd = new SqlCommand(sql, cn))
                 {
