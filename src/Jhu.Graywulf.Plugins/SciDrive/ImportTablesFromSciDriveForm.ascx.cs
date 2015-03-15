@@ -31,7 +31,8 @@ namespace Jhu.Graywulf.SciDrive
         {
             get
             {
-                return SciDriveClient.GetCredentials();
+                // SciDrive credentials will be set by the job factory
+                return null;
             }
             set { }
         }
