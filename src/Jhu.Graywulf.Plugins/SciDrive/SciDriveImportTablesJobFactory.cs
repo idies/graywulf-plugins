@@ -20,7 +20,17 @@ namespace Jhu.Graywulf.SciDrive
 
         public override ImportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, Format.DataFileBase source, IO.Tasks.DestinationTable destination)
         {
-            // TODO: intercept scidrive URIs and modify credentials
+            // Intercep scidrive URIs and modify credentials
+
+            if (uri.ToString().StartsWith(SciDriveClient.Configuration.BaseUri.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (credentials == null)
+                {
+                    credentials = new IO.Credentials();
+                }
+
+                SciDriveClient.SetAuthenticationHeaders(credentials);
+            }
 
             return base.CreateParameters(federation, uri, credentials, source, destination);
         }

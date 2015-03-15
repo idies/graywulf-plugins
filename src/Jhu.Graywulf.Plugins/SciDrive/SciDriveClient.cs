@@ -84,7 +84,7 @@ namespace Jhu.Graywulf.SciDrive
             return uri.MakeRelativeUri(Configuration.BaseUri);
         }
 
-        public static Credentials GetCredentials()
+        public static void SetAuthenticationHeaders(Credentials credentials)
         {
             var name = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             Keystone.Token token;
@@ -93,8 +93,6 @@ namespace Jhu.Graywulf.SciDrive
 
             if (Keystone.KeystoneTokenCache.Instance.TryGetValueByUserName(name, name, out token))
             {
-                var credentials = new Credentials();
-
                 var header = new AuthenticationHeader()
                 {
                     Name = Web.Security.KeystoneAuthentication.Configuration.AuthTokenHeader,
@@ -103,8 +101,6 @@ namespace Jhu.Graywulf.SciDrive
 
 
                 credentials.AuthenticationHeaders.Add(header);
-
-                return credentials;
             }
             else
             {
