@@ -179,6 +179,9 @@ namespace Jhu.Graywulf.Web.Security
                 if (roles == null || roles.Length == 0)
                 {
                     throw new Exception("No matching role found");      // TODO: ***
+                    
+                    // TODO: we might need to automatically create roles in graywulf
+                    // once a new role in Keystone found
                 }
                 var role = roles[0];
                 KeystoneClient.GrantRole(keystoneProject, keystoneUser, role);
