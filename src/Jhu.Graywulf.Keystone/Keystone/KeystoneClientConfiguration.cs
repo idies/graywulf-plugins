@@ -22,9 +22,6 @@ namespace Jhu.Graywulf.Keystone
         private static readonly ConfigurationProperty propDomain = new ConfigurationProperty(
             "domain", typeof(string), Constants.KeystoneDefaultDomain, ConfigurationPropertyOptions.None);
 
-        private static readonly ConfigurationProperty propProject = new ConfigurationProperty(
-            "project", typeof(string), null, ConfigurationPropertyOptions.None);
-
         private static readonly ConfigurationProperty propAdminToken = new ConfigurationProperty(
             "adminToken", typeof(string), null, ConfigurationPropertyOptions.None);
 
@@ -44,7 +41,6 @@ namespace Jhu.Graywulf.Keystone
             properties.Add(propAuthorityName);
             properties.Add(propBaseUri);
             properties.Add(propDomain);
-            properties.Add(propProject);
             properties.Add(propAdminToken);
             properties.Add(propAdminProject);
             properties.Add(propAdminUserName);
@@ -81,16 +77,6 @@ namespace Jhu.Graywulf.Keystone
         {
             get { return (string)base[propDomain]; }
             set { base[propDomain] = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the project (tenant) users are associated with.
-        /// </summary>
-        [ConfigurationProperty("project")]
-        public string Project
-        {
-            get { return (string)base[propProject]; }
-            set { base[propProject] = value; }
         }
 
         /// <summary>
