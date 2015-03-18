@@ -55,6 +55,7 @@
     <Compile Include="CasJobs\UsersTest.cs" />
     <Compile Include="CasJobs\CasJobsTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SciDrive\ExportTest.cs" />
     <Compile Include="SciDrive\ImportTest.cs" />
     <Compile Include="Web\Security\KeystoneIdentityProviderTest.cs" />
   </ItemGroup>

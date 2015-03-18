@@ -17,7 +17,7 @@ namespace Jhu.Graywulf.SciDrive
             }
         }
 
-        private static bool IsUriSciDrive(Uri uri)
+        public static bool IsUriSciDrive(Uri uri)
         {
             var c = StringComparer.InvariantCultureIgnoreCase;
 
@@ -86,10 +86,19 @@ namespace Jhu.Graywulf.SciDrive
 
         public static void SetAuthenticationHeaders(Credentials credentials)
         {
-            // TODO: use this once trust works
-            //var header = CreateAuthenticationHeaderFromTrust();
+            AuthenticationHeader header;
 
-            var header = CreateAuthenticationHeaderFromToken();
+            if (SciDriveClient.Configuration.IsTrustEnabled)
+            {
+                // TODO: add this once trusts tested and work
+                //header = CreateAuthenticationHeaderFromTrust();
+                throw new NotImplementedException();
+            }
+            else
+            {
+                header = CreateAuthenticationHeaderFromToken();
+            }
+
             credentials.AuthenticationHeaders.Add(header);
         }
 
@@ -97,8 +106,6 @@ namespace Jhu.Graywulf.SciDrive
         {
             var name = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             Keystone.Token token;
-
-            // TODO: replace keystone token to a trust here
 
             if (Keystone.KeystoneTokenCache.Instance.TryGetValueByUserName(name, name, out token))
             {
@@ -138,14 +145,21 @@ namespace Jhu.Graywulf.SciDrive
 
                 var trust = new Keystone.Trust()
                 {
-                    ExpiresAt = DateTime.UtcNow.AddHours(12),
+                    ExpiresAt = DateTime.UtcNow + Configuration.TrustExpiresAfter,
                     ProjectID = token.Project.ID,
                     Impersonation = true,
                     TrustorUserID = token.User.ID,
                     //TrusteeUserID = token.User.ID,
-                    TrusteeUserID = "9acc0f0db48f459389ce3cb0662c3f66",
+                    TrusteeUserID = "", // TODO: whom to trust?
                     RemainingUses = 5,
-                    
+                    Roles = new Keystone.Role[]
+                    {
+                        new Keystone.Role()
+                        {
+                            // TODO: is specifying name enough?
+                            Name = Configuration.TrustRole
+                        }
+                    }
                 };
 
                 trust = ksclient.Create(trust);

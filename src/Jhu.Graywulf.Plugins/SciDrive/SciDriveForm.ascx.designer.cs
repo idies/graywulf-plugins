@@ -10,7 +10,7 @@
 namespace Jhu.Graywulf.SciDrive {
     
     
-    public partial class ImportTablesFromSciDriveForm {
+    public partial class SciDriveForm {
         
         /// <summary>
         /// uriLabel control.

@@ -22,13 +22,9 @@ namespace Jhu.Graywulf.SciDrive
         {
             // Intercept scidrive URIs and modify credentials
 
-            if (uri.ToString().StartsWith(SciDriveClient.Configuration.BaseUri.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (SciDriveClient.IsUriSciDrive(uri))
             {
-                if (credentials == null)
-                {
-                    credentials = new IO.Credentials();
-                }
-
+                credentials = credentials ?? new IO.Credentials();
                 SciDriveClient.SetAuthenticationHeaders(credentials);
             }
 

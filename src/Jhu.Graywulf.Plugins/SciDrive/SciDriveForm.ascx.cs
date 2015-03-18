@@ -2,17 +2,18 @@
 using System.Web.UI;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Jobs.ImportTables;
+using Jhu.Graywulf.Jobs.ExportTables;
 using Jhu.Graywulf.Format;
 using Jhu.Graywulf.IO;
 using Jhu.Graywulf.IO.Tasks;
 
 namespace Jhu.Graywulf.SciDrive
 {
-    public partial class ImportTablesFromSciDriveForm : UserControl, IImportTablesForm
+    public partial class SciDriveForm : UserControl, IImportTablesForm, IExportTablesForm
     {
         public static string GetUrl()
         {
-            return "~/Jobs/ImportTables/ImportTablesFromSciDriveForm.ascx";
+            return "~/SciDrive/SciDriveForm.ascx";
         }
 
         public Uri Uri

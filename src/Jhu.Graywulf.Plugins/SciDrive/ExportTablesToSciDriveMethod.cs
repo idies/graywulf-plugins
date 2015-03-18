@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Jhu.Graywulf.Web.UI;
-using Jhu.Graywulf.Jobs.ImportTables;
+using Jhu.Graywulf.Jobs.ExportTables;
 
 namespace Jhu.Graywulf.SciDrive
 {
-    public class ImportTablesFromSciDriveMethod : ImportTablesMethod
+    public class ExportTablesToSciDriveMethod : ExportTablesMethod
     {
         public override string ID
         {
-            get { return "import_scidrive"; }
+            get { return "export_scidrive"; }
         }
 
         public override string Description
         {
-            get { return "Import from SciDrive"; }
+            get { return "Export to SciDrive"; }
         }
 
         public override void RegisterVirtualPaths(EmbeddedVirtualPathProvider vpp)

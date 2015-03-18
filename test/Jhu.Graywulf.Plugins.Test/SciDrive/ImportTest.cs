@@ -43,7 +43,7 @@ namespace Jhu.Graywulf.SciDrive
         {
             ImportFileHelper("graywulf_io_test/csv_numbers.csv.gz", "ImportCompressedFromSciDriveTest");
         }
-
+        
         [TestMethod]
         public void ImportArchiveFromSciDriveTest()
         {

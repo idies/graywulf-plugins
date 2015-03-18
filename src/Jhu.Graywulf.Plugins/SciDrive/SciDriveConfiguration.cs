@@ -20,6 +20,9 @@ namespace Jhu.Graywulf.SciDrive
         private static readonly ConfigurationProperty propIsTrustEnabled = new ConfigurationProperty(
             "isTrustEnabled", typeof(bool), false, ConfigurationPropertyOptions.None);
 
+        private static readonly ConfigurationProperty propTrustRole = new ConfigurationProperty(
+            "trustRole", typeof(string), null, ConfigurationPropertyOptions.None);
+
         private static readonly ConfigurationProperty propTrustExpiresAfter = new ConfigurationProperty(
             "trustExpiresAfter", typeof(TimeSpan), TimeSpan.Zero, ConfigurationPropertyOptions.None);
 
@@ -29,6 +32,7 @@ namespace Jhu.Graywulf.SciDrive
 
             properties.Add(propBaseUri);
             properties.Add(propIsTrustEnabled);
+            properties.Add(propTrustRole);
             properties.Add(propTrustExpiresAfter);
         }
 
@@ -47,6 +51,13 @@ namespace Jhu.Graywulf.SciDrive
         {
             get { return (bool)base[propIsTrustEnabled]; }
             set { base[propIsTrustEnabled] = value; }
+        }
+
+        [ConfigurationProperty("trustRole")]
+        public string TrustRole
+        {
+            get { return (string)base[propTrustRole]; }
+            set { base[propTrustRole] = value; }
         }
 
         [ConfigurationProperty("trustExpiresAfter")]

@@ -1,7 +1,7 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="Jhu.Graywulf.SciDrive.ImportTablesFromSciDriveForm" Codebehind="ImportTablesFromSciDriveForm.ascx.cs" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="Jhu.Graywulf.SciDrive.SciDriveForm" Codebehind="SciDriveForm.ascx.cs" %>
 
 <p>
-    Specify a file name to pull from SciDrive
+    Specify a file on SciDrive
 </p>
 <table class="FormTable">
     <tr>

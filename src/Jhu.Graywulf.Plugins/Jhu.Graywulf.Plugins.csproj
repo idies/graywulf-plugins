@@ -92,18 +92,19 @@
     <Compile Include="CasJobs\Objects\User.cs" />
     <Compile Include="CasJobs\Responses\ErrorResponse.cs" />
     <Compile Include="SciDrive\Constants.cs" />
+    <Compile Include="SciDrive\ExportTablesToSciDriveMethod.cs" />
     <Compile Include="SciDrive\ImportTablesFromSciDriveMethod.cs" />
-    <Compile Include="SciDrive\ImportTablesFromSciDriveForm.ascx.cs">
-      <DependentUpon>ImportTablesFromSciDriveForm.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SciDrive\ImportTablesFromSciDriveForm.ascx.designer.cs">
-      <DependentUpon>ImportTablesFromSciDriveForm.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SciDrive\SciDriveClient.cs" />
     <Compile Include="SciDrive\SciDriveConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SciDrive\SciDriveExportTablesJobFactory.cs" />
+    <Compile Include="SciDrive\SciDriveForm.ascx.cs">
+      <DependentUpon>SciDriveForm.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SciDrive\SciDriveForm.ascx.designer.cs">
+      <DependentUpon>SciDriveForm.ascx.cs</DependentUpon>
+    </Compile>
     <Compile Include="SciDrive\SciDriveImportTablesJobFactory.cs" />
     <Compile Include="Web\Security\Constants.cs" />
     <Compile Include="Web\Security\CustomAuthenticationFactory.cs" />
@@ -162,7 +163,7 @@
     <Folder Include="CasJobs\Requests\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SciDrive\ImportTablesFromSciDriveForm.ascx">
+    <EmbeddedResource Include="SciDrive\SciDriveForm.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </EmbeddedResource>
   </ItemGroup>
