@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="Jhu.Graywulf.SciDrive.SciDriveForm" Codebehind="SciDriveForm.ascx.cs" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="Jhu.Graywulf.SciDrive.ExportTablesToSciDriveForm" Codebehind="ExportTablesToSciDriveForm.ascx.cs" %>
 
 <p>
     Specify a file on SciDrive

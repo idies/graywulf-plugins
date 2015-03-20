@@ -21,12 +21,14 @@ namespace Jhu.Graywulf.SciDrive
 
         public override void RegisterVirtualPaths(EmbeddedVirtualPathProvider vpp)
         {
-            vpp.RegisterVirtualPath(SciDriveForm.GetUrl(), GetResourceName(typeof(SciDriveForm), ".ascx"));
+            vpp.RegisterVirtualPath(
+                ImportTablesFromSciDriveForm.GetUrl(),
+                GetResourceName(typeof(ImportTablesFromSciDriveForm), ".ascx"));
         }
 
         public override string GetForm()
         {
-            return SciDriveForm.GetUrl();
+            return ImportTablesFromSciDriveForm.GetUrl();
         }
     }
 }

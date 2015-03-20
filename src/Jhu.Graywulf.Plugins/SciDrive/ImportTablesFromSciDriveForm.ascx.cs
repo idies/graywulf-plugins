@@ -9,11 +9,11 @@ using Jhu.Graywulf.IO.Tasks;
 
 namespace Jhu.Graywulf.SciDrive
 {
-    public partial class SciDriveForm : UserControl, IImportTablesForm, IExportTablesForm
+    public partial class ImportTablesFromSciDriveForm : UserControl, IImportTablesForm
     {
         public static string GetUrl()
         {
-            return "~/SciDrive/SciDriveForm.ascx";
+            return "~/SciDrive/ImportTablesFromSciDriveForm.ascx";
         }
 
         public Uri Uri

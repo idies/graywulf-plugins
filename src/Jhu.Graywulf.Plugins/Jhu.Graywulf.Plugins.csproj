@@ -93,17 +93,24 @@
     <Compile Include="CasJobs\Responses\ErrorResponse.cs" />
     <Compile Include="SciDrive\Constants.cs" />
     <Compile Include="SciDrive\ExportTablesToSciDriveMethod.cs" />
+    <Compile Include="SciDrive\ExportTablesToSciDriveForm.ascx.cs">
+      <DependentUpon>ExportTablesToSciDriveForm.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SciDrive\ExportTablesToSciDriveForm.ascx.designer.cs">
+      <DependentUpon>ExportTablesToSciDriveForm.ascx.cs</DependentUpon>
+    </Compile>
     <Compile Include="SciDrive\ImportTablesFromSciDriveMethod.cs" />
     <Compile Include="SciDrive\SciDriveClient.cs" />
     <Compile Include="SciDrive\SciDriveConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SciDrive\SciDriveExportTablesJobFactory.cs" />
-    <Compile Include="SciDrive\SciDriveForm.ascx.cs">
-      <DependentUpon>SciDriveForm.ascx</DependentUpon>
+    <Compile Include="SciDrive\ImportTablesFromSciDriveForm.ascx.cs">
+      <DependentUpon>ImportTablesFromSciDriveForm.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SciDrive\SciDriveForm.ascx.designer.cs">
-      <DependentUpon>SciDriveForm.ascx.cs</DependentUpon>
+    <Compile Include="SciDrive\ImportTablesFromSciDriveForm.ascx.designer.cs">
+      <DependentUpon>ImportTablesFromSciDriveForm.ascx.cs</DependentUpon>
     </Compile>
     <Compile Include="SciDrive\SciDriveImportTablesJobFactory.cs" />
     <Compile Include="Web\Security\Constants.cs" />
@@ -163,7 +170,12 @@
     <Folder Include="CasJobs\Requests\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SciDrive\SciDriveForm.ascx">
+    <EmbeddedResource Include="SciDrive\ImportTablesFromSciDriveForm.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SciDrive\ExportTablesToSciDriveForm.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </EmbeddedResource>
   </ItemGroup>
