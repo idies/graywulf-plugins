@@ -58,6 +58,10 @@ namespace Jhu.Graywulf.Web.Security
         private void InitializeMembers()
         {
             AuthorityName = KeystoneClient.Configuration.AuthorityName;
+            AuthorityUri = KeystoneClient.Configuration.BaseUri;
+            IsMasterAuthority = Configuration.IsMasterAuthority;
+            DisplayName = Constants.ProtocolNameKeystone;
+            IsEnabled = Configuration.IsEnabled;
         }
 
         #endregion

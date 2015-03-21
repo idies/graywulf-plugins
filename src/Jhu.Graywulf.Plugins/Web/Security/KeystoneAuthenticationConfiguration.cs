@@ -16,6 +16,9 @@ namespace Jhu.Graywulf.Web.Security
         private static readonly ConfigurationProperty propIsEnabled = new ConfigurationProperty(
             "enabled", typeof(bool), false, ConfigurationPropertyOptions.None);
 
+        private static readonly ConfigurationProperty propIsMasterAuthority = new ConfigurationProperty(
+            "isMasterAuthority", typeof(bool), false, ConfigurationPropertyOptions.None);
+
         private static readonly ConfigurationProperty propAuthTokenParameter = new ConfigurationProperty(
             "authTokenParameter", typeof(string), Constants.KeystoneDefaultAuthTokenParameter, ConfigurationPropertyOptions.None);
 
@@ -33,6 +36,7 @@ namespace Jhu.Graywulf.Web.Security
             properties = new ConfigurationPropertyCollection();
 
             properties.Add(propIsEnabled);
+            properties.Add(propIsMasterAuthority);
             properties.Add(propAuthTokenParameter);
             properties.Add(propAuthTokenHeader);
             properties.Add(propAuthTokenCookie);
@@ -47,6 +51,13 @@ namespace Jhu.Graywulf.Web.Security
         {
             get { return (bool)base[propIsEnabled]; }
             set { base[propIsEnabled] = value; }
+        }
+
+        [ConfigurationProperty("isMasterAuthority")]
+        public bool IsMasterAuthority
+        {
+            get { return (bool)base[propIsMasterAuthority]; }
+            set { base[propIsMasterAuthority] = value; }
         }
 
         /// <summary>
