@@ -138,7 +138,7 @@ namespace Jhu.Graywulf.SimpleRestClient
                         Body = ReadResponseBody(ex.Response)
                     };
 
-#if DEBUG
+#if BREAKDEBUG
                     System.Diagnostics.Debugger.Break();
 #endif
 

@@ -108,7 +108,7 @@ namespace Jhu.Graywulf.Keystone
             }
             catch (RestException ex)
             {
-#if DEBUG
+#if BREAKDEBUG
                 System.Diagnostics.Debugger.Break();
 #endif
 
