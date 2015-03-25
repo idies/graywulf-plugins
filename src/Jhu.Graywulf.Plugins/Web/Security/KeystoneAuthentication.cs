@@ -80,8 +80,6 @@ namespace Jhu.Graywulf.Web.Security
             // Token renewal only happens when the token is conveyed in a cookie, meaning the
             // request is made by a browser or a smarter client.
 
-            var config = Configuration;
-
             bool foundInCookie;
             var tokenID = GetTokenID(request, out foundInCookie);
 
@@ -92,45 +90,15 @@ namespace Jhu.Graywulf.Web.Security
                 // Check if the resolved token is already in the cache
                 if (!KeystoneTokenCache.Instance.TryGetValueByTokenID(tokenID, out token))
                 {
-                    // Need to validate token against Keystone
-                    var ksclient = new KeystoneClient();
-
-                    try
-                    {
-                        token = ksclient.GetToken(tokenID);
-                    }
-                    catch (System.Net.WebException)
-                    {
-                        // This is very likely a token not found exception (404)
-                        // user cannot be authenticated this way
-                        UpdateAuthenticationResponse(response, null, IsMasterAuthority);
-
-                        return;
-                    }
-
-                    token.User = ksclient.GetUser(token.User.ID);
-
-                    KeystoneTokenCache.Instance.TryAdd(token);
+                    // If it's not in the cache we need to validate it against Keystone
+                    token = ValidateTokenID(tokenID);
                 }
 
-                // If the token is coming in a cookie and seems too old we can renew it here
-                if (foundInCookie && (token.ExpiresAt - DateTime.UtcNow).TotalMinutes < config.TokenRenewalInterval)
+                if (token != null && foundInCookie)
                 {
-                    // Request new token here...
-                    var ksclient = new KeystoneClient();
-                    var newtoken = ksclient.RenewToken(token);
-                    newtoken.User = ksclient.GetUser(newtoken.User.ID);
-
-                    // Update cache
-                    KeystoneTokenCache.Instance.TryRemoveByTokenID(tokenID, out token);
-                    KeystoneTokenCache.Instance.TryAdd(newtoken);
-
-                    token = newtoken;
-
-                    // TODO: Now the problem is if a user comes back with the old but still
-                    // valid token
+                    token = RenewToken(token);
                 }
-
+                
                 UpdateAuthenticationResponse(response, token, IsMasterAuthority);
             }
         }
@@ -176,7 +144,7 @@ namespace Jhu.Graywulf.Web.Security
                 response.SetPrincipal(principal);
             }
 
-            // Add keystone token to various response collections in necessary
+            // Add keystone token to various response collections if necessary
             // This data may be used depending on the communication channel (i.e. browser, WCF)
             if (token != null)
             {
@@ -196,20 +164,28 @@ namespace Jhu.Graywulf.Web.Security
                     {
                         Expires = token.ExpiresAt,
                     };
+
                     response.Cookies.Add(cookie);
                 }
             }
             else
             {
-                // Delete cookie
-                if (!String.IsNullOrWhiteSpace(config.AuthTokenCookie))
+                DeleteAuthCookie(response);
+            }
+        }
+
+        private static void DeleteAuthCookie(AuthenticationResponse response)
+        {
+            var config = Configuration;
+
+            if (!String.IsNullOrWhiteSpace(config.AuthTokenCookie))
+            {
+                var cookie = new System.Web.HttpCookie(config.AuthTokenCookie, String.Empty)
                 {
-                    var cookie = new System.Web.HttpCookie(config.AuthTokenCookie, String.Empty)
-                    {
-                        Expires = DateTime.Now.AddDays(-1)
-                    };
-                    response.Cookies.Add(cookie);
-                }
+                    Expires = DateTime.Now.AddDays(-1)
+                };
+
+                response.Cookies.Add(cookie);
             }
         }
 
@@ -251,6 +227,57 @@ namespace Jhu.Graywulf.Web.Security
             }
 
             return tokenID;
+        }
+
+        private Token ValidateTokenID(string tokenID)
+        {
+            Token token;
+            var ksclient = new KeystoneClient();
+
+            try
+            {
+                token = ksclient.GetToken(tokenID);
+            }
+            catch (KeystoneException)
+            {
+                // This exception happens when
+                // -- user comes in with invalid token
+                // -- the token is missing from the url or cookie
+                // -- the token has expired but it's not in the cache to tell
+                throw;
+            }
+
+            // Look up user owning the token and update cache
+            if (token != null)
+            {
+                token.User = ksclient.GetUser(token.User.ID);
+                KeystoneTokenCache.Instance.TryAdd(token);
+            }            
+
+            return token;
+        }
+
+        private Token RenewToken(Token token)
+        {
+            // If the token is coming in a cookie and seems too old we can renew it here
+            if ((token.ExpiresAt - DateTime.UtcNow).TotalMinutes < Configuration.TokenRenewalInterval)
+            {
+                // Request new token
+                var ksclient = new KeystoneClient();
+                var newtoken = ksclient.RenewToken(token);
+                newtoken.User = ksclient.GetUser(newtoken.User.ID);
+
+                // Update cache
+                KeystoneTokenCache.Instance.TryRemoveByTokenID(token.ID, out token);
+                KeystoneTokenCache.Instance.TryAdd(newtoken);
+
+                token = newtoken;
+
+                // TODO: Now the problem is if a user comes back with the old but still
+                // valid token
+            }
+
+            return token;
         }
 
         public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
