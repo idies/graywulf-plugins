@@ -20,12 +20,16 @@ namespace Jhu.Graywulf.CasJobs
         private static readonly ConfigurationProperty propBatchAdminConnectionString = new ConfigurationProperty(
             "batchAdminConnectionString", typeof(string), null, ConfigurationPropertyOptions.None);
 
+        private static readonly ConfigurationProperty propDefaultSchema = new ConfigurationProperty(
+            "defaultSchema", typeof(string), null, ConfigurationPropertyOptions.None);
+
         static CasJobsClientConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
 
             properties.Add(propBaseUri);
             properties.Add(propBatchAdminConnectionString);
+            properties.Add(propDefaultSchema);
         }
 
         #endregion
@@ -43,6 +47,13 @@ namespace Jhu.Graywulf.CasJobs
         {
             get { return (string)base[propBatchAdminConnectionString]; }
             set { base[propBatchAdminConnectionString] = value; }
+        }
+
+        [ConfigurationProperty("defaultSchema")]
+        public string DefaultSchema
+        {
+            get { return (string)base[propDefaultSchema]; }
+            set { base[propDefaultSchema] = value; }
         }
 
         #endregion

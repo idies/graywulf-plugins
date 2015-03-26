@@ -151,6 +151,7 @@ namespace Jhu.Graywulf.CasJobs
             var ds = new Jhu.Graywulf.Schema.SqlServer.SqlServerDataset()
             {
                 Name = Jhu.Graywulf.Registry.Constants.UserDbName,
+                DefaultSchemaName = CasJobsClient.Configuration.DefaultSchema ?? Jhu.Graywulf.Schema.SqlServer.Constants.DefaultSchemaName,
                 ConnectionString = cstr,
                 IsCacheable = false,
                 IsMutable = true,
