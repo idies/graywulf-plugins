@@ -141,6 +141,10 @@
       <Project>{5868b518-cbfc-43fb-b9c8-c617a65121c4}</Project>
       <Name>Jhu.Graywulf.Schema</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Sql\Jhu.Graywulf.Sql.csproj">
+      <Project>{aada04ee-f578-4628-8ae0-d423bb94c738}</Project>
+      <Name>Jhu.Graywulf.Sql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jhu.Graywulf.Keystone\Jhu.Graywulf.Keystone.csproj">
       <Project>{fb1b903b-cba6-4e7e-8c03-c7d8c49e2471}</Project>
       <Name>Jhu.Graywulf.Keystone</Name>
