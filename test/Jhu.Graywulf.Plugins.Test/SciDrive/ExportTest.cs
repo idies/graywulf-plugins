@@ -33,14 +33,23 @@ namespace Jhu.Graywulf.SciDrive
         }
 
         [TestMethod]
-        public void ExportToSciDriveTest()
+        public void ExportToSciDriveCsvTest()
         {
             ExportFileHelper(
                 "SampleData",
                 "graywulf_io_test/export.zip", 
                 "text/csv",
-                "ExportToSciDriveTest");
+                "ExportToSciDriveCsvTest");
         }
 
+        [TestMethod]
+        public void ExportToSciDriveTxtTest()
+        {
+            ExportFileHelper(
+                "SampleData",
+                "graywulf_io_test/export.zip",
+                "text/plain",
+                "ExportToSciDriveTxtTest");
+        }
     }
 }
