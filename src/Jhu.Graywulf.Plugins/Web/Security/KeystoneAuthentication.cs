@@ -91,7 +91,7 @@ namespace Jhu.Graywulf.Web.Security
                 if (!KeystoneTokenCache.Instance.TryGetValueByTokenID(tokenID, out token))
                 {
                     // If it's not in the cache we need to validate it against Keystone
-                    token = ValidateTokenID(tokenID);
+                    token = ValidateTokenID(tokenID, request, response);
                 }
 
                 if (token != null && foundInCookie)
@@ -229,7 +229,7 @@ namespace Jhu.Graywulf.Web.Security
             return tokenID;
         }
 
-        private Token ValidateTokenID(string tokenID)
+        private Token ValidateTokenID(string tokenID, AuthenticationRequest request, AuthenticationResponse response)
         {
             Token token;
             var ksclient = new KeystoneClient();
@@ -244,7 +244,7 @@ namespace Jhu.Graywulf.Web.Security
                 // -- user comes in with invalid token
                 // -- the token is missing from the url or cookie
                 // -- the token has expired but it's not in the cache to tell
-                throw;
+                token = null;
             }
 
             // Look up user owning the token and update cache
