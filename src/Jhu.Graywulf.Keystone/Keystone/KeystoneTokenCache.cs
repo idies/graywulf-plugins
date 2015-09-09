@@ -66,7 +66,9 @@ namespace Jhu.Graywulf.Keystone
             this.collectionInterval = new TimeSpan(0, 5, 0);
 
             this.tokens = new ConcurrentDictionary<string, Token>(StringComparer.InvariantCultureIgnoreCase);
-            this.users = new ConcurrentDictionary<string, string>(StringComparer.InvariantCulture);
+
+            // TODO: Are Keystone user names case-sensivitve?
+            this.users = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
             // Create the timer but don't start it
             this.collectionTimer = new System.Threading.Timer(CollectionTimerCallback);
