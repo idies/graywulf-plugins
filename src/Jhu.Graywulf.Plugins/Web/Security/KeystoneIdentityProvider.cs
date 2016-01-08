@@ -150,12 +150,13 @@ namespace Jhu.Graywulf.Web.Security
             }
         }
 
-        protected override void OnCreateUser(User user)
+        protected override void OnCreateUser(User user, string password)
         {
             var config = Keystone.KeystoneClient.Configuration;
 
             // Create user in keystone
             var keystoneUser = KeystoneClient.Create(ConvertUser(user));
+            KeystoneClient.ResetPassword(keystoneUser.ID, password);
 
             // Create and associated project (tenant)
             var keystoneProject = new Keystone.Project
@@ -165,8 +166,8 @@ namespace Jhu.Graywulf.Web.Security
             };
             keystoneProject = KeystoneClient.Create(keystoneProject);
 
-            // Create user locally
-            base.OnCreateUser(user);
+            // Create user locally in Graywulf registry
+            base.OnCreateUser(user, password);
 
             // Grant user roles on the project just created. This is necessary to
             // gain access to services like swift.

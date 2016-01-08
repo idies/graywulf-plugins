@@ -35,7 +35,7 @@ namespace Jhu.Graywulf.CasJobs
                     Name = "test_" + new Random().Next().ToString(),
                 };
 
-                id.CreateUser(user);
+                id.CreateUser(user, null);
                 id.ActivateUser(user);
                 id.ResetPassword(user, "alma");
 

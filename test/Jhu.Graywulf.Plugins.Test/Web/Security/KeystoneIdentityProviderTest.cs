@@ -76,8 +76,7 @@ namespace Jhu.Graywulf.Web.Security
                 user.Name = TestPrefix + "user";
                 user.Email = "testuser@graywulf.org";
 
-                ip.CreateUser(user);
-                ip.ResetPassword(user, "alma");
+                ip.CreateUser(user, "alma");
 
                 user.FirstName = "Modified";
                 ip.ModifyUser(user);
