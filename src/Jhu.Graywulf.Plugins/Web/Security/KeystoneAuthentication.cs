@@ -103,6 +103,11 @@ namespace Jhu.Graywulf.Web.Security
             }
         }
 
+        public override void Reset(AuthenticationRequest request, AuthenticationResponse response)
+        {
+            DeleteAuthCookie(response);
+        }
+
         internal static GraywulfPrincipal CreateAuthenticatedPrincipal(Keystone.User user, bool isMasterAuthority)
         {
             var config = Keystone.KeystoneClient.Configuration;

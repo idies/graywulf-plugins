@@ -122,6 +122,11 @@ namespace Jhu.Graywulf.Web.Security
             }
         }
 
+        public override void Reset(AuthenticationRequest request, AuthenticationResponse response)
+        {
+            
+        }
+
         /// <summary>
         /// Redirects the browser to the sign in page of the OpenID authority.
         /// </summary>
