@@ -127,7 +127,7 @@ namespace Jhu.Graywulf.Web.Security
             // Accept users without the following parameters set but
             // this is not a good practice in general to leave them null 
             // in Keystone
-            identity.User = new Registry.User()
+            var reguser = new Registry.User()
             {
                 Name = user.Name,
                 Comments = user.Description ?? String.Empty,
@@ -135,7 +135,12 @@ namespace Jhu.Graywulf.Web.Security
                 DeploymentState = user.Enabled.Value ? Registry.DeploymentState.Deployed : Registry.DeploymentState.Undeployed,
             };
 
-            return new GraywulfPrincipal(identity);;
+            var fqn = EntityFactory.CombineName(EntityType.User, ContextManager.Configuration.DomainName, user.Name);
+            reguser.SetFullyQualifiedName(fqn);
+
+            identity.User = reguser;
+
+            return new GraywulfPrincipal(identity);
         }
 
         internal static void UpdateAuthenticationResponse(AuthenticationResponse response, Token token, bool isMasterAuthority)
