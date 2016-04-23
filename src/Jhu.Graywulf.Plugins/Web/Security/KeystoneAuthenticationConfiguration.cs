@@ -31,6 +31,9 @@ namespace Jhu.Graywulf.Web.Security
         private static readonly ConfigurationProperty propTokenRenewalInterval = new ConfigurationProperty(
             "tokenRenewalInterval", typeof(int), Constants.KeystoneTokenRenewalInterval, ConfigurationPropertyOptions.None);
 
+        private static readonly ConfigurationProperty propDefaultRole = new ConfigurationProperty(
+            "defaultRole", typeof(bool), Constants.KeystoneDefaultRole, ConfigurationPropertyOptions.None);
+
         static KeystoneAuthenticationConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
@@ -41,6 +44,7 @@ namespace Jhu.Graywulf.Web.Security
             properties.Add(propAuthTokenHeader);
             properties.Add(propAuthTokenCookie);
             properties.Add(propTokenRenewalInterval);
+            properties.Add(propDefaultRole);
         }
 
         #endregion
@@ -89,6 +93,13 @@ namespace Jhu.Graywulf.Web.Security
         {
             get { return (int)base[propTokenRenewalInterval]; }
             set { base[propTokenRenewalInterval] = value; }
+        }
+
+        [ConfigurationProperty("defaultRole", DefaultValue = Constants.KeystoneDefaultRole)]
+        public string DefaultRole
+        {
+            get { return (string)base[propDefaultRole]; }
+            set { base[propDefaultRole] = value; }
         }
 
         #endregion

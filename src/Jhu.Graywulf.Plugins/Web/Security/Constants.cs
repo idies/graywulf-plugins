@@ -20,6 +20,7 @@ namespace Jhu.Graywulf.Web.Security
         public const string KeystoneDefaultAuthTokenParameter = "keystoneToken";
         public const string KeystoneDefaultAuthTokenHeader = "X-Auth-Token";
         public const string KeystoneDefaultAuthTokenCookie = "X-Auth-Token";
+        public const string KeystoneDefaultRole = "_member_";
         public const int KeystoneTokenRenewalInterval = 5;
     }
 }
