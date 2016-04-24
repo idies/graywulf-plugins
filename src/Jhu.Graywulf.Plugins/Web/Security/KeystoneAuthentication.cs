@@ -9,6 +9,7 @@ using System.Web.Security;
 using System.Configuration;
 using Jhu.Graywulf.Components;
 using Jhu.Graywulf.Check;
+using Jhu.Graywulf.AccessControl;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Keystone;
 

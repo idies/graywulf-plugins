@@ -10,6 +10,7 @@ using DotNetOpenAuth.OpenId.RelyingParty;
 using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using Jhu.Graywulf.Check;
 using Jhu.Graywulf.Registry;
+using Jhu.Graywulf.AccessControl;
 using Jhu.Graywulf.Web.Check;
 
 namespace Jhu.Graywulf.Web.Security
