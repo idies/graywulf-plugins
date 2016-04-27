@@ -279,7 +279,7 @@ namespace Jhu.Graywulf.Web.Security
 
             // Load user from the graywulf registry. This call will create the user
             // if necessary because authority is set to master
-            LoadOrCreateUser(response.Principal.Identity);
+            LoadOrCreateUser(response.Principal);
 
             return response;
         }
