@@ -62,6 +62,10 @@
     <Compile Include="Web\Security\KeystoneIdentityProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Registry.Enum\Jhu.Graywulf.Registry.Enum.csproj">
+      <Project>{f163a859-0fe2-4099-bd85-f61c9c05426a}</Project>
+      <Name>Jhu.Graywulf.Registry.Enum</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\graywulf\test\Jhu.Graywulf.RemoteService.Test\Jhu.Graywulf.RemoteService.Test.csproj">
       <Project>{8e1d75b4-4188-44d9-8737-93c8bd3fb409}</Project>
       <Name>Jhu.Graywulf.RemoteService.Test</Name>
@@ -93,10 +97,6 @@
     <ProjectReference Include="..\..\src\Jhu.Graywulf.Plugins\Jhu.Graywulf.Plugins.csproj">
       <Project>{644dcdc2-729e-4f84-84d0-ad9c2f49a8c8}</Project>
       <Name>Jhu.Graywulf.Plugins</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Registry.Enum\Jhu.Graywulf.Registry.Enum.sqlproj">
-      <Project>{d0cbe71f-b0fc-4911-b5ec-ddddea10656e}</Project>
-      <Name>Jhu.Graywulf.Registry.Enum</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Registry\Jhu.Graywulf.Registry.csproj">
       <Project>{59bfb28b-3f97-4714-b8d7-a1b40f668831}</Project>
