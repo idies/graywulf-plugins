@@ -32,7 +32,7 @@ namespace Jhu.Graywulf.Web.Security
             "tokenRenewalInterval", typeof(int), Constants.KeystoneTokenRenewalInterval, ConfigurationPropertyOptions.None);
 
         private static readonly ConfigurationProperty propDefaultRole = new ConfigurationProperty(
-            "defaultRole", typeof(bool), Constants.KeystoneDefaultRole, ConfigurationPropertyOptions.None);
+            "defaultRole", typeof(string), Constants.KeystoneDefaultRole, ConfigurationPropertyOptions.None);
 
         static KeystoneAuthenticationConfiguration()
         {
