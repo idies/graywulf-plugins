@@ -16,7 +16,7 @@ namespace Jhu.Graywulf.Keystone
 
             var domain = Client.GetDomain("default");
             var role = CreateTestRole();
-            var project = CreateTestProject();
+            var project = CreateTestProject("user");
             var user = CreateTestUser("user");
 
             // Grant user the role

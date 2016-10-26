@@ -15,7 +15,7 @@ namespace Jhu.Graywulf.Keystone
             PurgeTestEntities();
 
             // Create a project within the default domain
-            var project = CreateTestProject();
+            var project = CreateTestProject("project1");
 
             // Get the project by id
             project = Client.GetProject(project.ID);

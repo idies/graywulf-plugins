@@ -20,7 +20,7 @@ namespace Jhu.Graywulf.Keystone
             {
                 domain = new Domain()
                 {
-                    Name = domainID
+                    ID = domainID
                 };
             }
             else

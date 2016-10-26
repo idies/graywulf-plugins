@@ -35,12 +35,12 @@ namespace Jhu.Graywulf.CasJobs
                     Name = "test_" + new Random().Next().ToString(),
                 };
 
-                id.CreateUser(user, null);
+                id.CreateUser(user, "alma");
                 id.ActivateUser(user);
                 id.ResetPassword(user, "alma");
 
                 //
-                var token = KeystoneClient.Authenticate(Jhu.Graywulf.Keystone.KeystoneClient.Configuration.Domain, user.Name, user.Name, "alma");
+                var token = KeystoneClient.Authenticate(user.Name, "alma");
                 Keystone.KeystoneTokenCache.Instance.TryAdd(token);
 
                 var udf = new CasJobsUserDatabaseFactory(context.Federation);

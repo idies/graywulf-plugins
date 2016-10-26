@@ -86,11 +86,11 @@ namespace Jhu.Graywulf.Keystone
             return Client.Create(domain);
         }
 
-        protected Project CreateTestProject()
+        protected Project CreateTestProject(string name)
         {
             var project = new Project()
             {
-                Name = TestPrefix + "project",
+                Name = TestPrefix + name,
                 Description = "test project",
             };
 

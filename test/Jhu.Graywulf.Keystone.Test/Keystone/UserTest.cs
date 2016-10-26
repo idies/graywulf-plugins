@@ -21,7 +21,7 @@ namespace Jhu.Graywulf.Keystone
         {
             var version = Client.GetVersion();
 
-            Assert.AreEqual("v3.0", version.ID);
+            Assert.AreEqual("v3.", version.ID.Substring(0, 3));
             Assert.AreEqual("stable", version.Status);
         }
 
@@ -80,7 +80,11 @@ namespace Jhu.Graywulf.Keystone
         {
             PurgeTestEntities();
 
-            CreateTestUser("user");
+            var project = CreateTestProject("user");
+            var role = CreateTestRole();
+            var user = CreateTestUser("user");
+
+            Client.GrantRole(project, user, role);
 
             // Try once with password
             var token = Client.Authenticate("default", TestPrefix + "user", "alma");
@@ -89,7 +93,7 @@ namespace Jhu.Graywulf.Keystone
             token = Client.Authenticate(token);
 
             // Get user from token
-            var user = Client.GetUser(token);
+            user = Client.GetUser(token);
             Assert.AreEqual(TestPrefix + "user", user.Name);
 
             // Check token validity
@@ -141,7 +145,7 @@ namespace Jhu.Graywulf.Keystone
         {
             PurgeTestEntities();
 
-            var project = CreateTestProject();
+            var project = CreateTestProject("user");
             var role = CreateTestRole();
             var user = CreateTestUser("user");
 

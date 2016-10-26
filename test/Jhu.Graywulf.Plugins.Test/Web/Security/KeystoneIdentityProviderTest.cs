@@ -12,6 +12,7 @@ namespace Jhu.Graywulf.Web.Security
     public class KeystoneIdentityProviderTest
     {
         protected const string TestPrefix = "__test__";
+        protected const string TestPassword = "almafa";
 
         protected void PurgeTestEntities(Jhu.Graywulf.Keystone.KeystoneClient client)
         {
@@ -78,21 +79,17 @@ namespace Jhu.Graywulf.Web.Security
 
                 ip.CreateUser(user, "alma");
 
-                user.FirstName = "Modified";
-                ip.ModifyUser(user);
-
-                ip.ChangePassword(user, "alma", "alma2");
-
                 Assert.IsTrue(user.DeploymentState == DeploymentState.Undeployed);
-
-                // At this point a user should be able to be looked up
-                // even though they aren't active
-                //ip.VerifyPassword(TestPrefix + user
 
                 ip.ActivateUser(user);
 
                 Assert.IsTrue(user.DeploymentState == DeploymentState.Deployed);
 
+                user.FirstName = "Modified";
+                ip.ModifyUser(user);
+
+                ip.ChangePassword(user, "alma", "alma2");
+                
                 ip.DeactivateUser(user);
 
                 Assert.IsTrue(user.DeploymentState == DeploymentState.Undeployed);
