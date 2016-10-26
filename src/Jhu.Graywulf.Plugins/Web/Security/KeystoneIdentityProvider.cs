@@ -54,10 +54,10 @@ namespace Jhu.Graywulf.Web.Security
 
             var keystoneUser = new Keystone.User()
             {
-                Name = graywulfUser.Name.ToLowerInvariant(),
-                DomainID = config.Domain.ToLowerInvariant(),
+                Name = graywulfUser.Name,
+                DomainID = config.Domain,
                 Description = graywulfUser.Comments,
-                Email = graywulfUser.Email.ToLowerInvariant(),
+                Email = graywulfUser.Email,
                 Enabled = graywulfUser.DeploymentState == DeploymentState.Deployed,
             };
 
@@ -107,7 +107,7 @@ namespace Jhu.Graywulf.Web.Security
             var config = Keystone.KeystoneClient.Configuration;
 
             // Try to get user from Keystone
-            var users = KeystoneClient.FindUsers(config.Domain.ToLowerInvariant(), username.ToLowerInvariant(), false, false);
+            var users = KeystoneClient.FindUsers(config.Domain, username, false, false);
 
             if (users == null)
             {
@@ -137,7 +137,7 @@ namespace Jhu.Graywulf.Web.Security
         /// </remarks>
         public override User GetUserByUserName(string username)
         {
-            var user = GetKeystoneUser(username.ToLowerInvariant());
+            var user = GetKeystoneUser(username);
 
             if (user == null)
             {
@@ -154,23 +154,25 @@ namespace Jhu.Graywulf.Web.Security
         {
             var config = Keystone.KeystoneClient.Configuration;
 
-            // Create user in keystone
-            var keystoneUser = KeystoneClient.Create(ConvertUser(user));
-            KeystoneClient.ResetPassword(keystoneUser.ID, password);
-
             // Create and associated project (tenant)
             var keystoneProject = new Keystone.Project
             {
-                Name = user.Name.ToLowerInvariant(),
-                DomainID = config.Domain.ToLowerInvariant(),
+                Name = user.Name,
+                DomainID = config.Domain,
             };
             keystoneProject = KeystoneClient.Create(keystoneProject);
+
+            // Create user in keystone
+            var keystoneUser = ConvertUser(user);
+            keystoneUser.DefaultProjectID = keystoneProject.ID;
+            keystoneUser = KeystoneClient.Create(keystoneUser);
+            KeystoneClient.ResetPassword(keystoneUser.ID, password);
 
             // Create user locally in Graywulf registry
             base.OnCreateUser(user, password);
 
             // Add newly created user to the default role
-            var roles = KeystoneClient.FindRoles(config.Domain, KeystoneAuthentication.Configuration.DefaultRole, true, false);
+            var roles = KeystoneClient.FindRoles(null, KeystoneAuthentication.Configuration.DefaultRole, true, false);
             if (roles == null || roles.Length == 0)
             {
                 throw new Exception("No matching role found");      // TODO: ***
@@ -209,7 +211,7 @@ namespace Jhu.Graywulf.Web.Security
             var config = Keystone.KeystoneClient.Configuration;
 
             // Try to get user from Keystone
-            var users = KeystoneClient.FindUsers(config.Domain.ToLowerInvariant(), username.ToLowerInvariant(), false, false);
+            var users = KeystoneClient.FindUsers(config.Domain, username, false, false);
 
             return users != null && users.Length > 0;
         }
@@ -255,17 +257,17 @@ namespace Jhu.Graywulf.Web.Security
             // use the username as project name.
             var project = new Keystone.Project()
             {
-                Name = request.Username.ToLowerInvariant()
+                Name = request.Username
             };
 
             var domain = new Keystone.Domain()
             {
-                Name = config.Domain.ToLowerInvariant()
+                Name = config.Domain
             };
 
             // Verify user password in Keystone, we don't use
             // Graywulf password in this case
-            var token = KeystoneClient.Authenticate(request.Username.ToLowerInvariant(), request.Password, domain, project);
+            var token = KeystoneClient.Authenticate(request.Username, request.Password, domain, project);
 
             // Find user details in keystone
             token.User = GetKeystoneUser(request.Username);

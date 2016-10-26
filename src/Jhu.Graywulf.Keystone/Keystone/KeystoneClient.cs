@@ -117,24 +117,30 @@ namespace Jhu.Graywulf.Keystone
             return token;
         }
 
+        public Token Authenticate(string username, string password)
+        {
+            return Authenticate(Configuration.Domain, username, username, password);
+        }
+
         public Token Authenticate(string domain, string username, string password)
         {
-            return Authenticate(domain, username, password, null, null);
+            return Authenticate(domain, username, username, password);
         }
 
         public Token Authenticate(string domain, string project, string username, string password)
         {
+            var d = new Keystone.Domain()
+            {
+                ID = domain
+            };
+
             var p = new Keystone.Project()
             {
+                Domain = d,
                 Name = project
             };
 
-            var d = new Keystone.Domain()
-            {
-                Name = domain
-            };
-
-            return Authenticate(domain, username, password, d, p);
+            return Authenticate(null, username, password, d, p);
         }
 
         // TODO: test

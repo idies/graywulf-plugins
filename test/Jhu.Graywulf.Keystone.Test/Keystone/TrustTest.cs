@@ -17,7 +17,7 @@ namespace Jhu.Graywulf.Keystone
 
             // Create a project and a role
             var role = CreateTestRole();
-            var project = CreateTestProject();
+            var project = CreateTestProject("project");
 
             // Create new users
             var trustor = CreateTestUser("trustor");
@@ -28,7 +28,7 @@ namespace Jhu.Graywulf.Keystone
             Client.GrantRole(project, trustee, role);
 
             // Create token for user1
-            var token1 = Client.Authenticate("default", TestPrefix + "trustor", "alma");
+            var token1 = Client.Authenticate("default", project.Name, trustor.Name, "alma");
 
             // Make user1 trust user2
             var trust = new Trust()
@@ -49,7 +49,7 @@ namespace Jhu.Graywulf.Keystone
             trust = Client.Create(trust);
 
             // Try to impersonate user with trust
-            var token2 = Client.Authenticate("default", TestPrefix + "trustee", "alma");
+            var token2 = Client.Authenticate("default", project.Name, trustee.Name, "alma");
 
             var token3 = Client.Authenticate(token2, trust);
 
