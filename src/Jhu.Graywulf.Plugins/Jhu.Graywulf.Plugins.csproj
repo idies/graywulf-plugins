@@ -123,6 +123,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="post-build.ps1" />
+    <None Include="pre-build.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.AccessControl\Jhu.Graywulf.AccessControl.csproj">
@@ -197,50 +199,12 @@
     <Error Condition="Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>REM copy to solution bin
-
-copy $(TargetPath) $(SolutionDir)$(OutDir)
-copy $(TargetDir)$(TargetName).pdb $(SolutionDir)$(OutDir)
-
-REM copy to test
-
-cd $(SolutionDir)graywulf\test\Jhu.Graywulf.Jobs.Test\$(OutDir)
-copy $(TargetDir)*.dll .
-copy $(TargetDir)*.pdb .
-
-cd $(SolutionDir)graywulf\test\Jhu.Graywulf.Scheduler.Test\$(OutDir)
-copy $(TargetDir)*.dll .
-copy $(TargetDir)*.pdb .
-
-REM copy to web bin
-
-cd $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.UI\bin
-copy $(TargetDir)$(TargetName).dll .
-copy $(TargetDir)$(TargetName).pdb .
-copy $(TargetDir)Jhu.Graywulf.Keystone.dll .
-copy $(TargetDir)Jhu.Graywulf.Keystone.pdb .
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll .
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb .
-copy $(TargetDir)Newtonsoft.Json.dll .
-copy $(TargetDir)DotNetOpenAuth.Core.dll .
-copy $(TargetDir)DotNetOpenAuth.OpenId.dll .
-copy $(TargetDir)DotNetOpenAuth.OpenId.RelyingParty.dll .
-
-
-REM copy to auth web bin
-
-cd $(SolutionDir)graywulf\web\Jhu.Graywulf.Web.Auth\bin
-copy $(TargetDir)$(TargetName).dll .
-copy $(TargetDir)$(TargetName).pdb .
-copy $(TargetDir)Jhu.Graywulf.Keystone.dll .
-copy $(TargetDir)Jhu.Graywulf.Keystone.pdb .
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.dll .
-copy $(TargetDir)Jhu.Graywulf.SimpleRestClient.pdb .
-copy $(TargetDir)Newtonsoft.Json.dll .
-copy $(TargetDir)DotNetOpenAuth.Core.dll .
-copy $(TargetDir)DotNetOpenAuth.OpenId.dll .
-copy $(TargetDir)DotNetOpenAuth.OpenId.RelyingParty.dll .
-</PostBuildEvent>
+    <PostBuildEvent>cd "$(ProjectDir)"
+powershell -file post-build.ps1 $(SolutionDir) $(SolutionName) $(ProjectDir) $(ProjectName) $(OutDir) $(TargetName)</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>cd "$(ProjectDir)"
+powershell -file pre-build.ps1 $(SolutionDir) $(SolutionName) $(ProjectDir) $(ProjectName) $(OutDir) $(TargetName)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
