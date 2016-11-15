@@ -37,8 +37,6 @@ namespace Jhu.Graywulf.CasJobs
 
                 id.CreateUser(user, "alma");
                 id.ActivateUser(user);
-                id.ResetPassword(user, "alma");
-
                 //
                 var token = KeystoneClient.Authenticate(user.Name, "alma");
                 Keystone.KeystoneTokenCache.Instance.TryAdd(token);

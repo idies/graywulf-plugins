@@ -33,6 +33,7 @@ namespace Jhu.Graywulf.Keystone
 
             // Create a new test user
             var nuser = CreateTestUser("user");
+            var name = nuser.Name;
             Assert.IsTrue(nuser.Enabled.Value);
 
             // Retreive test user by id
@@ -42,8 +43,35 @@ namespace Jhu.Graywulf.Keystone
             nuser.Name = TestPrefix + "user2";
             nuser = Client.Update(nuser);
 
-            // Change password
+            Client.Delete(nuser);
+        }
+
+        [TestMethod]
+        public void ChangePasswordTest()
+        {
+            // Purge test users
+            PurgeTestEntities();
+
+            var nuser = CreateTestUser("user");
+            var name = nuser.Name;
+
             Client.ChangePassword(nuser.ID, "alma", "korte");
+            Client.Authenticate(name, "korte");
+
+            Client.Delete(nuser);
+        }
+
+        [TestMethod]
+        public void ResetPasswordTest()
+        {
+            // Purge test users
+            PurgeTestEntities();
+
+            var nuser = CreateTestUser("user");
+            var name = nuser.Name;
+
+            Client.ResetPassword(nuser.ID, "korte");
+            Client.Authenticate(name, "korte");
 
             Client.Delete(nuser);
         }
