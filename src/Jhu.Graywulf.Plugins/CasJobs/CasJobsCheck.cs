@@ -9,6 +9,11 @@ namespace Jhu.Graywulf.CasJobs
 {
     public class CasJobsCheck : CheckRoutineBase
     {
+        public override CheckCategory Category
+        {
+            get { return CheckCategory.Plugin; }
+        }
+
         public CasJobsCheck()
         {
         }
@@ -16,7 +21,7 @@ namespace Jhu.Graywulf.CasJobs
         public override void Execute(System.IO.TextWriter output)
         {
             output.WriteLine("Testing CasJobs configuration...");
-            
+
             // TODO what to do here? Would be great to ping service
             // we just look for an exception then
 

@@ -9,6 +9,11 @@ namespace Jhu.Graywulf.Web.Security
 {
     public class KeystoneCheck : CheckRoutineBase
     {
+        public override CheckCategory Category
+        {
+            get { return CheckCategory.Plugin; }
+        }
+
         public override void Execute(System.IO.TextWriter output)
         {
             if (!KeystoneAuthentication.Configuration.IsEnabled)
