@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Web;
 using Jhu.Graywulf.Check;
 using Jhu.Graywulf.Schema;
+using Jhu.Graywulf.Schema.SqlServer;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Web.Security;
 using Jhu.Graywulf.Keystone;
@@ -25,7 +26,17 @@ namespace Jhu.Graywulf.CasJobs
         {
         }
 
-        public override void EnsureUserDatabaseExists(Registry.User user)
+        protected override void EnsureUserDatabaseExists(Registry.User user, SqlServerDataset dataset)
+        {
+            // TODO: add scratch DB testing, though we cannot create that on the fly
+
+            if (SchemaManager.Comparer.Compare(dataset.Name, Registry.Constants.UserDbName) == 0)
+            {
+                EnsureMyDbExists(user);
+            }
+        }
+
+        private void EnsureMyDbExists(Registry.User user)
         {
             // This class is only used with tight Keystone integration.
             // We somehow have to find the token used to authenticate the user
@@ -95,22 +106,63 @@ namespace Jhu.Graywulf.CasJobs
             }
         }
 
-        protected override Jhu.Graywulf.Schema.SqlServer.SqlServerDataset OnGetUserDatabase(Registry.User user)
+        protected override void EnsureUserDatabaseConfigured(Registry.User user, SqlServerDataset dataset)
+        {
+            // Make sure the default schema exists
+
+            using (var cn = (SqlConnection)dataset.OpenConnection())
+            {
+                var sql =
+@"IF SCHEMA_ID('{0}') IS NULL
+EXEC('CREATE SCHEMA [{0}]')
+";
+
+                sql = String.Format(sql, dataset.DefaultSchemaName);
+
+                using (var cmd = new SqlCommand(sql, cn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        protected override Dictionary<string, SqlServerDataset> OnGetUserDatabases(Registry.User user)
+        {
+            var cjuser = GetCasJobsUser(user);
+
+            var mydb = GetMyDB(cjuser);
+            var scratchdb = GetScratchDb(cjuser);
+            var res = new Dictionary<string, SqlServerDataset>(SchemaManager.Comparer);
+
+            if (mydb != null)
+            {
+                res.Add(mydb.Name, mydb);
+            }
+
+            if (scratchdb != null)
+            {
+                res.Add(scratchdb.Name, scratchdb);
+            }
+
+            return res;
+        }
+
+        private CasJobs.User GetCasJobsUser(Registry.User user)
         {
             // CasJobs requires a keystone admin token to access REST services
-
             var ip = new KeystoneIdentityProvider(Federation.Domain);
             var token = ip.GetCachedToken(user);
-
             var ksclient = new KeystoneClient();
             var cjclient = new CasJobsClient(ksclient);
-
             var cjuser = cjclient.GetUser(token.User.ID);
 
+            return cjuser;
+        }
+
+        private SqlServerDataset GetMyDB(CasJobs.User cjuser)
+        {
             // Because the CasJobs web service doesn't expose the database password,
             // we need to look it up directly from batch admin
-
-            string server, username, password, extra;
 
             using (var cn = new SqlConnection(CasJobsClient.Configuration.BatchAdminConnectionString))
             {
@@ -125,45 +177,98 @@ namespace Jhu.Graywulf.CasJobs
 
                     using (var dr = cmd.ExecuteReader())
                     {
-                        dr.Read();
+                        if (dr.Read())
+                        {
+                            var csb = new SqlConnectionStringBuilder()
+                            {
+                                DataSource = dr.GetString(0),
+                                InitialCatalog = cjuser.MyDBName,
+                                UserID = dr.GetString(1),
+                                Password = dr.GetString(2),
+                                PersistSecurityInfo = true,
+                                IntegratedSecurity = false,
+                            };
 
-                        server = dr.GetString(0);
-                        username = dr.GetString(1);
-                        password = dr.GetString(2);
-                        extra = dr.GetString(3);
+                            return new SqlServerDataset()
+                            {
+                                Name = Registry.Constants.UserDbName,
+                                DefaultSchemaName = CasJobsClient.Configuration.DefaultSchema ?? Schema.SqlServer.Constants.DefaultSchemaName,
+                                ConnectionString = csb.ConnectionString,
+                                IsCacheable = false,
+                                IsMutable = true,
+                                IsRestrictedSchema = false,
+                            };
+                        }
+                        else
+                        {
+                            throw new CasJobsException("MyDB cannot be found.");
+                        }
                     }
                 }
             }
-
-            // Build connection string
-            var csb = new SqlConnectionStringBuilder()
-            {
-                DataSource = server,
-                InitialCatalog = cjuser.MyDBName,
-                UserID = username,
-                Password = password,
-                PersistSecurityInfo = true,
-                IntegratedSecurity = false,
-            };
-
-            var cstr = csb.ConnectionString + ';' + extra;
-
-            var ds = new Jhu.Graywulf.Schema.SqlServer.SqlServerDataset()
-            {
-                Name = Jhu.Graywulf.Registry.Constants.UserDbName,
-                DefaultSchemaName = CasJobsClient.Configuration.DefaultSchema ?? Jhu.Graywulf.Schema.SqlServer.Constants.DefaultSchemaName,
-                ConnectionString = cstr,
-                IsCacheable = false,
-                IsMutable = true,
-            };
-
-            return ds;
         }
 
-        protected override ServerInstance OnGetUserDatabaseServerInstance(Registry.User user)
+        private SqlServerDataset GetScratchDb(CasJobs.User cjuser)
         {
-            var ds = OnGetUserDatabase(user);
-            return GetAssociatedServerInstance(ds);
+            using (var cn = new SqlConnection(CasJobsClient.Configuration.BatchAdminConnectionString))
+            {
+                cn.Open();
+
+                var sql = "SELECT Host, Cat, Usr, Password FROM batch.Servers WHERE Name = @name";
+
+                using (var cmd = new SqlCommand(sql, cn))
+                {
+                    cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = CasJobsClient.Configuration.ScratchDbServer;
+
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            var csb = new SqlConnectionStringBuilder()
+                            {
+                                DataSource = dr.GetString(0),
+                                InitialCatalog = dr.GetString(1),
+                                UserID = dr.GetString(2),
+                                Password = dr.GetString(3),
+                                PersistSecurityInfo = true,
+                                IntegratedSecurity = false,
+                            };
+
+                            return new SqlServerDataset()
+                            {
+                                Name = Constants.ScratchDbName,
+                                DefaultSchemaName = "WSID_" + cjuser.WebServicesId,
+                                ConnectionString = csb.ConnectionString,
+                                IsCacheable = false,
+                                IsMutable = true,
+                                IsRestrictedSchema = true,
+                            };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
+        protected override Dictionary<string, ServerInstance> OnGetUserDatabaseServerInstances(Registry.User user)
+        {
+            var ds = OnGetUserDatabases(user);
+            return GetAssociatedServerInstances(ds);
+        }
+
+        private Dictionary<string, ServerInstance> GetAssociatedServerInstances(Dictionary<string, SqlServerDataset> datasets)
+        {
+            var sis = new Dictionary<string, ServerInstance>(SchemaManager.Comparer);
+
+            foreach (var key in datasets.Keys)
+            {
+                sis.Add(key, GetAssociatedServerInstance(datasets[key]));
+            }
+
+            return sis;
         }
 
         private ServerInstance GetAssociatedServerInstance(Jhu.Graywulf.Schema.SqlServer.SqlServerDataset dataset)

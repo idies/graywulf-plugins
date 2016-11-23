@@ -23,6 +23,9 @@ namespace Jhu.Graywulf.CasJobs
         private static readonly ConfigurationProperty propDefaultSchema = new ConfigurationProperty(
             "defaultSchema", typeof(string), null, ConfigurationPropertyOptions.None);
 
+        private static readonly ConfigurationProperty propScratchDbServer = new ConfigurationProperty(
+            "scratchDbServer", typeof(string), null, ConfigurationPropertyOptions.None);
+
         static CasJobsClientConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
@@ -54,6 +57,13 @@ namespace Jhu.Graywulf.CasJobs
         {
             get { return (string)base[propDefaultSchema]; }
             set { base[propDefaultSchema] = value; }
+        }
+
+        [ConfigurationProperty("scratchDbServer")]
+        public string ScratchDbServer
+        {
+            get { return (string)base[propScratchDbServer]; }
+            set { base[propScratchDbServer] = value; }
         }
 
         #endregion

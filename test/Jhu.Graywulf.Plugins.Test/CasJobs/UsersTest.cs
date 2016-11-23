@@ -45,7 +45,7 @@ namespace Jhu.Graywulf.CasJobs
 
                 var udf = new CasJobsUserDatabaseFactory(context.Federation);
 
-                udf.EnsureUserDatabaseExists(user);
+                udf.GetUserDatabases(user);
             }
         }
     }
