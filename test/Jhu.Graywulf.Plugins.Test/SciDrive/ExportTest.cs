@@ -25,17 +25,18 @@ namespace Jhu.Graywulf.SciDrive
             Jhu.Graywulf.Web.Api.V1.ImportTest.CleanUp();
         }
 
-        protected override void ExportFileHelper(string table, string uri, string mimeType, string comments)
+        protected override void ExportFileHelper(string dataset, string table, string uri, string mimeType, string comments)
         {
             var scuri =  SciDriveClient.GetFilePutUri(new Uri(uri, UriKind.RelativeOrAbsolute)).ToString();
             
-            base.ExportFileHelper(table, scuri, mimeType, comments);
+            base.ExportFileHelper(dataset, table, scuri, mimeType, comments);
         }
 
         [TestMethod]
         public void ExportToSciDriveCsvTest()
         {
             ExportFileHelper(
+                Registry.Constants.UserDbName,
                 "SampleData",
                 "graywulf_io_test/export.zip", 
                 "text/csv",
@@ -46,6 +47,7 @@ namespace Jhu.Graywulf.SciDrive
         public void ExportToSciDriveTxtTest()
         {
             ExportFileHelper(
+                Registry.Constants.UserDbName,
                 "SampleData",
                 "graywulf_io_test/export.zip",
                 "text/plain",
