@@ -210,6 +210,11 @@ EXEC('CREATE SCHEMA [{0}]')
 
         private SqlServerDataset GetScratchDb(CasJobs.User cjuser)
         {
+            if (String.IsNullOrWhiteSpace(CasJobsClient.Configuration.ScratchDbServer))
+            {
+                return null;
+            }
+
             using (var cn = new SqlConnection(CasJobsClient.Configuration.BatchAdminConnectionString))
             {
                 cn.Open();
