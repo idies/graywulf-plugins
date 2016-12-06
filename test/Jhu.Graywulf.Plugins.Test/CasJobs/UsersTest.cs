@@ -29,10 +29,12 @@ namespace Jhu.Graywulf.CasJobs
             using (var context = ContextManager.Instance.CreateContext(ConnectionMode.AutoOpen, TransactionMode.AutoCommit))
             {
                 var id = new KeystoneIdentityProvider(context.Domain);
+                var name = "test_" + new Random().Next().ToString();
 
                 var user = new Registry.User(context.Domain)
                 {
-                    Name = "test_" + new Random().Next().ToString(),
+                    Name = name,
+                    Email = name + "@test.com",
                 };
 
                 id.CreateUser(user, "alma");
