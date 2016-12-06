@@ -32,22 +32,25 @@ namespace Jhu.Graywulf.SimpleRestClient
 
         protected virtual RestHeaderCollection SendRequest(HttpMethod method, string path, RestHeaderCollection headers)
         {
-            var response = SendRequestInternal(method, path, null, headers);
-            var resheaders = ReadResponseHeaders(response);
-
-            return resheaders;
+            using (var response = SendRequestInternal(method, path, null, headers))
+            {
+                var resheaders = ReadResponseHeaders(response);
+                return resheaders;
+            }
         }
 
         protected virtual RestMessage<R> SendRequest<R>(HttpMethod method, string path, RestHeaderCollection headers)
         {
-            var response = SendRequestInternal(method, path, null, headers);
-            var resheaders = ReadResponseHeaders(response);
-            var resbody = ReadResponseBody(response);
+            using (var response = SendRequestInternal(method, path, null, headers))
+            {
+                var resheaders = ReadResponseHeaders(response);
+                var resbody = ReadResponseBody(response);
 
-            return new RestMessage<R>(
-                DeserializeJson<R>(resbody),
-                resheaders
-            );
+                return new RestMessage<R>(
+                    DeserializeJson<R>(resbody),
+                    resheaders
+                );
+            }
         }
 
         /// <summary>
@@ -60,10 +63,11 @@ namespace Jhu.Graywulf.SimpleRestClient
         /// <returns></returns>
         protected virtual RestHeaderCollection SendRequest<T>(HttpMethod method, string path, RestMessage<T> message)
         {
-            var response = SendRequestInternal(method, path, SerializeJson(message.Body), message.Headers);
-            var resheaders = ReadResponseHeaders(response);
-
-            return resheaders;
+            using (var response = SendRequestInternal(method, path, SerializeJson(message.Body), message.Headers))
+            {
+                var resheaders = ReadResponseHeaders(response);
+                return resheaders;
+            }
         }
 
         /// <summary>
@@ -78,14 +82,17 @@ namespace Jhu.Graywulf.SimpleRestClient
         protected virtual RestMessage<R> SendRequest<T, R>(HttpMethod method, string path, RestMessage<T> message)
         {
             var reqbody = SerializeJson(message.Body);
-            var response = SendRequestInternal(method, path, reqbody, message.Headers);
-            var resheaders = ReadResponseHeaders(response);
-            var resbody = ReadResponseBody(response);
 
-            return new RestMessage<R>(
-                DeserializeJson<R>(resbody),
-                resheaders
-            );
+            using (var response = SendRequestInternal(method, path, reqbody, message.Headers))
+            {
+                var resheaders = ReadResponseHeaders(response);
+                var resbody = ReadResponseBody(response);
+
+                return new RestMessage<R>(
+                    DeserializeJson<R>(resbody),
+                    resheaders
+                );
+            }
         }
 
         /// <summary>
@@ -100,6 +107,7 @@ namespace Jhu.Graywulf.SimpleRestClient
         {
             var req = (HttpWebRequest)WebRequest.Create(CreateAbsoluteUri(path));
 
+            req.KeepAlive = false;
             req.Method = method.ToString().ToUpper();
             req.SendChunked = false;
             req.ContentType = Constants.JsonMimeType;
@@ -116,6 +124,7 @@ namespace Jhu.Graywulf.SimpleRestClient
                 case HttpMethod.Put:
                 case HttpMethod.Patch:
                     WriteRequestBody(req, body);
+
                     break;
                 default:
                     throw new NotImplementedException();
@@ -154,11 +163,12 @@ namespace Jhu.Graywulf.SimpleRestClient
         /// <param name="body"></param>
         private void WriteRequestBody(WebRequest request, string body)
         {
-            var stream = request.GetRequestStream();
-
-            using (var writer = new StreamWriter(stream))
+            using (var stream = request.GetRequestStream())
             {
-                writer.Write(body);
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(body);
+                }
             }
         }
 
@@ -169,11 +179,12 @@ namespace Jhu.Graywulf.SimpleRestClient
         /// <returns></returns>
         private string ReadResponseBody(WebResponse response)
         {
-            var stream = response.GetResponseStream();
-
-            using (var reader = new StreamReader(stream))
+            using (var stream = response.GetResponseStream())
             {
-                return reader.ReadToEnd();
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
             }
         }
 
