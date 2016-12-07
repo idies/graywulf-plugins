@@ -23,3 +23,6 @@ cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\web\Jhu.Graywulf.Web.Auth\
 
 cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\web\Jhu.Graywulf.Web.UI\bin
 cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\web\Jhu.Graywulf.Web.UI\bin
+
+cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Web.Test\${OutDir}
+cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Web.Test\${OutDir}
