@@ -28,6 +28,9 @@ namespace Jhu.Graywulf.Web.Security
         private static readonly ConfigurationProperty propAuthTokenCookie = new ConfigurationProperty(
             "authTokenCookie", typeof(string), Constants.KeystoneDefaultAuthTokenCookie, ConfigurationPropertyOptions.None);
 
+        private static readonly ConfigurationProperty propAutoTokenRenewal = new ConfigurationProperty(
+            "autoTokenRenewal", typeof(bool), Constants.KeystoneAutoTokenRenewal, ConfigurationPropertyOptions.None);
+
         private static readonly ConfigurationProperty propTokenRenewalInterval = new ConfigurationProperty(
             "tokenRenewalInterval", typeof(int), Constants.KeystoneTokenRenewalInterval, ConfigurationPropertyOptions.None);
 
@@ -43,6 +46,7 @@ namespace Jhu.Graywulf.Web.Security
             properties.Add(propAuthTokenParameter);
             properties.Add(propAuthTokenHeader);
             properties.Add(propAuthTokenCookie);
+            properties.Add(propAutoTokenRenewal);
             properties.Add(propTokenRenewalInterval);
             properties.Add(propDefaultRole);
         }
@@ -86,6 +90,13 @@ namespace Jhu.Graywulf.Web.Security
         {
             get { return (string)base[propAuthTokenCookie]; }
             set { base[propAuthTokenCookie] = value; }
+        }
+
+        [ConfigurationProperty("autoTokenRenewal", DefaultValue = Constants.KeystoneAutoTokenRenewal)]
+        public bool AutoTokenRenewal
+        {
+            get { return (bool)base[propAutoTokenRenewal]; }
+            set { base[propAutoTokenRenewal] = value; }
         }
 
         [ConfigurationProperty("tokenRenewalInterval", DefaultValue = Constants.KeystoneTokenRenewalInterval)]

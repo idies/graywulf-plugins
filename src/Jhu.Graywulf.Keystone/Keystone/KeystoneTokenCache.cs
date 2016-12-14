@@ -120,7 +120,9 @@ namespace Jhu.Graywulf.Keystone
                 {
                     // Remove the correspoing user-token pair
                     string oldTokenID;
-                    users.TryRemove(GetUserKey(token), out oldTokenID);
+                    var key = GetUserKey(token);
+
+                    users.TryRemove(key, out oldTokenID);
                 }
             }
 
@@ -235,7 +237,9 @@ namespace Jhu.Graywulf.Keystone
         public bool TryGetValueByUserName(string projectName, string userName, out Token token)
         {
             string tokenID;
-            if (users.TryGetValue(GetUserKey(projectName, userName), out tokenID))
+            var key = GetUserKey(projectName, userName);
+
+            if (users.TryGetValue(key, out tokenID))
             {
                 return TryGetValueByTokenID(tokenID, out token);
             }

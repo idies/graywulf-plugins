@@ -82,7 +82,12 @@ namespace Jhu.Graywulf.Web.Security
             // request is made by a browser or a smarter client.
 
             bool foundInCookie;
+            bool setCookie;
+
             var tokenID = GetTokenID(request, out foundInCookie);
+
+            // Only set cookie if request didn't already have it
+            setCookie = !foundInCookie;
 
             if (tokenID != null)
             {
@@ -97,10 +102,15 @@ namespace Jhu.Graywulf.Web.Security
 
                 if (token != null && foundInCookie)
                 {
-                    token = RenewToken(token);
+                    Token newtoken;
+                    if (RenewToken(token, out newtoken))
+                    {
+                        token = newtoken;
+                        setCookie = true;
+                    }
                 }
-                
-                UpdateAuthenticationResponse(response, token, IsMasterAuthority);
+
+                UpdateAuthenticationResponse(request, response, token, setCookie, IsMasterAuthority);
             }
         }
 
@@ -144,7 +154,7 @@ namespace Jhu.Graywulf.Web.Security
             return new GraywulfPrincipal(identity);
         }
 
-        internal static void UpdateAuthenticationResponse(AuthenticationResponse response, Token token, bool isMasterAuthority)
+        internal static void UpdateAuthenticationResponse(AuthenticationRequest request, AuthenticationResponse response, Token token, bool setCookie, bool isMasterAuthority)
         {
             var config = Configuration;
 
@@ -164,12 +174,15 @@ namespace Jhu.Graywulf.Web.Security
                     response.QueryParameters.Add(config.AuthTokenParameter, token.ID);
                 }
 
-                if (!String.IsNullOrWhiteSpace(config.AuthTokenHeader))
+                if (request.ProtocolType.HasFlag(AuthenticatorProtocolType.RestRequest) &&
+                    !String.IsNullOrWhiteSpace(config.AuthTokenHeader))
                 {
                     response.Headers.Add(config.AuthTokenHeader, token.ID);
                 }
 
-                if (!String.IsNullOrWhiteSpace(config.AuthTokenCookie))
+                if (setCookie &&
+                    request.ProtocolType.HasFlag(AuthenticatorProtocolType.WebRequest) &&
+                    !String.IsNullOrWhiteSpace(config.AuthTokenCookie))
                 {
                     var cookie = new System.Web.HttpCookie(config.AuthTokenCookie, token.ID)
                     {
@@ -263,32 +276,34 @@ namespace Jhu.Graywulf.Web.Security
             {
                 token.User = ksclient.GetUser(token.User.ID);
                 KeystoneTokenCache.Instance.TryAdd(token);
-            }            
+            }
 
             return token;
         }
 
-        private Token RenewToken(Token token)
+        private bool RenewToken(Token token, out Token newtoken)
         {
             // If the token is coming in a cookie and seems too old we can renew it here
-            if ((token.ExpiresAt - DateTime.UtcNow).TotalMinutes < Configuration.TokenRenewalInterval)
+            if (Configuration.AutoTokenRenewal &&
+                (token.ExpiresAt - DateTime.UtcNow).TotalMinutes < Configuration.TokenRenewalInterval)
             {
                 // Request new token
                 var ksclient = new KeystoneClient();
-                var newtoken = ksclient.RenewToken(token);
+                newtoken = ksclient.RenewToken(token);
                 newtoken.User = ksclient.GetUser(newtoken.User.ID);
 
                 // Update cache
                 KeystoneTokenCache.Instance.TryRemoveByTokenID(token.ID, out token);
                 KeystoneTokenCache.Instance.TryAdd(newtoken);
 
-                token = newtoken;
+                return true;
 
                 // TODO: Now the problem is if a user comes back with the old but still
                 // valid token
             }
 
-            return token;
+            newtoken = null;
+            return false;
         }
 
         public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
