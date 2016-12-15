@@ -116,6 +116,11 @@ namespace Jhu.Graywulf.Web.Security
             }
         }
 
+        public override void Deauthenticate(AuthenticationRequest request, AuthenticationResponse response)
+        {
+            DeleteAuthCookie(response);
+        }
+
         public override void Reset(AuthenticationRequest request, AuthenticationResponse response)
         {
             DeleteAuthCookie(response);
