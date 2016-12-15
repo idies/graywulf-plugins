@@ -82,12 +82,12 @@ namespace Jhu.Graywulf.Web.Security
             // request is made by a browser or a smarter client.
 
             bool foundInCookie;
-            bool setCookie;
-
             var tokenID = GetTokenID(request, out foundInCookie);
 
-            // Only set cookie if request didn't already have it
-            setCookie = !foundInCookie;
+            // // Only set cookie if request didn't already have it
+            bool setParameter = true;
+            bool setHeader = request.ProtocolType.HasFlag(AuthenticatorProtocolType.RestRequest);
+            bool setCookie = !foundInCookie && request.ProtocolType.HasFlag(AuthenticatorProtocolType.WebRequest);
 
             if (tokenID != null)
             {
@@ -110,7 +110,9 @@ namespace Jhu.Graywulf.Web.Security
                     }
                 }
 
-                UpdateAuthenticationResponse(request, response, token, setCookie, IsMasterAuthority);
+                
+
+                UpdateAuthenticationResponse(request, response, token, setParameter, setHeader, setCookie, IsMasterAuthority);
             }
         }
 
@@ -154,7 +156,7 @@ namespace Jhu.Graywulf.Web.Security
             return new GraywulfPrincipal(identity);
         }
 
-        internal static void UpdateAuthenticationResponse(AuthenticationRequest request, AuthenticationResponse response, Token token, bool setCookie, bool isMasterAuthority)
+        internal static void UpdateAuthenticationResponse(AuthenticationRequest request, AuthenticationResponse response, Token token, bool setParameter, bool setHeader, bool setCookie, bool isMasterAuthority)
         {
             var config = Configuration;
 
@@ -169,19 +171,18 @@ namespace Jhu.Graywulf.Web.Security
             // This data may be used depending on the communication channel (i.e. browser, WCF)
             if (token != null)
             {
-                if (!String.IsNullOrWhiteSpace(config.AuthTokenParameter))
+                if (setParameter && !String.IsNullOrWhiteSpace(config.AuthTokenParameter))
                 {
                     response.QueryParameters.Add(config.AuthTokenParameter, token.ID);
                 }
 
-                if (request.ProtocolType.HasFlag(AuthenticatorProtocolType.RestRequest) &&
+                if (setHeader &&
                     !String.IsNullOrWhiteSpace(config.AuthTokenHeader))
                 {
                     response.Headers.Add(config.AuthTokenHeader, token.ID);
                 }
 
                 if (setCookie &&
-                    request.ProtocolType.HasFlag(AuthenticatorProtocolType.WebRequest) &&
                     !String.IsNullOrWhiteSpace(config.AuthTokenCookie))
                 {
                     var cookie = new System.Web.HttpCookie(config.AuthTokenCookie, token.ID)
