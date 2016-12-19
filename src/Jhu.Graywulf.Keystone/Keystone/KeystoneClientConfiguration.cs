@@ -34,6 +34,9 @@ namespace Jhu.Graywulf.Keystone
         private static readonly ConfigurationProperty propAdminPassword = new ConfigurationProperty(
             "adminPassword", typeof(string), null, ConfigurationPropertyOptions.None);
 
+        private static readonly ConfigurationProperty propValidateCachedTokens = new ConfigurationProperty(
+            "validateCachedTokens", typeof(bool), true, ConfigurationPropertyOptions.None);
+
         static KeystoneClientConfiguration()
         {
             properties = new ConfigurationPropertyCollection();
@@ -45,6 +48,7 @@ namespace Jhu.Graywulf.Keystone
             properties.Add(propAdminProject);
             properties.Add(propAdminUserName);
             properties.Add(propAdminPassword);
+            properties.Add(propValidateCachedTokens);
         }
 
         #endregion
@@ -121,6 +125,17 @@ namespace Jhu.Graywulf.Keystone
         {
             get { return (string)base[propAdminPassword]; }
             set { base[propAdminPassword] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the value that determines whether tokens
+        /// are validated when they are picked up from the cache.
+        /// </summary>
+        [ConfigurationProperty("validateCachedTokens")]
+        public bool ValidateCachedTokens
+        {
+            get { return (bool)base[propValidateCachedTokens]; }
+            set { base[propValidateCachedTokens] = value; }
         }
 
         #endregion

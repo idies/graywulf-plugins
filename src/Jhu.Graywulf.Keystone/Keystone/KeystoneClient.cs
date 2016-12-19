@@ -83,15 +83,25 @@ namespace Jhu.Graywulf.Keystone
 
         public Token GetAdminToken()
         {
-            return GetToken(adminCredentials);
+            return GetAdminToken(false);
+        }
+
+        private Token GetAdminToken(bool validating)
+        {
+            return GetToken(adminCredentials, validating);
         }
 
         public Token GetUserToken()
         {
-            return GetToken(userCredentials);
+            return GetUserToken(false);
         }
 
-        public Token GetToken(KeystoneCredentials credentials)
+        private Token GetUserToken(bool validating)
+        {
+            return GetToken(userCredentials, validating);
+        }
+
+        private Token GetToken(KeystoneCredentials credentials, bool validating)
         {
             Token token;
 
@@ -107,7 +117,37 @@ namespace Jhu.Graywulf.Keystone
                     ID = credentials.TokenID
                 };
             }
-            else if (!KeystoneTokenCache.Instance.TryGetValueByUserName(credentials.ProjectName, credentials.UserName, out token))
+            else if (KeystoneTokenCache.Instance.TryGetValueByUserName(credentials.ProjectName, credentials.UserName, out token))
+            {
+                // Token found in cache, validate against Keystone server if necessary
+                if (!validating && Configuration.ValidateCachedTokens)
+                {
+                    try
+                    {
+                        ValidateToken(token, true);
+                    }
+                    catch (KeystoneException ex)
+                    {
+                        switch (ex.StatusCode)
+                        {
+                            case HttpStatusCode.Unauthorized:
+                                // Admin token is invalid, renew
+                                ResetToken(adminCredentials);
+                                GetToken(adminCredentials, true);
+                                token = GetToken(credentials, true);
+                                break;
+                            case HttpStatusCode.NotFound:
+                                // User token is invalid, renew
+                                ResetToken(credentials);
+                                token = GetToken(credentials, true);
+                                break;
+                            default:
+                                throw;
+                        }
+                    }
+                }
+            }
+            else
             {
                 // No valid token found, request a new one
                 token = Authenticate(credentials.DomainID, credentials.ProjectName, credentials.UserName, credentials.Password);
@@ -187,6 +227,13 @@ namespace Jhu.Graywulf.Keystone
             return authResponse.Token;
         }
 
+        public void ResetToken(KeystoneCredentials credentials)
+        {
+            Token token;
+            KeystoneTokenCache.Instance.TryRemoveByUserName(adminCredentials.ProjectName, adminCredentials.UserName, out token);
+            adminCredentials.TokenID = null;
+        }
+
         public Token RenewToken(Token token)
         {
             var req = AuthRequest.CreateMessage(token);
@@ -219,11 +266,16 @@ namespace Jhu.Graywulf.Keystone
 
         public bool ValidateToken(Token token)
         {
+            return ValidateToken(token, false);
+        }
+
+        private bool ValidateToken(Token token, bool validating)
+        {
             var headers = new RestHeaderCollection();
             headers.Add(new RestHeader(Constants.KeystoneXSubjectTokenHeader, token.ID));
 
             var resMessage = SendRequest(
-                HttpMethod.Head, "/v3/auth/tokens", headers, GetAdminToken());
+                HttpMethod.Head, "/v3/auth/tokens", headers, GetAdminToken(validating));
 
             return true;
         }

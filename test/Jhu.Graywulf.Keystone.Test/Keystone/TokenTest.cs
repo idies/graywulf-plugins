@@ -35,5 +35,29 @@ namespace Jhu.Graywulf.Keystone
 
             PurgeTestEntities();
         }
+
+        [TestMethod]
+        public void AutoRenewAdminTokenTest()
+        {
+            var token = Client.GetAdminToken();
+            Client.RevokeToken(token);
+            token = Client.GetAdminToken();
+        }
+
+        [TestMethod]
+        public void AutoRenewUserTokenTest()
+        {
+            // Try once with password
+            Client.UserCredentials = new KeystoneCredentials()
+            {
+                DomainID = "default",
+                ProjectName = "test",
+                UserName = "test",
+                Password = "almafa",
+            };
+            var token = Client.GetUserToken();
+            Client.RevokeToken(token);
+            token = Client.GetUserToken();
+        }
     }
 }

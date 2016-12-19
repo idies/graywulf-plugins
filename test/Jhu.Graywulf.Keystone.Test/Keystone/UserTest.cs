@@ -16,6 +16,8 @@ namespace Jhu.Graywulf.Keystone
     [TestClass]
     public class UserTest : KeystoneTestBase
     {
+
+
         [TestMethod]
         public void GetVersionTest()
         {
