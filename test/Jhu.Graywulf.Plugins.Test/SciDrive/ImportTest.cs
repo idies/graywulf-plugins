@@ -25,29 +25,32 @@ namespace Jhu.Graywulf.SciDrive
             Jhu.Graywulf.Web.Api.V1.ImportTest.CleanUp();
         }
 
-        protected override void ImportFileHelper(string uri, string comments)
+        protected override void ImportFileHelper(string uri, bool generateIdentityColumn)
         {
             var scuri =  SciDriveClient.GetFileGetUri(new Uri(uri, UriKind.RelativeOrAbsolute)).ToString();
             
-            base.ImportFileHelper(scuri, comments);
+            base.ImportFileHelper(scuri, generateIdentityColumn);
         }
 
         [TestMethod]
         public void ImportFileFromSciDriveTest()
         {
-            ImportFileHelper("graywulf_io_test/csv_numbers.csv", "ImportFileFromSciDriveTest");
+            ImportFileHelper("graywulf_io_test/csv_numbers.csv", false);
+            ImportFileHelper("graywulf_io_test/csv_numbers.csv", true);
         }
 
         [TestMethod]
         public void ImportCompressedFromSciDriveTest()
         {
-            ImportFileHelper("graywulf_io_test/csv_numbers.csv.gz", "ImportCompressedFromSciDriveTest");
+            ImportFileHelper("graywulf_io_test/csv_numbers.csv.gz", false);
+            ImportFileHelper("graywulf_io_test/csv_numbers.csv.gz", true);
         }
         
         [TestMethod]
         public void ImportArchiveFromSciDriveTest()
         {
-            ImportFileHelper("graywulf_io_test/csv_numbers.zip", "ImportArchiveFromSciDriveTest");
+            ImportFileHelper("graywulf_io_test/csv_numbers.zip", false);
+            ImportFileHelper("graywulf_io_test/csv_numbers.zip", true);
         }
     }
 }
