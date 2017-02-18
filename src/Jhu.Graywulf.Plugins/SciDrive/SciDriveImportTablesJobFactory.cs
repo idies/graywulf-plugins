@@ -18,7 +18,7 @@ namespace Jhu.Graywulf.SciDrive
             yield return new ImportTablesFromSciDriveMethod();
         }
 
-        public override ImportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, Format.DataFileBase source, IO.Tasks.DestinationTable destination)
+        public override ImportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, Format.DataFileBase source, IO.Tasks.DestinationTable destination, IO.Tasks.ImportTableOptions options)
         {
             // Intercept scidrive URIs and modify credentials
 
@@ -28,7 +28,7 @@ namespace Jhu.Graywulf.SciDrive
                 SciDriveClient.SetAuthenticationHeaders(credentials);
             }
 
-            return base.CreateParameters(federation, uri, credentials, source, destination);
+            return base.CreateParameters(federation, uri, credentials, source, destination, options);
         }
     }
 }
