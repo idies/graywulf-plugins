@@ -21,8 +21,8 @@ namespace Jhu.Graywulf.CasJobs
     /// </summary>
     public class CasJobsUserDatabaseFactory : UserDatabaseFactory, ICheckable
     {
-        public CasJobsUserDatabaseFactory(Federation federation)
-            : base(federation)
+        public CasJobsUserDatabaseFactory(FederationContext context)
+            : base(context)
         {
         }
 
@@ -46,7 +46,7 @@ namespace Jhu.Graywulf.CasJobs
             // The best we can do is to look up the token from the token
             // cache which should hold the last valid tokens indexed by user name.
 
-            var ip = new KeystoneIdentityProvider(Federation.Domain);
+            var ip = new KeystoneIdentityProvider(FederationContext.Domain);
             var token = ip.GetCachedToken(user);
 
             // Now create a CasJobs client and look up or create user
@@ -150,7 +150,7 @@ EXEC('CREATE SCHEMA [{0}]')
         private CasJobs.User GetCasJobsUser(Registry.User user)
         {
             // CasJobs requires a keystone admin token to access REST services
-            var ip = new KeystoneIdentityProvider(Federation.Domain);
+            var ip = new KeystoneIdentityProvider(FederationContext.Domain);
             var token = ip.GetCachedToken(user);
             var ksclient = new KeystoneClient();
             var cjclient = new CasJobsClient(ksclient);
@@ -284,7 +284,7 @@ EXEC('CREATE SCHEMA [{0}]')
             var instancename = dataset.InstanceName;
 
             // Find the server instance based on Graywulf settings
-            var mr = Federation.UserDatabaseVersion.ServerVersion.MachineRole;
+            var mr = FederationContext.Federation.UserDatabaseVersion.ServerVersion.MachineRole;
 
             // Find the right machine
             mr.LoadMachines(false);

@@ -45,7 +45,7 @@ namespace Jhu.Graywulf.CasJobs
                 var token = KeystoneClient.Authenticate(user.Name, "alma");
                 Keystone.KeystoneTokenCache.Instance.TryAdd(token);
 
-                var udf = new CasJobsUserDatabaseFactory(context.Federation);
+                var udf = new CasJobsUserDatabaseFactory(new FederationContext(context, user));
 
                 udf.GetUserDatabases(user);
             }
