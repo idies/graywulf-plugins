@@ -128,8 +128,9 @@ EXEC('CREATE SCHEMA [{0}]')
 
         protected override Dictionary<string, SqlServerDataset> OnGetUserDatabases(Registry.User user)
         {
-            var cjuser = GetCasJobsUser(user);
+            EnsureMyDbExists(user);
 
+            var cjuser = GetCasJobsUser(user);
             var mydb = GetMyDB(cjuser);
             var scratchdb = GetScratchDb(cjuser);
             var res = new Dictionary<string, SqlServerDataset>(SchemaManager.Comparer);
