@@ -86,7 +86,7 @@ namespace Jhu.Graywulf.Logging
         {
             SciServer.Logging.Message msg;
 
-            if (e.EventSeverity == EventSeverity.Error)
+            if (e.Severity == EventSeverity.Error)
             {
                 msg = logger.CreateErrorMessage(e.Exception, null);
             }

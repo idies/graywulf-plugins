@@ -184,7 +184,9 @@ namespace Jhu.Graywulf.Web.Security
             KeystoneClient.GrantRole(keystoneProject, keystoneUser, role);
 
             // Add identity to local principal
-            var principal = KeystoneAuthentication.CreateAuthenticatedPrincipal(keystoneUser, true);
+            // The user is created but not authenticated yet, so no token to set as evidence
+            // Since users are most of the time created outside graywulf, this should not be an issue
+            var principal = KeystoneAuthentication.CreateAuthenticatedPrincipal(keystoneUser, null, true);
             AddUserIdentity(user, principal.Identity);
         }
 

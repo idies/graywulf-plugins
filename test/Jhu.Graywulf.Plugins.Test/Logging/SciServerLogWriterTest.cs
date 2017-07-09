@@ -13,7 +13,7 @@ namespace Jhu.Graywulf.Logging
 
             var e = new Event()
             {
-                EventSource = EventSource.Test,
+                Source = EventSource.Test,
                 Message = "TestMessage",
                 Operation = "WriteEventTest"
             };

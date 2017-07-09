@@ -109,9 +109,7 @@ namespace Jhu.Graywulf.Web.Security
                         setCookie = true;
                     }
                 }
-
                 
-
                 UpdateAuthenticationResponse(request, response, token, setParameter, setHeader, setCookie, IsMasterAuthority);
             }
         }
@@ -126,7 +124,7 @@ namespace Jhu.Graywulf.Web.Security
             DeleteAuthCookie(response);
         }
 
-        internal static GraywulfPrincipal CreateAuthenticatedPrincipal(Keystone.User user, bool isMasterAuthority)
+        internal static GraywulfPrincipal CreateAuthenticatedPrincipal(Keystone.User user, Keystone.Token token, bool isMasterAuthority)
         {
             var config = Keystone.KeystoneClient.Configuration;
 
@@ -138,6 +136,7 @@ namespace Jhu.Graywulf.Web.Security
                 AuthorityName = config.AuthorityName,
                 AuthorityUri = config.BaseUri.ToString(),
                 Identifier = user.ID,
+                Evidence = token,
                 IsAuthenticated = true,
                 IsMasterAuthority = isMasterAuthority,
             };
@@ -168,7 +167,7 @@ namespace Jhu.Graywulf.Web.Security
             // Forward identified user to response
             if (token != null && response.Principal == null)
             {
-                var principal = CreateAuthenticatedPrincipal(token.User, isMasterAuthority);
+                var principal = CreateAuthenticatedPrincipal(token.User, token, isMasterAuthority);
                 response.SetPrincipal(principal);
             }
 

@@ -104,6 +104,9 @@ namespace Jhu.Graywulf.SciDrive
 
         private static AuthenticationHeader CreateAuthenticationHeaderFromToken()
         {
+            // TODO: can be rewritten to use evidence from identity as token
+            // instead of looking it up in the cache
+
             var name = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             Keystone.Token token;
 

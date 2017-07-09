@@ -14,7 +14,6 @@ namespace Jhu.Graywulf.Web.Security
         public const string ProtocolNameOAuth2 = "OAuth2";
         public const string ProtocolNameKeystone = "Keystone";
 
-        // TODO: delete
         public const string KeystoneDefaultUri = "http://localhost:5000/";
         public const string KeystoneDefaultDomain = "default";
         public const string KeystoneDefaultAuthTokenParameter = "keystoneToken";
