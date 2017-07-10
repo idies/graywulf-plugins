@@ -63,9 +63,9 @@ namespace Jhu.Graywulf.Web.Security
 
             if (graywulfUser.IsExisting)
             {
-                if (!graywulfUser.Context.IsValid)
+                if (!graywulfUser.RegistryContext.IsValid)
                 {
-                    graywulfUser.Context = this.Context;
+                    graywulfUser.RegistryContext = this.Context;
                 }
 
                 graywulfUser.LoadUserIdentities(false);
