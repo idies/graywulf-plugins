@@ -6,8 +6,8 @@ cp ${ProjectDir}${OutDir}*.pdb $SolutionDir$OutDir
 cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Jobs.Test\${OutDir}
 cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Jobs.Test\${OutDir}
 
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\exe\Jhu.Graywulf.Scheduler\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\exe\Jhu.Graywulf.Scheduler\${OutDir}
+cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\exe\Jhu.Graywulf.Scheduler.Server\${OutDir}
+cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\exe\Jhu.Graywulf.Scheduler.Server\${OutDir}
 
 cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Scheduler.Test\${OutDir}
 cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Scheduler.Test\${OutDir}
