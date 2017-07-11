@@ -135,10 +135,6 @@
       <Project>{da689d40-edcd-433d-8d9b-4e96829f8c6a}</Project>
       <Name>Jhu.Graywulf.AccessControl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Activities\Jhu.Graywulf.Activities.csproj">
-      <Project>{57392da3-e280-48ee-80c8-64e09fd8afb5}</Project>
-      <Name>Jhu.Graywulf.Activities</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.IO\Jhu.Graywulf.IO.csproj">
       <Project>{6797ed88-1d8c-491b-a036-4c42c4bf2eaf}</Project>
       <Name>Jhu.Graywulf.IO</Name>
