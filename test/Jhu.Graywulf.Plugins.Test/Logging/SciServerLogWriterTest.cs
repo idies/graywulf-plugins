@@ -11,14 +11,7 @@ namespace Jhu.Graywulf.Logging
         {
             Logger.Instance.Start(false);
 
-            var e = new Event()
-            {
-                Source = EventSource.Test,
-                Message = "TestMessage",
-                Operation = "WriteEventTest"
-            };
-
-            Logger.Instance.LogEvent(e);
+            Logger.Instance.LogInfo("TestMessage", "WriteEventTest");
 
             Logger.Instance.Stop();
         }
