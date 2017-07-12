@@ -3,12 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 using Jhu.Graywulf.Logging;
 
 namespace Jhu.Graywulf.Logging
 {
     public class SciServerLogWriter : LogWriterBase
     {
+        public static SciServerLogWriterConfiguration Configuration
+        {
+            get
+            {
+                return (SciServerLogWriterConfiguration)ConfigurationManager.GetSection("jhu.graywulf/logging/sciServer");
+            }
+        }
+
         private string applicatioName;
         private string messagingHost;
         private string exchangeName;
