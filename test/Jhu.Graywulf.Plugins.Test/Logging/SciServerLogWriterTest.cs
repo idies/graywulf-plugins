@@ -9,11 +9,9 @@ namespace Jhu.Graywulf.Logging
         [TestMethod]
         public void WriteEventTest()
         {
-            Logger.Instance.Start(Logging.EventSource.Test, false);
-
-            Logger.Instance.LogOperation(Logging.EventSource.Test, "TestMessage", "WriteEventTest");
-
-            Logger.Instance.Stop();
+            Logging.LoggingContext.Current.StartLogger(Logging.EventSource.Test, false);
+            Logging.LoggingContext.Current.LogOperation(Logging.EventSource.Test, "TestMessage", "WriteEventTest");
+            Logging.LoggingContext.Current.StopLogger();
         }
     }
 }
