@@ -93,33 +93,42 @@ namespace Jhu.Graywulf.Logging
 
         protected override void OnWriteEvent(Event e)
         {
-            SciServer.Logging.Message msg;
+            var msg = logger.CreateSkyQueryMessage(e.Message ?? "", e.UserGuid != Guid.Empty);
 
-            if (e.Severity == EventSeverity.Error)
+            msg.ClientIP = e.Client;
+            msg.Host = e.Server;
+            //msg.MessageId = TODO: BOOKMARK
+            msg.MessageType = SciServer.Logging.MessageType.SKYQUERY;
+            msg.Method = e.Operation;
+            msg.TaskName = e.JobGuid == Guid.Empty ? null : e.JobGuid.ToString();
+            msg.UserId = e.UserGuid == Guid.Empty ? null : e.UserGuid.ToString();
+
+            var principal = e.Principal as Graywulf.AccessControl.GraywulfPrincipal;
+
+            if (principal != null)
             {
-                msg = logger.CreateErrorMessage(e.Exception, null);
+                msg.UserToken = principal.Identity.Evidence.ToString();
+                msg.UserName = principal.Identity.Name;
             }
             else
             {
-                // *** TODO: should it be CreateSkyQueryMessage?
-                msg = logger.CreateSkyQueryMessage(e.Message ?? "", false);
+                msg.UserToken = null;
+                msg.UserName = null;
+            }
 
-                msg.ClientIP = "0.0.0.0";
-                //msg.Host = 
-                //msg.MessageId =
-                msg.MessageType = SciServer.Logging.MessageType.SKYQUERY;
-                msg.Method = e.Operation;
-                msg.TaskName = e.JobGuid.ToString();
-                msg.UserId = e.UserGuid.ToString();
-                //msg.UserName = 
-                //msg.UserToken = 
-
-                //msg.MessageBody =
-
-                foreach (var d in e.UserData)
+            if (e.Severity == EventSeverity.Error)
+            {
+                msg.MessageBody = new SciServer.Logging.ExceptionMessageBody()
                 {
-                    msg.MessageBody.Properties.Add(d.Key, d.Value.ToString());
-                }
+                    ExceptionText = e.Message,
+                    ExceptionType = e.ExceptionType,
+                    StackTrace = e.ExceptionStackTrace,
+                };
+            }
+
+            foreach (var d in e.UserData)
+            {
+                msg.MessageBody.Properties.Add(d.Key, d.Value.ToString());
             }
 
             logger.SendMessage(msg);
