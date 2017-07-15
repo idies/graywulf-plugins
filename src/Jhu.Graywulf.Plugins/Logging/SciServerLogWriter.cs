@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using Newtonsoft.Json.Linq;
 using Jhu.Graywulf.Logging;
 
 namespace Jhu.Graywulf.Logging
@@ -93,15 +94,48 @@ namespace Jhu.Graywulf.Logging
 
         protected override void OnWriteEvent(Event e)
         {
-            var msg = logger.CreateSkyQueryMessage(e.Message ?? "", e.UserGuid != Guid.Empty);
+            var msg = logger.CreateSkyQueryMessage(null, e.UserGuid != Guid.Empty);
 
-            msg.ClientIP = e.Client;
-            msg.Host = e.Server;
-            //msg.MessageId = TODO: BOOKMARK
-            msg.MessageType = SciServer.Logging.MessageType.SKYQUERY;
-            msg.Method = e.Operation;
-            msg.TaskName = e.JobGuid == Guid.Empty ? null : e.JobGuid.ToString();
             msg.UserId = e.UserGuid == Guid.Empty ? null : e.UserGuid.ToString();
+            msg.UserName = e.UserName;
+            msg.TaskName = e.TaskName;
+            msg.Time = e.DateTime;
+            msg.Method = e.Operation;
+            msg.Host = e.Server;
+            msg.ClientIP = e.Client;
+
+            if ((e.Source & (EventSource.Workflow | EventSource.Scheduler | EventSource.Job)) != 0)
+            {
+                msg.Application = "SkyQuery.Scheduler";
+            }
+            else if ((e.Source & EventSource.RemoteService) != 0)
+            {
+                msg.Application = "SkyQuery.RemoteService";
+            }
+            else if ((e.Source & EventSource.WebUI) != 0)
+            {
+                msg.Application = "SkyQuery.WebUI";
+            }
+            else if ((e.Source & EventSource.WebService) != 0)
+            {
+                msg.Application = "SkyQuery.WebService";
+            }
+            else if ((e.Source & EventSource.WebAdmin) != 0)
+            {
+                msg.Application = "SkyQuery.WebAdmin";
+            }
+            else
+            {
+                msg.Application = "SkyQuery";
+            }
+            
+
+            if (e.BookmarkGuid != Guid.Empty)
+            {
+                msg.MessageId = e.BookmarkGuid;
+            }
+
+            msg.MessageType = SciServer.Logging.MessageType.SKYQUERY;
 
             var principal = e.Principal as Graywulf.AccessControl.GraywulfPrincipal;
 
@@ -124,6 +158,16 @@ namespace Jhu.Graywulf.Logging
                     ExceptionType = e.ExceptionType,
                     StackTrace = e.ExceptionStackTrace,
                 };
+            }
+
+            if (e.JobName != null)
+            {
+                msg.MessageBody.Properties.Add("JobID", e.JobName);
+            }
+
+            if (e.Message != null)
+            {
+                msg.MessageBody.Properties.Add("Action", e.Message);
             }
 
             foreach (var d in e.UserData)
