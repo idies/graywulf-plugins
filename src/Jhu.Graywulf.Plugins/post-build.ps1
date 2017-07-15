@@ -1,34 +1,30 @@
-﻿cp ${ProjectDir}${OutDir}*.dll $SolutionDir$OutDir
-cp ${ProjectDir}${OutDir}*.pdb $SolutionDir$OutDir
+﻿$source = "$ProjectDir$OutDir"
+$target1 = "$SolutionDir$OutDir"
+$target2 = "$SolutionDir\plugins\$ConfigurationName"
 
-# copy to test etc.
+$files = @(
+	"$TargetName.dll", 
+	"$TargetName.pdb", 
+	"DotNetOpenAuth.Core.dll", 
+	"DotNetOpenAuth.OpenId.dll", 
+	"DotNetOpenAuth.OpenId.RelyingParty.dll", 
+	"ICSharpCode.SharpZipLib.dll", 
+	"Mono.Math.dll", 
+	"MySql.Data.dll", 
+	"Newtonsoft.Json.dll", 
+	"Npgsql.dll", 
+	"Org.Mentalis.Security.Cryptography.dll", 
+	"RabbitMQ.Client.dll", 
+	"SciServer.Logging.dll", 
+	"SciServer.Logging.pdb", 
+	"System.IO.dll", 
+	"System.Net.Http.dll", 
+	"System.Net.Http.Extensions.dll", 
+	"System.Net.Http.Primitives.dll", 
+	"System.Net.Http.WebRequest.dll"
+)
 
-# TODO: copy to a common plugin dir instead where individual project can pick the assemblies up if they need them
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Jobs.Test\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Jobs.Test\${OutDir}
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\exe\Jhu.Graywulf.Scheduler.Server\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\exe\Jhu.Graywulf.Scheduler.Server\${OutDir}
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Scheduler.Test\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Scheduler.Test\${OutDir}
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.RemoteService.Test\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.RemoteService.Test\${OutDir}
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Logging.Test\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Logging.Test\${OutDir}
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Sql.Test\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Sql.Test\${OutDir}
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\web\Jhu.Graywulf.Web.Auth\bin
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\web\Jhu.Graywulf.Web.Auth\bin
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\web\Jhu.Graywulf.Web.UI\bin
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\web\Jhu.Graywulf.Web.UI\bin
-
-cp ${ProjectDir}${OutDir}*.dll ${SolutionDir}graywulf\test\Jhu.Graywulf.Web.Test\${OutDir}
-cp ${ProjectDir}${OutDir}*.pdb ${SolutionDir}graywulf\test\Jhu.Graywulf.Web.Test\${OutDir}
-
+foreach ($f in $files) {
+	cp "$source$f" "$target1"
+	cp "$source$f" "$target2"
+}
