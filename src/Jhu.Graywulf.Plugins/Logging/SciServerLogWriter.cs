@@ -163,29 +163,45 @@ namespace Jhu.Graywulf.Logging
 
         private string GetMessageApplication(Event e)
         {
+            var module = "";
+
             if ((e.Source & (EventSource.Workflow | EventSource.Scheduler | EventSource.Job)) != 0)
             {
-                return "SkyQuery.Scheduler";
+                module = "Scheduler";
             }
             else if ((e.Source & EventSource.RemoteService) != 0)
             {
-                return "SkyQuery.RemoteService";
+                module = "RemoteService";
+
             }
             else if ((e.Source & EventSource.WebUI) != 0)
             {
-                return "SkyQuery.WebUI";
+                module = "WebUI";
+
             }
             else if ((e.Source & EventSource.WebService) != 0)
             {
-                return "SkyQuery.WebService";
+                module = "WebService";
+
             }
             else if ((e.Source & EventSource.WebAdmin) != 0)
             {
-                return "SkyQuery.WebAdmin";
+                module = "WebAdmin";
+
             }
             else
             {
-                return "SkyQuery";
+                return Configuration.ApplicationName;
+            }
+
+
+            if (!String.IsNullOrWhiteSpace(module))
+            {
+                return Configuration.ApplicationName;
+            }
+            else
+            {
+                return Configuration.ApplicationName + "." + module;
             }
         }
     }
