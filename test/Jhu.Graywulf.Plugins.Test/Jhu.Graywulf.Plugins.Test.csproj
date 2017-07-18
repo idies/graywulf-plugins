@@ -82,6 +82,10 @@
       <Project>{aada04ee-f578-4628-8ae0-d423bb94c738}</Project>
       <Name>Jhu.Graywulf.Sql</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\graywulf\test\Jhu.Graywulf.Logging.Test\Jhu.Graywulf.Logging.Test.csproj">
+      <Project>{d152dc9a-004c-4851-b0e7-b81a4325c9b7}</Project>
+      <Name>Jhu.Graywulf.Logging.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\graywulf\test\Jhu.Graywulf.RemoteService.Test\Jhu.Graywulf.RemoteService.Test.csproj">
       <Project>{8e1d75b4-4188-44d9-8737-93c8bd3fb409}</Project>
       <Name>Jhu.Graywulf.RemoteService.Test</Name>

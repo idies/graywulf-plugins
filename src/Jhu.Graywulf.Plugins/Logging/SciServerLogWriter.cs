@@ -63,12 +63,7 @@ namespace Jhu.Graywulf.Logging
             logger = null;
         }
 
-        public override void Dispose()
-        {
-            Stop();
-        }
-
-        public override void Start()
+        protected override void OnStart()
         {
             logger = new SciServer.Logging.Logger()
             {
@@ -83,7 +78,15 @@ namespace Jhu.Graywulf.Logging
             logger.Connect();
         }
 
-        public override void Stop()
+        protected override void OnBatchStart()
+        {
+        }
+
+        protected override void OnBatchEnd()
+        {
+        }
+
+        protected override void OnStop()
         {
             if (logger != null)
             {
@@ -203,6 +206,11 @@ namespace Jhu.Graywulf.Logging
             {
                 return Configuration.ApplicationName + "." + module;
             }
+        }
+
+        protected override void OnUnhandledExpcetion(Exception ex)
+        {
+            Stop();
         }
     }
 }
