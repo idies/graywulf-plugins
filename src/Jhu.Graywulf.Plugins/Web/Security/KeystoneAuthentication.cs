@@ -137,7 +137,7 @@ namespace Jhu.Graywulf.Web.Security
                 AuthorityUri = config.BaseUri.ToString(),
                 Identifier = user.ID,
                 Evidence = token,
-                SessionId = token.ID,
+                SessionId = token?.ID,
                 IsAuthenticated = true,
                 IsMasterAuthority = isMasterAuthority,
             };

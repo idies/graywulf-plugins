@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Jhu.Graywulf.Test;
 using Jhu.Graywulf.Keystone;
 
 namespace Jhu.Graywulf.CasJobs
 {
-    public class CasJobsTestBase
+    public class CasJobsTestBase : TestClassBase
     {
         private CasJobsClient client;
         private KeystoneClient keystoneClient;

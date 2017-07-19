@@ -5,14 +5,27 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Jhu.Graywulf.Components;
 using Jhu.Graywulf.Registry;
+using Jhu.Graywulf.Test;
 
 namespace Jhu.Graywulf.Web.Security
 {
     [TestClass]
-    public class KeystoneIdentityProviderTest
+    public class KeystoneIdentityProviderTest : TestClassBase
     {
         protected const string TestPrefix = "__test__";
         protected const string TestPassword = "almafa";
+
+        [ClassInitialize]
+        public static void Initialize(TestContext context)
+        {
+            StartLogger();
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            StopLogger();
+        }
 
         protected void PurgeTestEntities(Jhu.Graywulf.Keystone.KeystoneClient client)
         {

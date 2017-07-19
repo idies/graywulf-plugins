@@ -11,6 +11,18 @@ namespace Jhu.Graywulf.CasJobs
     [TestClass]
     public class UsersTest : CasJobsTestBase
     {
+        [ClassInitialize]
+        public static void Initialize(TestContext context)
+        {
+            StartLogger();
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            StopLogger();
+        }
+
         [TestMethod]
         public void GetUserTest()
         {
