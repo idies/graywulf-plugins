@@ -168,6 +168,11 @@ namespace Jhu.Graywulf.Web.Security
             keystoneUser = KeystoneClient.Create(keystoneUser);
             KeystoneClient.ResetPassword(keystoneUser.ID, password);
 
+            if (!user.IsExisting)
+            {
+                user.Guid = new Guid(keystoneUser.ID);
+            }
+
             // Create user locally in Graywulf registry
             base.OnCreateUser(user, password);
 

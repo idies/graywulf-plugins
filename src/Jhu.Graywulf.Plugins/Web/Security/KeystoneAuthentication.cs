@@ -147,6 +147,7 @@ namespace Jhu.Graywulf.Web.Security
             // in Keystone
             var reguser = new Registry.User()
             {
+                Guid = new Guid(user.ID),   // Match user guid with keystone id
                 Name = user.Name,
                 Comments = user.Description ?? String.Empty,
                 Email = user.Email ?? String.Empty,
