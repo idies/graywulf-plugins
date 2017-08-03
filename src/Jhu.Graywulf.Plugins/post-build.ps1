@@ -16,12 +16,8 @@ $files = @(
 	"Org.Mentalis.Security.Cryptography.dll", 
 	"RabbitMQ.Client.dll", 
 	"SciServer.Logging.dll", 
-	"SciServer.Logging.pdb", 
-	"System.IO.dll", 
-	"System.Net.Http.dll", 
-	"System.Net.Http.Extensions.dll", 
-	"System.Net.Http.Primitives.dll", 
-	"System.Net.Http.WebRequest.dll"
+	"SciServer.Logging.pdb",
+	"log4net.dll"
 )
 
 foreach ($f in $files) {
