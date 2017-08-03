@@ -931,7 +931,7 @@ namespace Jhu.Graywulf.Keystone
         protected override Exception CreateException(RestException ex)
         {
             KeystoneException kex = null;
-            var error = DeserializeJson<ErrorResponse>(ex.Body);
+            var error = DeserializeJson<ErrorResponse>(ex.ResponseBody);
 
             if (error != null)
             {

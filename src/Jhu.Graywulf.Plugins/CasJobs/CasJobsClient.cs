@@ -87,7 +87,7 @@ namespace Jhu.Graywulf.CasJobs
         protected override Exception CreateException(RestException ex)
         {
             CasJobsException cjex = null;
-            var error = DeserializeJson<ErrorResponse>(ex.Body);
+            var error = DeserializeJson<ErrorResponse>(ex.ResponseBody);
 
             if (error != null)
             {

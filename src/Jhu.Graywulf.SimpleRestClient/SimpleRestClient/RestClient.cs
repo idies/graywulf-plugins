@@ -144,9 +144,13 @@ namespace Jhu.Graywulf.SimpleRestClient
                 {
                     var rex = new RestException(ExceptionMessages.InternalRestError, ex)
                     {
-                        Body = ReadResponseBody(ex.Response)
+                        RequestMethod = req.Method,
+                        RequestUri = req.RequestUri,
+                        RequestHeaders = req.Headers,
+                        RequestBody = body,
+                        ResponseBody = ReadResponseBody(ex.Response)
                     };
-
+                    
 #if BREAKDEBUG
                     System.Diagnostics.Debugger.Break();
 #endif
