@@ -92,6 +92,8 @@ namespace Jhu.Graywulf.Keystone
         /// <param name="state"></param>
         private void CollectionTimerCallback(object state)
         {
+            // TODO: does keystone use UTC or local time?
+
             var delete = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
             var now = DateTime.Now;
 
@@ -213,7 +215,7 @@ namespace Jhu.Graywulf.Keystone
             if (tokens.TryGetValue(tokenID, out token))
             {
                 // Make sure time zone is taken into account
-                var now = DateTime.Now.ToUniversalTime();
+                var now = DateTime.UtcNow;
 
                 if (token.ExpiresAt > now)
                 {

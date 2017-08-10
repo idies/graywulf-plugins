@@ -330,6 +330,8 @@ namespace Jhu.Graywulf.Web.Security
 
         private Keystone.Trust CreateTrust(Registry.User user, TimeSpan expiresAfter)
         {
+            // TODO: use UTC or local time?
+
             var token = GetCachedToken(user);
 
             var trust = new Keystone.Trust()
