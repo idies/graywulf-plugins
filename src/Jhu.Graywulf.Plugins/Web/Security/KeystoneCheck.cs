@@ -14,23 +14,23 @@ namespace Jhu.Graywulf.Web.Security
             get { return CheckCategory.Plugin; }
         }
 
-        public override void Execute(System.IO.TextWriter output)
+        protected override IEnumerable<CheckRoutineStatus> OnExecute()
         {
             if (!KeystoneAuthentication.Configuration.IsEnabled)
             {
-                output.WriteLine("Keystone authentication is not enabled");
+                yield return ReportSuccess("Keystone authentication is not enabled");
             }
             else
             {
-                output.WriteLine("Testing Keystone configuration...");
+                yield return ReportInfo("Testing Keystone configuration...");
                 var kclient = new Keystone.KeystoneClient();
                 kclient.GetDomain("default");
 
-                output.WriteLine("Keystone configuration appears to be correct.");
+                yield return ReportSuccess("Keystone configuration appears to be correct.");
             }
         }
 
-        public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
+        protected override IEnumerable<CheckRoutineBase> OnGetCheckRoutines()
         {
             yield break;
         }

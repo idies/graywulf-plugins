@@ -18,9 +18,9 @@ namespace Jhu.Graywulf.CasJobs
         {
         }
 
-        public override void Execute(System.IO.TextWriter output)
+        protected override IEnumerable<CheckRoutineStatus> OnExecute()
         {
-            output.WriteLine("Testing CasJobs configuration...");
+            yield return ReportInfo("Testing CasJobs configuration...");
 
             // TODO what to do here? Would be great to ping service
             // we just look for an exception then
@@ -36,9 +36,11 @@ namespace Jhu.Graywulf.CasJobs
             {
                 // Eat only casjobs exception, everything else means wrong config
             }
+
+            yield return ReportSuccess("OK");
         }
 
-        public override IEnumerable<CheckRoutineBase> GetCheckRoutines()
+        protected override IEnumerable<CheckRoutineBase> OnGetCheckRoutines()
         {
             yield return new DatabaseCheck(CasJobsClient.Configuration.BatchAdminConnectionString);
         }
