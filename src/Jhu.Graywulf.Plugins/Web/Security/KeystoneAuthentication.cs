@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Web;
 using System.Web.Security;
@@ -23,11 +23,27 @@ namespace Jhu.Graywulf.Web.Security
     public class KeystoneAuthentication : Authentication, ICheckable
     {
         #region Static members
+
+        private static Regex tokenQueryStringRegex;
+
         public static KeystoneAuthenticationConfiguration Configuration
         {
             get
             {
                 return (KeystoneAuthenticationConfiguration)ConfigurationManager.GetSection("jhu.graywulf/authentication/keystone");
+            }
+        }
+
+        private static Regex TokenQueryStringRegex
+        {
+            get
+            {
+                if (tokenQueryStringRegex == null)
+                {
+                     tokenQueryStringRegex = new Regex(Configuration.AuthTokenParameter + "=[^&]*", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                }
+
+                return tokenQueryStringRegex;
             }
         }
 
@@ -109,7 +125,7 @@ namespace Jhu.Graywulf.Web.Security
                         setCookie = true;
                     }
                 }
-                
+
                 UpdateAuthenticationResponse(request, response, token, setParameter, setHeader, setCookie, IsMasterAuthority);
             }
         }
@@ -218,6 +234,11 @@ namespace Jhu.Graywulf.Web.Security
 
                 response.Cookies.Add(cookie);
             }
+        }
+
+        public override string RemoveUrlTokens(string url)
+        {
+            return TokenQueryStringRegex.Replace(url, "");
         }
 
         /// <summary>
