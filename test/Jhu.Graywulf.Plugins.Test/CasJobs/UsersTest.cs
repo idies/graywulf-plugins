@@ -38,7 +38,7 @@ namespace Jhu.Graywulf.CasJobs
             // Unfortunately, the casjobs REST interface doesn't support deleting users
             // so the only way we can test is is to create a new user every time
 
-            using (var context = ContextManager.Instance.CreateContext(ConnectionMode.AutoOpen, TransactionMode.AutoCommit))
+            using (var context = ContextManager.Instance.CreateReadWriteContext())
             {
                 var id = new KeystoneIdentityProvider(context.Domain);
                 var name = "test_" + new Random().Next().ToString();
