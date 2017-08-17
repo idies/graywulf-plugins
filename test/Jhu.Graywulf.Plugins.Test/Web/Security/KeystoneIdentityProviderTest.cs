@@ -78,7 +78,7 @@ namespace Jhu.Graywulf.Web.Security
         [TestMethod]
         public void ManipulateUserTest()
         {
-            using (var context = ContextManager.Instance.CreateContext(TransactionMode.ManualCommit))
+            using (var context = ContextManager.Instance.CreateReadWriteContext())
             {
                 var ip = new KeystoneIdentityProvider(context.Domain);
 
