@@ -119,6 +119,11 @@ namespace Jhu.Graywulf.Logging
                 content.Add("job_name", e.JobName);
             }
 
+            if (e.JobGuid != Guid.Empty)
+            {
+                content.Add("job_guid", e.JobGuid);
+            }
+
             if (e.Request != null)
             {
                 content.Add("request", e.Request);
@@ -148,7 +153,7 @@ namespace Jhu.Graywulf.Logging
 
                 msg.MessageBody = new SciServer.Logging.SkyQueryMessageBody
                 {
-                    DoShowInUserHistory = true,
+                    DoShowInUserHistory = e.UserGuid != Guid.Empty,
                     Content = content.ToString(Newtonsoft.Json.Formatting.None)
                 };
             }
