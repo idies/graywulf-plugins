@@ -95,7 +95,7 @@ namespace Jhu.Graywulf.Logging
             msg.UserId = e.UserGuid == Guid.Empty ? null : e.UserGuid.ToString("n");
             msg.UserName = e.UserName;
             msg.TaskName = e.TaskName;
-            msg.Time = e.DateTime;
+            msg.Time = e.DateTime.ToLocalTime();
             msg.Method = e.Operation;
             msg.Host = e.Server;
             msg.ClientIP = e.Client;
@@ -143,7 +143,7 @@ namespace Jhu.Graywulf.Logging
             {
                 if (e.Message != null)
                 {
-                    content.Add("message", e.Message);
+                    content.Add("action", e.Message);
                 }
 
                 msg.MessageBody = new SciServer.Logging.SkyQueryMessageBody
