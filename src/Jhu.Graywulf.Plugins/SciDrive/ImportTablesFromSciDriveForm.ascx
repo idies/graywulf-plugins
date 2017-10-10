@@ -12,7 +12,7 @@
             <asp:TextBox runat="server" ID="uri" CssClass="FormField" Width="420px" Text="first_container/myfile.csv" />
             <asp:RequiredFieldValidator runat="server" ControlToValidate="uri" Display="Dynamic"
                 ErrorMessage="<br />The URI field is required" />
-            <asp:RegularExpressionValidator runat="server" ControlToValidate="uri" Display="Dynamic"
+            <asp:RegularExpressionValidator runat="server" ID="uriFormatValidator" ControlToValidate="uri" Display="Dynamic"
                 ErrorMessage="<br />Invalid SciDrive path" ValidationExpression="^/?[a-zA-Z0-9_\.]+(/[a-zA-Z0-9_\.]+)*$" />
         </td>
     </tr>

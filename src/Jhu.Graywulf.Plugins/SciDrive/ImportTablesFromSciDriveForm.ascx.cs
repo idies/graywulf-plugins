@@ -37,5 +37,10 @@ namespace Jhu.Graywulf.SciDrive
             }
             set { }
         }
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            uriFormatValidator.ValidationExpression = Jhu.Graywulf.IO.Constants.UrlPathPattern;
+        }
     }
 }

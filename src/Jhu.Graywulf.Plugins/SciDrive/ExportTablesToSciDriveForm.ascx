@@ -9,11 +9,11 @@
             <asp:Label runat="server" ID="uriLabel">Path:</asp:Label>&nbsp;&nbsp;
         </td>
         <td class="FormField" style="width: 420px">
-            <asp:TextBox runat="server" ID="uri" CssClass="FormField" Width="420px" Text="first_container/myfile.csv" />
+            <asp:TextBox runat="server" ID="uri" CssClass="FormField" Width="420px" />
             <asp:RequiredFieldValidator runat="server" ControlToValidate="uri" Display="Dynamic"
                 ErrorMessage="<br />The URI field is required" />
-            <asp:RegularExpressionValidator runat="server" ControlToValidate="uri" Display="Dynamic"
-                ErrorMessage="<br />Invalid SciDrive path" ValidationExpression="^/?[a-zA-Z0-9_\.]+(/[a-zA-Z0-9_\.]+)*$" />
+            <asp:RegularExpressionValidator ID="uriFormatValidator" runat="server" ControlToValidate="uri" Display="Dynamic"
+                ErrorMessage="<br />Invalid SciDrive path" />
         </td>
     </tr>
 </table>

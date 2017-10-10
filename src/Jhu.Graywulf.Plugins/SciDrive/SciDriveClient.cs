@@ -17,6 +17,14 @@ namespace Jhu.Graywulf.SciDrive
             }
         }
 
+        public static string GetFilePrefix = "1/files/dropbox/";
+        public static string PutFilePrefix = "1/files_put/dropbox/";
+        
+        /// <summary>
+        /// Returns true if the URI points to SciDrive
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
         public static bool IsUriSciDrive(Uri uri)
         {
             var c = StringComparer.InvariantCultureIgnoreCase;
@@ -64,7 +72,7 @@ namespace Jhu.Graywulf.SciDrive
         public static Uri GetFileGetUri(Uri path)
         {
             var uri = Configuration.BaseUri;
-            uri = Util.UriConverter.Combine(uri, "1/files/dropbox/");
+            uri = Util.UriConverter.Combine(uri, GetFilePrefix);
             uri = Util.UriConverter.Combine(uri, path);
 
             return uri;
@@ -73,7 +81,7 @@ namespace Jhu.Graywulf.SciDrive
         public static Uri GetFilePutUri(Uri path)
         {
             var uri = Configuration.BaseUri;
-            uri = Util.UriConverter.Combine(uri, "1/files_put/dropbox/");
+            uri = Util.UriConverter.Combine(uri, PutFilePrefix);
             uri = Util.UriConverter.Combine(uri, path);
 
             return uri;
@@ -81,8 +89,20 @@ namespace Jhu.Graywulf.SciDrive
 
         public static Uri GetFilePath(Uri uri)
         {
-            return uri.MakeRelativeUri(Configuration.BaseUri);
+            var path = Configuration.BaseUri.MakeRelativeUri(uri).ToString();
+
+            if (path.StartsWith(GetFilePrefix))
+            {
+                path = path.Remove(0, GetFilePrefix.Length);
+            }
+            else if (path.StartsWith(PutFilePrefix))
+            {
+                path = path.Remove(0, PutFilePrefix.Length);
+            }
+
+            return new Uri(path, UriKind.Relative);
         }
+
 
         public static void SetAuthenticationHeaders(Credentials credentials)
         {

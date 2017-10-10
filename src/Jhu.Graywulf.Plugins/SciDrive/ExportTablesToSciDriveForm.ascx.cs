@@ -28,6 +28,12 @@ namespace Jhu.Graywulf.SciDrive
             }
         }
 
+        public Uri CustomizableUri
+        {
+            get { return new Uri(uri.Text, UriKind.Relative); }
+            set { uri.Text = value.ToString(); }
+        }
+
         public Credentials Credentials
         {
             get
@@ -36,6 +42,16 @@ namespace Jhu.Graywulf.SciDrive
                 return null;
             }
             set { }
+        }
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            uriFormatValidator.ValidationExpression = Jhu.Graywulf.IO.Constants.UrlPathPattern;
+        }
+
+        public void GenerateDefaultUri(string filename)
+        {
+            uri.Text = "first_container/" + filename;
         }
     }
 }

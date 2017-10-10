@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SciDrive\ExportTest.cs" />
     <Compile Include="SciDrive\ImportTest.cs" />
+    <Compile Include="SciDrive\SciDriveClientTest.cs" />
     <Compile Include="Web\Security\KeystoneIdentityProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
