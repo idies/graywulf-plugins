@@ -118,6 +118,7 @@
     <Compile Include="Web\Security\OpenIDProviderSettingsCollection.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="build.config" />
     <None Include="packages.config" />
     <None Include="post-build.ps1" />
