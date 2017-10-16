@@ -30,7 +30,14 @@ namespace Jhu.Graywulf.Web.Security
         {
             get
             {
-                return (KeystoneAuthenticationConfiguration)ConfigurationManager.GetSection("jhu.graywulf/authentication/keystone");
+                var config = (KeystoneAuthenticationConfiguration)ConfigurationManager.GetSection("jhu.graywulf/authentication/keystone");
+
+                if (config == null)
+                {
+                    config = new KeystoneAuthenticationConfiguration();
+                }
+
+                return config;
             }
         }
 

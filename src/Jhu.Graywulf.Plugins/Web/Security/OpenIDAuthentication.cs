@@ -25,7 +25,14 @@ namespace Jhu.Graywulf.Web.Security
         {
             get
             {
-                return (OpenIDConfiguration)ConfigurationManager.GetSection("jhu.graywulf/authentication/openID");
+                var config = (OpenIDConfiguration)ConfigurationManager.GetSection("jhu.graywulf/authentication/openID");
+
+                if (config == null)
+                {
+                    config = new OpenIDConfiguration();
+                }
+
+                return config;
             }
         }
 
