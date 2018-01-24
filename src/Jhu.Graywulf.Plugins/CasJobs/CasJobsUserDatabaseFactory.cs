@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web;
 using Jhu.Graywulf.Check;
-using Jhu.Graywulf.Schema;
+using Jhu.Graywulf.Sql.Schema;
 using Jhu.Graywulf.Schema.SqlServer;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Web.Security;
