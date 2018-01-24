@@ -147,13 +147,13 @@
       <Project>{da689d40-edcd-433d-8d9b-4e96829f8c6a}</Project>
       <Name>Jhu.Graywulf.AccessControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.IO.Jobs\Jhu.Graywulf.IO.Jobs.csproj">
+      <Project>{0e3fda36-70cf-477c-8ea6-1ac2c4d73dcc}</Project>
+      <Name>Jhu.Graywulf.IO.Jobs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.IO\Jhu.Graywulf.IO.csproj">
       <Project>{6797ed88-1d8c-491b-a036-4c42c4bf2eaf}</Project>
       <Name>Jhu.Graywulf.IO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Jobs\Jhu.Graywulf.Jobs.csproj">
-      <Project>{2bd2d467-d003-468d-9b97-83ddc6f2ed78}</Project>
-      <Name>Jhu.Graywulf.Jobs</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\graywulf\dll\Jhu.Graywulf.Logging\Jhu.Graywulf.Logging.csproj">
       <Project>{fd98fb58-a3e5-4d32-b6d6-3e20609c4d09}</Project>

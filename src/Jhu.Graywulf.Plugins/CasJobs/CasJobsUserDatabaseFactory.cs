@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Web;
 using Jhu.Graywulf.Check;
 using Jhu.Graywulf.Sql.Schema;
-using Jhu.Graywulf.Schema.SqlServer;
+using Jhu.Graywulf.Sql.Schema.SqlServer;
 using Jhu.Graywulf.Registry;
 using Jhu.Graywulf.Web.Security;
 using Jhu.Graywulf.Keystone;
@@ -193,7 +193,7 @@ EXEC('CREATE SCHEMA [{0}]')
                             return new SqlServerDataset()
                             {
                                 Name = Registry.Constants.UserDbName,
-                                DefaultSchemaName = CasJobsClient.Configuration.DefaultSchema ?? Schema.SqlServer.Constants.DefaultSchemaName,
+                                DefaultSchemaName = CasJobsClient.Configuration.DefaultSchema ?? Sql.Schema.SqlServer.Constants.DefaultSchemaName,
                                 ConnectionString = csb.ConnectionString,
                                 IsCacheable = false,
                                 IsMutable = true,
@@ -277,7 +277,7 @@ EXEC('CREATE SCHEMA [{0}]')
             return sis;
         }
 
-        private ServerInstance GetAssociatedServerInstance(Jhu.Graywulf.Schema.SqlServer.SqlServerDataset dataset)
+        private ServerInstance GetAssociatedServerInstance(Jhu.Graywulf.Sql.Schema.SqlServer.SqlServerDataset dataset)
         {
             // This function is currently unused
 

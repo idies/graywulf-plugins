@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Jhu.Graywulf.Jobs.ImportTables;
+using Jhu.Graywulf.IO.Jobs.ImportTables;
 
 namespace Jhu.Graywulf.SciDrive
 {
     public class SciDriveImportTablesJobFactory : ImportTablesJobFactory
     {
-        public override IEnumerable<Jobs.ImportTables.ImportTablesMethod> EnumerateMethods()
+        public override IEnumerable<IO.Jobs.ImportTables.ImportTablesMethod> EnumerateMethods()
         {
             foreach (var method in base.EnumerateMethods())
             {

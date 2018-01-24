@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.UI;
 using Jhu.Graywulf.Registry;
-using Jhu.Graywulf.Jobs.ImportTables;
-using Jhu.Graywulf.Jobs.ExportTables;
+using Jhu.Graywulf.IO.Jobs.ImportTables;
+using Jhu.Graywulf.IO.Jobs.ExportTables;
 using Jhu.Graywulf.Format;
 using Jhu.Graywulf.IO;
 using Jhu.Graywulf.IO.Tasks;

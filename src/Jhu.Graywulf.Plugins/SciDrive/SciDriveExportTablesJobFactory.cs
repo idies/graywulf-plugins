@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Jhu.Graywulf.Jobs.ExportTables;
+using Jhu.Graywulf.IO.Jobs.ExportTables;
 
 
 namespace Jhu.Graywulf.SciDrive
 {
     public class SciDriveExportTablesJobFactory : ExportTablesJobFactory
     {
-        public override IEnumerable<Jobs.ExportTables.ExportTablesMethod> EnumerateMethods()
+        public override IEnumerable<IO.Jobs.ExportTables.ExportTablesMethod> EnumerateMethods()
         {
             foreach (var method in base.EnumerateMethods())
             {

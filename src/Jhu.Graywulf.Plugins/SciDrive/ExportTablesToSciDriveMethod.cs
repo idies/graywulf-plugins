@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Jhu.Graywulf.Web.UI;
-using Jhu.Graywulf.Jobs.ExportTables;
+using Jhu.Graywulf.IO.Jobs.ExportTables;
 
 namespace Jhu.Graywulf.SciDrive
 {
