@@ -19,7 +19,7 @@ namespace Jhu.Graywulf.SciDrive
             yield return new ExportTablesToSciDriveMethod();
         }
 
-        public override ExportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, IO.Tasks.SourceTableQuery source, string mimeType)
+        public override ExportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, IO.Tasks.SourceTable source, string mimeType)
         {
             // Intercept scidrive URIs and modify credentials
 
