@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Jhu.Graywulf.Format;
+using Jhu.Graywulf.IO;
 using Jhu.Graywulf.IO.Jobs.ImportTables;
+using Jhu.Graywulf.IO.Tasks;
+using Jhu.Graywulf.Registry;
 
 namespace Jhu.Graywulf.SciDrive
 {
@@ -17,8 +21,8 @@ namespace Jhu.Graywulf.SciDrive
 
             yield return new ImportTablesFromSciDriveMethod();
         }
-
-        public override ImportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, Format.DataFileBase source, IO.Tasks.DestinationTable destination, IO.Tasks.ImportTableOptions options)
+        
+        public override ImportTablesParameters CreateParameters(Registry.Federation federation, Uri uri, IO.Credentials credentials, Format.DataFileBase source, IO.Tasks.DestinationTable destination)
         {
             // Intercept scidrive URIs and modify credentials
 
@@ -28,7 +32,7 @@ namespace Jhu.Graywulf.SciDrive
                 SciDriveClient.SetAuthenticationHeaders(credentials);
             }
 
-            return base.CreateParameters(federation, uri, credentials, source, destination, options);
+            return base.CreateParameters(federation, uri, credentials, source, destination);
         }
     }
 }
