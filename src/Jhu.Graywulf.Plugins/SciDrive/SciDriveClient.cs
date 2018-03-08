@@ -40,10 +40,10 @@ namespace Jhu.Graywulf.SciDrive
             {
                 // Compare host name with settings
                 var uriHost = uri.Host;
-                var configHost = SciDriveClient.Configuration.BaseUri.Host;
+                var configHost = SciDriveClient.Configuration?.BaseUri?.Host;
 
                 // If host names match it is a SciDrive instance
-                if (c.Compare(uriHost, configHost) == 0)
+                if (configHost != null && c.Compare(uriHost, configHost) == 0)
                 {
                     return true;
                 }
