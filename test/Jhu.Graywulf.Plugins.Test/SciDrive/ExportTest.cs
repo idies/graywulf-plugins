@@ -11,7 +11,7 @@ using Jhu.Graywulf.Registry;
 namespace Jhu.Graywulf.SciDrive
 {
     [TestClass]
-    public class ExportTest : Jhu.Graywulf.Web.Api.V1.ExportTest
+    public sealed class ExportTest : Jhu.Graywulf.Web.Api.V1.ApiTestBase
     {
         [ClassInitialize]
         public new static void Initialize(TestContext context)
