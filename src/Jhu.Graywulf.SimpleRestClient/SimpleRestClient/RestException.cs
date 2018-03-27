@@ -91,5 +91,10 @@ namespace Jhu.Graywulf.SimpleRestClient
             : base(message, innerException)
         {
         }
+
+        public RestException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }
