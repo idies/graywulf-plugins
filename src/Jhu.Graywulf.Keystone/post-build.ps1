@@ -1,6 +1,6 @@
 ﻿$source = "$ProjectDir$OutDir"
 $target1 = "$SolutionDir$OutDir"
-$target2 = "$SolutionDir\plugins\$ConfigurationName"
+$target2 = "$SolutionDir\plugins\$OutDir"
 
 $files = @(
 	"$TargetName.dll", 
